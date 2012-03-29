@@ -1,5 +1,5 @@
 package App::bmkpasswd;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use strict;
 use warnings;
@@ -69,10 +69,10 @@ sub mkpasswd {
   ## have_sha() above will set our package HAVE_PASSWD_XS:
   if ($HAVE_PASSWD_XS) {
     ## ...but make sure the user isn't doing something dumb:
-    unless ( eval { require Crypt::Passwd::XS } ) {
-      croak '$HAVE_PASSWD_XS=1 but Crypt::Passwd::XS not loadable';
-    } else {
+    if ( eval { require Crypt::Passwd::XS } && !$@) {
       return Crypt::Passwd::XS::crypt($pwd, $salt);
+    } else {
+      croak '$HAVE_PASSWD_XS=1 but Crypt::Passwd::XS not loadable';
     }
   } else {
     return crypt($pwd, $salt);  
@@ -86,7 +86,7 @@ sub passwdcmp {
   if ($crypt =~ /^\$2a\$\d{2}\$/) {
     return unless $crypt eq bcrypt($pwd, $crypt);
   } else {
-    if ( eval { require Crypt::Passwd::XS } ) {
+    if ( eval { require Crypt::Passwd::XS } && !$@ ) {
       return unless $crypt eq Crypt::Passwd::XS::crypt($pwd, $crypt);
     } else {
       return unless $crypt eq crypt($pwd, $crypt);
@@ -103,7 +103,7 @@ sub have_sha {
   ## requires glibc2.7+ or Crypt::Passwd::XS
 
   ## if we have Crypt::Passwd::XS, just use that:
-  if ( eval { require Crypt::Passwd::XS } ) {
+  if ( eval { require Crypt::Passwd::XS } && !$@ ) {
     $HAVE_PASSWD_XS = 1;
     return 1
   }
