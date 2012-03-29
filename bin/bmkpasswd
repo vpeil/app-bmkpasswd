@@ -21,8 +21,9 @@ GetOptions(
 
   'check=s'    => \$check,
   
-  'method|type=s'   => \$type,
-  'workcost=s' => \$bcost,
+  'method|type=s' => \$type,
+  
+  'workcost=s'    => \$bcost,
   
   'version' => sub {
      print "App::bmkpasswd $App::bmkpasswd::VERSION\n";
@@ -71,7 +72,7 @@ if (@ARGV) {
   print "\n";
 }
 
-my $timer0 = [gettimeofday()];
+my $timer0 = [gettimeofday()] if $showtimer;
 
 if ($check) {
   if ( passwdcmp($pwd, $check) ) {
@@ -83,8 +84,10 @@ if ($check) {
   print mkpasswd($pwd, $type, $bcost), "\n";
 }
 
-my $interval0 = tv_interval($timer0);
-print " bench: $type, timer0 -> $interval0\n" if $showtimer;
+if ($showtimer) {
+  my $interval0 = tv_interval($timer0);
+  print " bench: $type, timer0 -> $interval0\n";
+}
 
 __END__
 =pod
