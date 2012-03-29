@@ -18,6 +18,7 @@ my $build = Module::Build->new(
    requires => {
      'perl' => '5.8.0',
      'Getopt::Long'  => 0,
+     'Time::HiRes'   => 0,
      
      'Crypt::Eksblowfish::Bcrypt' => 0,
      'Term::ReadKey' => 0,

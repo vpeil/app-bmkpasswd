@@ -86,4 +86,42 @@ __END__
 
 App::bmkpasswd - bcrypt-enabled mkpasswd
 
+=head1 SYNOPSIS
+
+  bmkpasswd --help
+  
+  bmkpasswd
+  bmkpasswd --workcost='06'
+  
+  ## glibc-2.7+ only (that I am aware of):
+  bmkpasswd --method='sha512'
+
+=head1 DESCRIPTION
+
+B<App::bmkpasswd> is a simple bcrypt-enabled mkpasswd.
+
+Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords; all others 
+fall back to the system's C<crypt()>.
+
+=head1 EXPORTED
+
+You can use the exported B<mkpasswd> and B<passwdcmp> functions in 
+other Perl modules/applications:
+
+  use App::bmkpasswd;
+  ## Generate a bcrypted passwd with work-cost 08:
+  $bcrypted = mkpasswd($passwd);
+  ## Generate a bcrypted passwd with other work-cost:
+  $bcrypted = mkpasswd($passwd, 'bcrypt', '06');
+  ## SHA:
+  $crypted = mkpasswd($passwd, 'sha256');
+  $crypted = mkpasswd($passwd, 'sha512');
+
+  ## Compare a password against a hash:
+  $pwd_matched++ if passwdcmp($passwd, $hash);
+
+=head1 AUTHOR
+
+Jon Portnoy <avenj@cobaltirc.org>
+
 =cut

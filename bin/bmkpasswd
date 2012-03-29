@@ -25,12 +25,12 @@ GetOptions(
   'workcost=s' => \$bcost,
   
   'version' => sub {
-
+     print "App::bmkpasswd $App::bmkpasswd::VERSION\n";
      exit 0
    },
 
   'help' => sub {
-    print(
+    print (
       "bmkpasswd [OPTS]... [PASSWD]\n",
       "Opts:\n",
       " --benchmark\n",
@@ -95,7 +95,7 @@ __END__
 
 =head1 SYNOPSIS
 
- mkpasswd [OPTIONS]... [PASSWD]
+ bmkpasswd [OPTIONS]... [PASSWD]
 
 =head1 OPTIONS
 
@@ -124,6 +124,8 @@ __END__
 
 =head1 DESCRIPTION
 
+Simple bcrypt-enabled mkpasswd.
+
 While SHA512 isn't a bad choice if you have it, bcrypt has the 
 advantage of including a configurable work cost factor.
 
@@ -135,7 +137,5 @@ number of passwords against yours.
 =head1 AUTHOR
 
 Jon Portnoy <avenj@cobaltirc.org>
-
-L<http://www.cobaltirc.org>
 
 =cut
