@@ -1,3 +1,50 @@
 NAME
     App::bmkpasswd - bcrypt-enabled mkpasswd
 
+SYNOPSIS
+      bmkpasswd --help
+  
+      bmkpasswd
+      bmkpasswd --workcost='06'
+  
+      ## glibc-2.7+ only (that I am aware of):
+      bmkpasswd --method='sha512'
+
+DESCRIPTION
+    App::bmkpasswd is a simple bcrypt-enabled mkpasswd.
+
+    See `bmkpasswd --help' for usage information.
+
+    Uses Crypt::Eksblowfish::Bcrypt for bcrypted passwords.
+
+    SHA-256 and SHA-512 are supported if available. You'll need either
+    Crypt::Passwd::XS or a system crypt() that can handle SHA (such as
+    glibc-2.7 and newer).
+
+    MD5 uses the system's `crypt()' (support for it is fairly universal).
+
+EXPORTED
+    You can use the exported mkpasswd and passwdcmp functions in other Perl
+    modules/applications:
+
+      use App::bmkpasswd;
+      ## Generate a bcrypted passwd with work-cost 08:
+      $bcrypted = mkpasswd($passwd);
+      ## Generate a bcrypted passwd with other work-cost:
+      $bcrypted = mkpasswd($passwd, 'bcrypt', '06');
+      ## SHA:
+      $crypted = mkpasswd($passwd, 'sha256');
+      $crypted = mkpasswd($passwd, 'sha512');
+
+      ## Compare a password against a hash:
+      $pwd_matched++ if passwdcmp($passwd, $hash);
+
+BUGS
+    There is currently no easy way to pass your own salt; frankly, this
+    thing is aimed at some projects of mine where that issue is unlikely to
+    come up and randomized is appropriate. If that's a problem, patches
+    welcome? ;-)
+
+AUTHOR
+    Jon Portnoy <avenj@cobaltirc.org>
+

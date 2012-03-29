@@ -18,10 +18,13 @@ provides:
   App::bmkpasswd:
     file: lib/App/bmkpasswd.pm
     version: 0.01
+recommends:
+  Crypt::Passwd::XS: 0
 requires:
   Crypt::Eksblowfish::Bcrypt: 0
   Getopt::Long: 0
   Term::ReadKey: 0
+  Time::HiRes: 0
   perl: v5.8.0
 resources:
   license: http://dev.perl.org/licenses/

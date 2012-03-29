@@ -26,10 +26,14 @@
          }
       },
       "runtime" : {
+         "recommends" : {
+            "Crypt::Passwd::XS" : 0
+         },
          "requires" : {
             "Crypt::Eksblowfish::Bcrypt" : 0,
             "Getopt::Long" : 0,
             "Term::ReadKey" : 0,
+            "Time::HiRes" : 0,
             "perl" : "v5.8.0"
          }
       }
