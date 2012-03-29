@@ -8,5 +8,4 @@ META.yml
 README
 t/01_loadable.t
 t/02_md5.t
-t/03_sha.t
-t/04_bcrypt.t
+t/03_bcrypt.t
