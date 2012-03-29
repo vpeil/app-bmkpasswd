@@ -30,7 +30,7 @@ GetOptions(
    },
 
   'help' => sub {
-    print (
+    print(
       "bmkpasswd [OPTS]... [PASSWD]\n",
       "Opts:\n",
       " --benchmark\n",
@@ -80,7 +80,7 @@ if ($check) {
     exit 1
   }
 } else {
-  print mkpasswd($pwd, $type, $bcost);
+  print mkpasswd($pwd, $type, $bcost), "\n";
 }
 
 my $interval0 = tv_interval($timer0);

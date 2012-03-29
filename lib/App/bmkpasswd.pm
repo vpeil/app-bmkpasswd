@@ -6,8 +6,8 @@ use warnings;
 
 use Crypt::Eksblowfish::Bcrypt qw/bcrypt en_base64/;
 
-use base 'Exporter';
-
+require Exporter;
+our @ISA = qw/Exporter/;
 our @EXPORT = qw/
   mkpasswd
   passwdcmp
@@ -60,7 +60,7 @@ sub mkpasswd {
       last TYPE
     }
     
-    if ($type =~ /sha-?256/i) {
+    if ($type =~ /sha(-?256)?/i) {
       $salt .= $p[rand@p] for 1 .. rand 8;
       $salt = '$5$'.$salt.'$';
       last TYPE
