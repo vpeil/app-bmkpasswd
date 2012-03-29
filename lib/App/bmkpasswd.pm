@@ -36,15 +36,13 @@ sub mkpasswd {
       return bcrypt($pwd, $bsettings);
     }
 
-    ## these are all crypt():
-
-    # SHA requires glibc2.7+
+    # SHA requires Crypt::Passwd::XS or glibc2.7+
     # Not sure of other libcs with support.
     # Ulrich Drepper's been evangelizing a bit . . .
     if ($type =~ /sha-?512/i) {
       croak "SHA hash requested but no SHA support available\n" 
         unless have_sha(512);
-      # SHA has variable length salts
+      # SHA has variable length salts (max 16)
       # Drepper claims this can slow down attacks.
       # ...I'm under-convinced, but there you are:
       $salt .= $p[rand@p] for 1 .. rand 8;
@@ -68,7 +66,9 @@ sub mkpasswd {
     return
   }
 
+  ## have_sha() above will set our package HAVE_PASSWD_XS:
   if ($HAVE_PASSWD_XS) {
+    ## ...but make sure the user isn't doing something dumb:
     unless ( eval { require Crypt::Passwd::XS } ) {
       croak '$HAVE_PASSWD_XS=1 but Crypt::Passwd::XS not loadable';
     } else {
@@ -177,6 +177,13 @@ other Perl modules/applications:
 
   ## Compare a password against a hash:
   $pwd_matched++ if passwdcmp($passwd, $hash);
+
+=head1 BUGS
+
+There is currently no easy way to pass your own salt; frankly, 
+this thing is aimed at some projects of mine where that issue is 
+unlikely to come up and randomized is appropriate. If that's a problem, 
+patches welcome? ;-)
 
 =head1 AUTHOR
 
