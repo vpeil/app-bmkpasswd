@@ -26,7 +26,17 @@ GetOptions(
   'workcost=s'    => \$bcost,
   
   'version' => sub {
-     print "App::bmkpasswd $App::bmkpasswd::VERSION\n";
+     require Crypt::Eksblowfish::Bcrypt;
+     print(
+           "App::bmkpasswd $App::bmkpasswd::VERSION\n\n",
+           "  Crypt::Eksblowfish::Bcrypt-", 
+            $Crypt::Eksblowfish::Bcrypt::VERSION, "\n\n",
+     );
+     
+     print "  SHA256 available\n" if App::bmkpasswd::have_sha(256);
+     print "  SHA512 available\n" if App::bmkpasswd::have_sha(512);
+     print "  Using Crypt::Passwd::XS\n" if $App::bmkpasswd::HAVE_PASSWD_XS;
+     
      exit 0
    },
 
