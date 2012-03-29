@@ -24,6 +24,10 @@ my $build = Module::Build->new(
      'Crypt::Eksblowfish::Bcrypt' => 0,
      'Term::ReadKey' => 0,
    },
+   
+   recommends => {
+     'Crypt::Passwd::XS' => 0,
+   },
 );
 
 $build->create_build_script;

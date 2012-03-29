@@ -21,7 +21,7 @@ GetOptions(
 
   'check=s'    => \$check,
   
-  'method=s'   => \$type,
+  'method|type=s'   => \$type,
   'workcost=s' => \$bcost,
   
   'version' => sub {

@@ -4,6 +4,8 @@ our $VERSION = '0.01';
 use strict;
 use warnings;
 
+use Carp;
+
 use Crypt::Eksblowfish::Bcrypt qw/bcrypt en_base64/;
 
 require Exporter;
@@ -13,6 +15,7 @@ our @EXPORT = qw/
   passwdcmp
 /;
 
+our $HAVE_PASSWD_XS = 0;
 
 sub passwdcmp {
   my ($pwd, $crypt) = @_;
@@ -52,6 +55,8 @@ sub mkpasswd {
     # Not sure of other libcs with support.
     # Ulrich Drepper's been evangelizing a bit . . .
     if ($type =~ /sha-?512/i) {
+      croak "SHA hash requested but no SHA support available\n" 
+        unless have_sha(512);
       # SHA has variable length salts
       # Drepper claims this can slow down attacks.
       # ...I'm under-convinced, but there you are:
@@ -61,6 +66,8 @@ sub mkpasswd {
     }
     
     if ($type =~ /sha(-?256)?/i) {
+      croak "SHA hash requested but no SHA support available" 
+        unless have_sha(256);
       $salt .= $p[rand@p] for 1 .. rand 8;
       $salt = '$5$'.$salt.'$';
       last TYPE
@@ -73,8 +80,47 @@ sub mkpasswd {
 
     return
   }
+
+  if ($HAVE_PASSWD_XS) {
+    unless ( eval { require Crypt::Passwd::XS } ) {
+      croak '$HAVE_PASSWD_XS=1 but Crypt::Passwd::XS not loadable';
+    } else {
+      return Crypt::Passwd::XS::crypt($pwd, $salt);
+    }
+  } else {
+    return crypt($pwd, $salt);  
+  }
+}
+
+sub have_sha {
+  my ($rate) = @_;
+  $rate = 512 unless $rate;
+  ## determine (the slow way) if SHA256/512 are available
+  ## requires glibc2.7+ or Crypt::Passwd::XS
+
+  ## if we have Crypt::Passwd::XS, just use that:
+  if ( eval { require Crypt::Passwd::XS } ) {
+    $HAVE_PASSWD_XS = 1;
+    return 1
+  }
   
-  return crypt($pwd, $salt);
+  ## otherwise, find out the slow way:
+  my %tests = (
+    256 => sub {
+      my $testcrypt = crypt('a', '$5$abc$');
+      return unless index($testcrypt, '$5$abc$') == 0;
+      return 1
+    },
+  
+    512 => sub {
+      my $testcrypt = crypt('b', '$6$abc$');
+      return unless index($testcrypt, '$6$abc$') == 0;
+      return 1
+    },
+  );
+  
+  return unless defined $tests{$rate} and $tests{$rate}->();
+  return 1
 }
 
 1;
