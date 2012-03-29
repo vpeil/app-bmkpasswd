@@ -91,7 +91,12 @@ if ($check) {
     exit 1
   }
 } else {
-  print mkpasswd($pwd, $type, $bcost), "\n";
+  my $crypted = mkpasswd($pwd, $type, $bcost);
+  if ($crypted) {
+    print $crypted, "\n";
+  } else {
+    print "Failed to generate password; unimplemented --method?\n";
+  }
 }
 
 if ($showtimer) {
