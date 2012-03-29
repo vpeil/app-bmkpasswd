@@ -17,19 +17,6 @@ our @EXPORT = qw/
 
 our $HAVE_PASSWD_XS = 0;
 
-sub passwdcmp {
-  my ($pwd, $crypt) = @_;
-  return unless defined $pwd and $crypt;
-  
-  if ($crypt =~ /^\$2a\$\d{2}\$/) {
-    return unless $crypt eq bcrypt($pwd, $crypt);
-  } else {
-    return unless $crypt eq crypt($pwd, $crypt);
-  }
-  
-  return $crypt
-}
-
 sub mkpasswd {
   my ($pwd, $type, $cost) = @_;
   
@@ -92,6 +79,23 @@ sub mkpasswd {
   }
 }
 
+sub passwdcmp {
+  my ($pwd, $crypt) = @_;
+  return unless defined $pwd and $crypt;
+  
+  if ($crypt =~ /^\$2a\$\d{2}\$/) {
+    return unless $crypt eq bcrypt($pwd, $crypt);
+  } else {
+    if ( eval { require Crypt::Passwd::XS } ) {
+      return unless $crypt eq Crypt::Passwd::XS::crypt($pwd, $crypt);
+    } else {
+      return unless $crypt eq crypt($pwd, $crypt);
+    }
+  }
+
+  return $crypt  
+}
+
 sub have_sha {
   my ($rate) = @_;
   $rate = 512 unless $rate;
@@ -146,8 +150,16 @@ App::bmkpasswd - bcrypt-enabled mkpasswd
 
 B<App::bmkpasswd> is a simple bcrypt-enabled mkpasswd.
 
-Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords; all others 
-fall back to the system's C<crypt()>.
+See C<bmkpasswd --help> for usage information.
+
+Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords.
+
+B<SHA-256> and B<SHA-512> are supported if available. You'll need 
+either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA 
+(such as glibc-2.7 and newer).
+
+B<MD5> uses the system's C<crypt()> (support for it is fairly 
+universal).
 
 =head1 EXPORTED
 
