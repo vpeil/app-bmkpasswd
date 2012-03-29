@@ -1,0 +1,141 @@
+#!perl
+
+use strict;
+use warnings;
+
+use App::bmkpasswd;
+
+use Term::ReadKey qw/ ReadMode /;
+
+use Time::HiRes qw/ gettimeofday tv_interval /;
+
+my $type = 'bcrypt';
+my $bcost = '08';
+my $showtimer = 0;
+my $check;
+
+use Getopt::Long;
+GetOptions(
+
+  'benchmark!' => \$showtimer,
+
+  'check=s'    => \$check,
+  
+  'method=s'   => \$type,
+  'workcost=s' => \$bcost,
+  
+  'version' => sub {
+
+     exit 0
+   },
+
+  'help' => sub {
+    print(
+      "bmkpasswd [OPTS]... [PASSWD]\n",
+      "Opts:\n",
+      " --benchmark\n",
+      "   Show timers. [Default: off]\n",
+      "\n",
+      " --method=<TYPE>\n",
+      "   Default: -m bcrypt\n",
+      "   Types: \n",
+      "   - bcrypt (requires Crypt::Eksblowfish)\n",
+      "   - sha256 (requires glibc2.7+)\n",
+      "   - sha512 (requires glibc2.7+)\n",
+      "   - md5 (fast, portable, insecure)\n",
+      "\n",
+      " --check=<HASH>\n",
+      "   Compare password against specified hash.\n",
+      "\n",
+      " bcrypt-only:\n",
+      " --workcost=<two digit power of 2>\n",
+      "   Default: -w 08\n",
+      "   bcrypt work cost factor; higher is slower.\n",
+      "   When it comes to comparing passwds, slower can be better.\n",
+      "   See http://codahale.com/how-to-safely-store-a-password/\n",
+    );
+    exit 0
+  },  
+
+);
+
+my $pwd;
+if (@ARGV) {
+  $pwd = $ARGV[0];
+} else {
+  ReadMode(2);
+  print "Password: ";
+  $pwd = <STDIN>;
+  ReadMode(0);
+  chomp($pwd);
+  print "\n";
+}
+
+my $timer0 = [gettimeofday()];
+
+if ($check) {
+  if ( passwdcmp($pwd, $check) ) {
+    print "Match\n", "hash: $check\n";
+  } else {
+    exit 1
+  }
+} else {
+  print mkpasswd($pwd, $type, $bcost);
+}
+
+my $interval0 = tv_interval($timer0);
+print " bench: $type, timer0 -> $interval0\n" if $showtimer;
+
+__END__
+=pod
+
+=head1 NAME
+
+ bmkpasswd - bcrypt-enabled mkpasswd
+
+=head1 SYNOPSIS
+
+ mkpasswd [OPTIONS]... [PASSWD]
+
+=head1 OPTIONS
+
+ -h, --help
+
+ -b, --benchmark
+     Show timers.
+
+ -m, --method <TYPE>
+     crypt method.
+     Types:
+       bcrypt (default; requires Crypt::Eksblowfish)
+       sha512 (requires glibc2.7+)
+       sha256 (requires glibc2.7+)
+       md5 (fast, portable, weak)
+
+ -c, --check <HASH>
+     Check password against <HASH>.
+     Method will be auto-detected.
+
+ -w, --workcost <COST>
+     bcrypt-only.
+     Specify a work cost factor. Higher is slower.
+     Must be a two-digit power of 2.
+     Pad with zeros as necessary.
+
+=head1 DESCRIPTION
+
+While SHA512 isn't a bad choice if you have it, bcrypt has the 
+advantage of including a configurable work cost factor.
+
+A higher work cost factor exponentially increases hashing time.
+
+That means it takes significantly longer to compare a very large 
+number of passwords against yours.
+
+=head1 AUTHOR
+
+Jon Portnoy <avenj@cobaltirc.org>
+
+L<http://www.cobaltirc.org>
+
+=cut

@@ -1,0 +1,28 @@
+---
+abstract: 'bcrypt-enabled mkpasswd'
+author:
+  - 'Jon Portnoy <avenj@cobaltirc.org>'
+build_requires:
+  Module::Build: 0.38
+  Test::More: 0
+configure_requires:
+  Module::Build: 0.38
+dynamic_config: 1
+generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.112150'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: App-bmkpasswd
+provides:
+  App::bmkpasswd:
+    file: lib/App/bmkpasswd.pm
+    version: 0.01
+requires:
+  Crypt::Eksblowfish::Bcrypt: 0
+  Getopt::Long: 0
+  Term::ReadKey: 0
+  perl: v5.8.0
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.01
