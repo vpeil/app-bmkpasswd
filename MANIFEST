@@ -6,6 +6,7 @@ MANIFEST			This list of files
 META.json
 META.yml
 README
+Changes
 t/01_loadable.t
 t/02_md5.t
 t/03_bcrypt.t

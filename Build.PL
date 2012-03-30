@@ -4,7 +4,7 @@ use Module::Build;
 
 my $build = Module::Build->new(
    module_name   => 'App::bmkpasswd',
-   dist_abstract => 'bcrypt-enabled mkpasswd',
+   dist_abstract => 'A bcrypt-capable mkpasswd',
    dist_author   => 'Jon Portnoy <avenj@cobaltirc.org>',
    license => 'perl',
    

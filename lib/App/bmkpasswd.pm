@@ -161,6 +161,8 @@ either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA
 B<MD5> uses the system's C<crypt()> (support for it is fairly 
 universal).
 
+Salts are randomly generated.
+
 =head1 EXPORTED
 
 You can use the exported B<mkpasswd> and B<passwdcmp> functions in 

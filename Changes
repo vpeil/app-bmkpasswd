@@ -1,0 +1,10 @@
+Revision history for App::bmkpasswd
+
+0.03 2012-03-29
+
+  First known-working CPAN-able dist.
+
+  Based on code pulled out of Circe IRC services.
+  
+Previous revision history lives in git:
+git://eris.cobaltirc.org/app-bmkpasswd
