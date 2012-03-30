@@ -10,9 +10,12 @@ my $build = Module::Build->new(
    
    create_makefile_pl => 'small',
    create_readme => 1,
+
+   configure_requires => {
+     'Module::Build' => '0.36',
+   },
    
    build_requires => {
-     'Module::Build' => '0.38',
      'Test::More'    => 0,
    },
    
@@ -21,7 +24,7 @@ my $build = Module::Build->new(
      'Getopt::Long'  => 0,
      'Time::HiRes'   => 0,
      
-     'Crypt::Eksblowfish::Bcrypt' => 0,
+     'Crypt::Eksblowfish' => '0.003',
      'Term::ReadKey' => 0,
    },
    

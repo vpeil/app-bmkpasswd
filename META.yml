@@ -3,10 +3,9 @@ abstract: 'A bcrypt-capable mkpasswd'
 author:
   - 'Jon Portnoy <avenj@cobaltirc.org>'
 build_requires:
-  Module::Build: 0.38
   Test::More: 0
 configure_requires:
-  Module::Build: 0.38
+  Module::Build: 0.36
 dynamic_config: 1
 generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.112150'
 license: perl
@@ -21,7 +20,7 @@ provides:
 recommends:
   Crypt::Passwd::XS: 0
 requires:
-  Crypt::Eksblowfish::Bcrypt: 0
+  Crypt::Eksblowfish: 0.003
   Getopt::Long: 0
   Term::ReadKey: 0
   Time::HiRes: 0

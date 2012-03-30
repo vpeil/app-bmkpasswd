@@ -11,13 +11,13 @@ use Time::HiRes qw/ gettimeofday tv_interval /;
 
 my $type = 'bcrypt';
 my $bcost = '08';
-my $showtimer = 0;
+my $bench = 0;
 my $check;
 
 use Getopt::Long;
 GetOptions(
 
-  'benchmark!' => \$showtimer,
+  'benchmark!' => \$bench,
 
   'check=s'    => \$check,
   
@@ -84,7 +84,7 @@ if (@ARGV) {
   print "\n";
 }
 
-my $timer0 = [gettimeofday()] if $showtimer;
+my $timer = [gettimeofday()] if $bench;
 
 if ($check) {
   if ( passwdcmp($pwd, $check) ) {
@@ -101,9 +101,9 @@ if ($check) {
   }
 }
 
-if ($showtimer) {
-  my $interval0 = tv_interval($timer0);
-  print " bench: $type, timer0 -> $interval0\n";
+if ($bench) {
+  my $interval = tv_interval($timer);
+  print " bench: $type, timer0 -> $interval\n";
 }
 
 __END__

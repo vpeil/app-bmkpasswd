@@ -16,13 +16,12 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Module::Build" : "0.38",
             "Test::More" : 0
          }
       },
       "configure" : {
          "requires" : {
-            "Module::Build" : "0.38"
+            "Module::Build" : "0.36"
          }
       },
       "runtime" : {
@@ -30,7 +29,7 @@
             "Crypt::Passwd::XS" : 0
          },
          "requires" : {
-            "Crypt::Eksblowfish::Bcrypt" : 0,
+            "Crypt::Eksblowfish" : "0.003",
             "Getopt::Long" : 0,
             "Term::ReadKey" : 0,
             "Time::HiRes" : 0,
