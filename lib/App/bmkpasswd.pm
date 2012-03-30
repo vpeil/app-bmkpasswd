@@ -140,11 +140,18 @@ App::bmkpasswd - bcrypt-enabled mkpasswd
 
   bmkpasswd --help
   
+  ## Generate bcrypted passwords
+  ## Defaults to work cost factor '08':
   bmkpasswd
   bmkpasswd --workcost='06'
-  
-  ## glibc-2.7+ only (that I am aware of):
+
+  ## Use other methods:
+  bmkpasswd --method='md5'
+  # SHA requires Crypt::Passwd::XS or glibc2.7+
   bmkpasswd --method='sha512'
+  
+  ## Compare a hash:
+  bmkpasswd --check=HASH
 
 =head1 DESCRIPTION
 
