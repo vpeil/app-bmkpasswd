@@ -7,7 +7,7 @@ BEGIN {
 SKIP: {
   skip "No SHA256 support", 2 unless App::bmkpasswd::have_sha(256);
   if ( $App::bmkpasswd::HAVE_PASSWD_XS ) {
-    diag("Crypt::Passwd::XS found, using it for SHA256");
+    diag("Using Crypt::Passwd::XS");
   } else {
     diag("Using system crypt()");
   }
@@ -18,11 +18,6 @@ SKIP: {
 
 SKIP: {
   skip "No SHA512 support", 2 unless App::bmkpasswd::have_sha(512);
-  if ( $App::bmkpasswd::HAVE_PASSWD_XS ) {
-    diag("Crypt::Passwd::XS found, using it for SHA512");
-  } else {
-    diag("Using system crypt()");
-  }
   my $sha;
   ok( $sha = mkpasswd('snacks', 'sha512'), 'SHA512 crypt()' );
   ok( passwdcmp('snacks', $sha), 'SHA512 compare' );  

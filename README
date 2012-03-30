@@ -15,13 +15,15 @@ DESCRIPTION
 
     See `bmkpasswd --help' for usage information.
 
-    Uses Crypt::Eksblowfish::Bcrypt for bcrypted passwords.
+    Uses Crypt::Eksblowfish::Bcrypt for bcrypted passwords. (See
+    http://codahale.com/how-to-safely-store-a-password/ for why you ought to
+    be using bcrypt or similar "adaptive" techniques).
 
     SHA-256 and SHA-512 are supported if available. You'll need either
-    Crypt::Passwd::XS or a system crypt() that can handle SHA (such as
-    glibc-2.7 and newer).
+    Crypt::Passwd::XS or a system crypt() that can handle SHA, such as
+    glibc-2.7 and newer.
 
-    MD5 uses the system's `crypt()' (support for it is fairly universal).
+    MD5 uses the system's `crypt()' -- support for it is fairly universal.
 
     Salts are randomly generated.
 
