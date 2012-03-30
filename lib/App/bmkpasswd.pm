@@ -1,5 +1,5 @@
 package App::bmkpasswd;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use strict;
 use warnings;
@@ -152,14 +152,16 @@ B<App::bmkpasswd> is a simple bcrypt-enabled mkpasswd.
 
 See C<bmkpasswd --help> for usage information.
 
-Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords.
+Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords. 
+(See http://codahale.com/how-to-safely-store-a-password/ for why you 
+ought to be using bcrypt or similar "adaptive" techniques).
 
 B<SHA-256> and B<SHA-512> are supported if available. You'll need 
-either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA 
-(such as glibc-2.7 and newer).
+either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA, 
+such as glibc-2.7 and newer.
 
-B<MD5> uses the system's C<crypt()> (support for it is fairly 
-universal).
+B<MD5> uses the system's C<crypt()> -- support for it is fairly 
+universal.
 
 Salts are randomly generated.
 

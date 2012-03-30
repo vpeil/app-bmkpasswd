@@ -1,5 +1,5 @@
 ---
-abstract: 'bcrypt-enabled mkpasswd'
+abstract: 'A bcrypt-capable mkpasswd'
 author:
   - 'Jon Portnoy <avenj@cobaltirc.org>'
 build_requires:

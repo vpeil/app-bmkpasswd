@@ -23,6 +23,8 @@ DESCRIPTION
 
     MD5 uses the system's `crypt()' (support for it is fairly universal).
 
+    Salts are randomly generated.
+
 EXPORTED
     You can use the exported mkpasswd and passwdcmp functions in other Perl
     modules/applications:
