@@ -30,7 +30,7 @@ DESCRIPTION
     Crypt::Passwd::XS or a system crypt() that can handle SHA, such as
     glibc-2.7 and newer.
 
-    MD5 uses the system's `crypt()' -- support for it is fairly universal.
+    MD5 uses the system's crypt() -- support for it is fairly universal.
 
     Salts are randomly generated.
 

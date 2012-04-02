@@ -10,9 +10,9 @@ SKIP: {
     2
   ) unless App::bmkpasswd::have_sha(256);
   if ( $App::bmkpasswd::HAVE_PASSWD_XS ) {
-    diag("Using Crypt::Passwd::XS");
+    diag("Using Crypt::Passwd::XS for SHA");
   } else {
-    diag("Using system crypt()");
+    diag("Using system crypt() for SHA");
   }
   my $sha;
   ok( $sha = mkpasswd('snacks', 'sha256'), 'SHA256 crypt()' );
