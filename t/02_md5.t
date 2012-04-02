@@ -1,7 +1,7 @@
 use Test::More tests => 3;
 
 BEGIN {
-  use_ok( 'App::bmkpasswd' );
+  use_ok( 'App::bmkpasswd', qw/mkpasswd passwdcmp/ );
 }
 
 my $md5;

@@ -8,7 +8,7 @@ use Crypt::Eksblowfish::Bcrypt qw/bcrypt en_base64/;
 
 require Exporter;
 our @ISA = qw/Exporter/;
-our @EXPORT = qw/
+our @EXPORT_OK = qw/
   mkpasswd
   passwdcmp
 /;
@@ -175,7 +175,7 @@ Salts are randomly generated.
 You can use the exported B<mkpasswd> and B<passwdcmp> functions in 
 other Perl modules/applications:
 
-  use App::bmkpasswd;
+  use App::bmkpasswd qw/mkpasswd passwdcmp/;
   ## Generate a bcrypted passwd with work-cost 08:
   $bcrypted = mkpasswd($passwd);
   ## Generate a bcrypted passwd with other work-cost:

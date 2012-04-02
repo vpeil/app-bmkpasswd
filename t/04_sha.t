@@ -1,14 +1,16 @@
 use Test::More tests => 5;
 
 BEGIN {
-  use_ok( 'App::bmkpasswd' );
+  use_ok( 'App::bmkpasswd', qw/mkpasswd passwdcmp/ );
 }
 
 SKIP: {
-  skip(
-    "No SHA256 support\nYou may want to install Crypt::Passwd::XS",
-    2
-  ) unless App::bmkpasswd::have_sha(256);
+  unless ( App::bmkpasswd::have_sha(256) ) {
+    diag("No SHA support found\n",
+          "You may want to install Crypt::Passwd::XS");
+    skip( "No SHA256 support", 2 );
+  }
+  
   if ( $App::bmkpasswd::HAVE_PASSWD_XS ) {
     diag("Using Crypt::Passwd::XS for SHA");
   } else {

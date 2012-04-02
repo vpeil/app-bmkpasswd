@@ -3,11 +3,9 @@
 use strict;
 use warnings;
 
-use App::bmkpasswd;
-
-use Term::ReadKey qw/ ReadMode /;
-
-use Time::HiRes qw/ gettimeofday tv_interval /;
+use App::bmkpasswd qw/ mkpasswd passwdcmp /;
+use Term::ReadKey  qw/ ReadMode /;
+use Time::HiRes    qw/ gettimeofday tv_interval /;
 
 my $type = 'bcrypt';
 my $bcost = '08';
