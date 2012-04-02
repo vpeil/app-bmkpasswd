@@ -9,6 +9,8 @@ SKIP: {
     diag("No SHA support found\n",
           "You may want to install Crypt::Passwd::XS");
     skip( "No SHA256 support", 2 );
+  } else {
+    diag("Found SHA support");
   }
   
   if ( $App::bmkpasswd::HAVE_PASSWD_XS ) {
