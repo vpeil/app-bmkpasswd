@@ -14,7 +14,7 @@ our @EXPORT_OK = qw/
   passwdcmp
 /;
 
-our $HAVE_PASSWD_XS = 0;
+our $HAVE_PASSWD_XS;
 
 sub mkpasswd {
   my ($pwd, $type, $cost) = @_;
@@ -23,7 +23,7 @@ sub mkpasswd {
   
   # a default (randomized) salt
   # can be used for md5 or built on for SHA
-  my @p = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9 );
+  my @p = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9, '.', '/' );
   my $salt = join '', map { $p[rand@p] } 1 .. 8;
   
   TYPE: {

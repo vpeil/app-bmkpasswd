@@ -38,7 +38,7 @@ EXPORTED
     You can use the exported mkpasswd and passwdcmp functions in other Perl
     modules/applications:
 
-      use App::bmkpasswd;
+      use App::bmkpasswd qw/mkpasswd passwdcmp/;
       ## Generate a bcrypted passwd with work-cost 08:
       $bcrypted = mkpasswd($passwd);
       ## Generate a bcrypted passwd with other work-cost:
