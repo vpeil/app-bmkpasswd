@@ -1,5 +1,5 @@
 package App::bmkpasswd;
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use strict;
 use warnings;
@@ -102,7 +102,7 @@ sub have_sha {
   ## requires glibc2.7+ or Crypt::Passwd::XS
 
   ## if we have Crypt::Passwd::XS, just use that:
-  if ( eval { require Crypt::Passwd::XS } && !$@ ) {
+  if ( eval { require Crypt::Passwd::XS;1 } && !$@ ) {
     $HAVE_PASSWD_XS = 1;
     return 1
   }
