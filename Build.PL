@@ -1,3 +1,4 @@
+#!/usr/bin/env perl
 use strict; 
 use warnings;
 use Module::Build;
@@ -21,7 +22,7 @@ my $build = Module::Build->new(
    
    requires => {
      'perl' => '5.8.0',
-     'Getopt::Long'  => 0,
+     'Getopt::Long'  => '2.24',
      'Time::HiRes'   => 0,
      
      'Crypt::Eksblowfish' => '0.003',
