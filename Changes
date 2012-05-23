@@ -1,5 +1,13 @@
 Revision history for App::bmkpasswd
 
+0.05 2012-04-07
+
+Minor fixes:
+
+  - t/04_sha: mention Crypt::Passwd::XS if SHA is missing
+  - Include . / in standard salt possibles (MD5/SHA)
+  - croak() rather than die() from bmkpasswd.pm
+
 0.04 2012-04-02
 
   Don't export mkpasswd/passwdcmp unless requested.
