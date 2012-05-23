@@ -1,5 +1,5 @@
 package App::bmkpasswd;
-our $VERSION = '0.06';
+our $VERSION = '1.00';
 
 use strict;
 use warnings;
