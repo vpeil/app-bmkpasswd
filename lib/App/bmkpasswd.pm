@@ -1,5 +1,5 @@
 package App::bmkpasswd;
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 use strictures 1;
 
@@ -34,7 +34,7 @@ sub mkpasswd {
       $cost = '0$cost' if length $cost == 1;
       $salt = en_base64( join '', map { chr int rand 256 } 1 .. 16 );
       my $bsettings = join '', '$2a$', $cost, '$', $salt;
-      return bcrypt($pwd, $bsettings);
+      return bcrypt($pwd, $bsettings)
     }
 
     # SHA requires Crypt::Passwd::XS or glibc2.7+
@@ -74,7 +74,7 @@ sub mkpasswd {
       require Crypt::Passwd::XS
     } catch {
       croak "\$HAVE_PASSWD_XS=1 but Crypt::Passwd::XS is not loadable"
-    }
+    };
 
     return Crypt::Passwd::XS::crypt($pwd, $salt)
   }
@@ -87,7 +87,7 @@ sub passwdcmp {
   return unless defined $pwd and $crypt;
   
   if ($crypt =~ /^\$2a\$\d{2}\$/) {
-    return unless $crypt eq bcrypt($pwd, $crypt);
+    return unless $crypt eq bcrypt($pwd, $crypt)
   } else {
     my $really_have_xs;
     try {

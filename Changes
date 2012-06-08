@@ -1,5 +1,10 @@
 Revision history for App::bmkpasswd
 
+1.02 2012-06-08
+
+  A couple of "derp" typo/style cleanups; non-fatal but aggravating my 
+  OCD.
+
 1.01 2012-06-08
 
   - Use Try::Tiny rather than raw block eval
