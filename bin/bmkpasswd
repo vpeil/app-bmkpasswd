@@ -1,7 +1,6 @@
 #!perl
 
-use strict;
-use warnings;
+use strictures 1;
 
 use App::bmkpasswd qw/ mkpasswd passwdcmp /;
 use Term::ReadKey  qw/ ReadMode /;
