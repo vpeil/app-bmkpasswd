@@ -1,4 +1,4 @@
-use Test::More tests => 5;
+use Test::More tests => 7;
 
 BEGIN {
   use_ok( 'App::bmkpasswd', qw/mkpasswd passwdcmp/ );
@@ -21,6 +21,7 @@ SKIP: {
   my $sha;
   ok( $sha = mkpasswd('snacks', 'sha256'), 'SHA256 crypt()' );
   ok( passwdcmp('snacks', $sha), 'SHA256 compare' );  
+  ok( !passwdcmp('things', $sha), 'SHA256 negative compare' );
 }
 
 SKIP: {
@@ -30,5 +31,6 @@ SKIP: {
   ) unless App::bmkpasswd::have_sha(512);
   my $sha;
   ok( $sha = mkpasswd('snacks', 'sha512'), 'SHA512 crypt()' );
-  ok( passwdcmp('snacks', $sha), 'SHA512 compare' );  
+  ok( passwdcmp('snacks', $sha), 'SHA512 compare' );
+  ok( !passwdcmp('things', $sha), 'SHA512 negative compare' );
 }
