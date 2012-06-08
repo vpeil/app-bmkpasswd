@@ -69,7 +69,7 @@ sub mkpasswd {
       last TYPE
     }
 
-    return
+    croak "Unknown type specified: $type"
   }
 
   ## have_sha() called above will set our package HAVE_PASSWD_XS:
