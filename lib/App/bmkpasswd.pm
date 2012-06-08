@@ -67,17 +67,9 @@ sub mkpasswd {
     return
   }
 
-  ## have_sha() will set our package HAVE_PASSWD_XS:
-  if ($HAVE_PASSWD_XS) {
-    ## ...but make sure the user isn't doing something dumb:
-    try {
-      require Crypt::Passwd::XS
-    } catch {
-      croak "\$HAVE_PASSWD_XS=1 but Crypt::Passwd::XS is not loadable"
-    };
-
-    return Crypt::Passwd::XS::crypt($pwd, $salt)
-  }
+  ## have_sha() called above will set our package HAVE_PASSWD_XS:
+  return Crypt::Passwd::XS::crypt($pwd, $salt)
+    if $HAVE_PASSWD_XS;
 
   return crypt($pwd, $salt)
 }
