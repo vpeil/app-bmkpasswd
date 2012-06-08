@@ -1,9 +1,11 @@
 package App::bmkpasswd;
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
-use strict;
-use warnings;
+use strictures 1;
+
 use Carp;
+
+use Try::Tiny;
 
 use Crypt::Eksblowfish::Bcrypt qw/bcrypt en_base64/;
 
@@ -65,17 +67,19 @@ sub mkpasswd {
     return
   }
 
-  ## have_sha() above will set our package HAVE_PASSWD_XS:
+  ## have_sha() will set our package HAVE_PASSWD_XS:
   if ($HAVE_PASSWD_XS) {
     ## ...but make sure the user isn't doing something dumb:
-    if ( eval { require Crypt::Passwd::XS } && !$@) {
-      return Crypt::Passwd::XS::crypt($pwd, $salt);
-    } else {
-      croak "\$HAVE_PASSWD_XS=1 but Crypt::Passwd::XS not loadable";
+    try {
+      require Crypt::Passwd::XS
+    } catch {
+      croak "\$HAVE_PASSWD_XS=1 but Crypt::Passwd::XS is not loadable"
     }
-  } else {
-    return crypt($pwd, $salt);  
+
+    return Crypt::Passwd::XS::crypt($pwd, $salt)
   }
+
+  return crypt($pwd, $salt)
 }
 
 sub passwdcmp {
@@ -85,10 +89,16 @@ sub passwdcmp {
   if ($crypt =~ /^\$2a\$\d{2}\$/) {
     return unless $crypt eq bcrypt($pwd, $crypt);
   } else {
-    if ( eval { require Crypt::Passwd::XS } && !$@ ) {
-      return unless $crypt eq Crypt::Passwd::XS::crypt($pwd, $crypt);
+    my $really_have_xs;
+    try {
+      require Crypt::Passwd::XS;
+      $really_have_xs = 1
+    };
+
+    if ($really_have_xs) {
+      return unless $crypt eq Crypt::Passwd::XS::crypt($pwd, $crypt)
     } else {
-      return unless $crypt eq crypt($pwd, $crypt);
+      return unless $crypt eq crypt($pwd, $crypt)
     }
   }
 
@@ -102,10 +112,13 @@ sub have_sha {
   ## requires glibc2.7+ or Crypt::Passwd::XS
 
   ## if we have Crypt::Passwd::XS, just use that:
-  if ( eval { require Crypt::Passwd::XS;1 } && !$@ ) {
-    $HAVE_PASSWD_XS = 1;
-    return 1
-  }
+  $HAVE_PASSWD_XS = 0;
+  try {
+    require Crypt::Passwd::XS;
+    $HAVE_PASSWD_XS = 1
+  };
+  
+  return 1 if $HAVE_PASSWD_XS;
   
   ## otherwise, find out the slow way:
   my %tests = (
@@ -133,7 +146,7 @@ __END__
 
 =head1 NAME
 
-App::bmkpasswd - bcrypt-enabled mkpasswd
+App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 
 =head1 SYNOPSIS
 
@@ -154,20 +167,22 @@ App::bmkpasswd - bcrypt-enabled mkpasswd
 
 =head1 DESCRIPTION
 
-B<App::bmkpasswd> is a simple bcrypt-enabled mkpasswd.
+B<App::bmkpasswd> is a simple bcrypt-enabled mkpasswd. (Helper functions 
+are also exported for use in other applications; see L</EXPORTED>.)
 
 See C<bmkpasswd --help> for usage information.
 
 Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords. 
-(See http://codahale.com/how-to-safely-store-a-password/ for why you 
+(See L<http://codahale.com/how-to-safely-store-a-password/> for why you 
 ought to be using bcrypt or similar "adaptive" techniques).
 
 B<SHA-256> and B<SHA-512> are supported if available. You'll need 
 either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA, 
-such as glibc-2.7 and newer.
+such as glibc-2.7+ or newer FreeBSD builds.
 
 B<MD5> uses the system's crypt() -- support for it is fairly 
-universal.
+universal, but it is known insecure and there is really no valid excuse 
+to be using it ;-)
 
 Salts are randomly generated.
 
