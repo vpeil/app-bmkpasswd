@@ -42,8 +42,7 @@ sub mkpasswd {
       return bcrypt($pwd, $bsettings)
     }
 
-    # SHA requires Crypt::Passwd::XS or glibc2.7+
-    # Not sure of other libcs with support.
+    # SHA requires Crypt::Passwd::XS or glibc2.7+, recent fBSD etc
     # Ulrich Drepper's been evangelizing a bit . . .
     if ($type =~ /sha-?512/i) {
       croak "SHA hash requested but no SHA support available" 
