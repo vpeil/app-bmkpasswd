@@ -1,5 +1,5 @@
 NAME
-    App::bmkpasswd - bcrypt-enabled mkpasswd
+    App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 
 SYNOPSIS
       bmkpasswd --help
@@ -18,19 +18,22 @@ SYNOPSIS
       bmkpasswd --check=HASH
 
 DESCRIPTION
-    App::bmkpasswd is a simple bcrypt-enabled mkpasswd.
+    App::bmkpasswd is a simple bcrypt-enabled mkpasswd. (Helper functions
+    are also exported for use in other applications; see "EXPORTED".)
 
-    See `bmkpasswd --help' for usage information.
+    See "bmkpasswd --help" for usage information.
 
     Uses Crypt::Eksblowfish::Bcrypt for bcrypted passwords. (See
-    http://codahale.com/how-to-safely-store-a-password/ for why you ought to
-    be using bcrypt or similar "adaptive" techniques).
+    <http://codahale.com/how-to-safely-store-a-password/> for why you ought
+    to be using bcrypt or similar "adaptive" techniques).
 
     SHA-256 and SHA-512 are supported if available. You'll need either
     Crypt::Passwd::XS or a system crypt() that can handle SHA, such as
-    glibc-2.7 and newer.
+    glibc-2.7+ or newer FreeBSD builds.
 
-    MD5 uses the system's crypt() -- support for it is fairly universal.
+    MD5 uses the system's crypt() -- support for it is fairly universal, but
+    it is known insecure and there is really no valid excuse to be using it
+    ;-)
 
     Salts are randomly generated.
 

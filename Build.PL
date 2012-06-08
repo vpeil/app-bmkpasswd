@@ -5,7 +5,7 @@ use Module::Build;
 
 my $build = Module::Build->new(
    module_name   => 'App::bmkpasswd',
-   dist_abstract => 'A bcrypt-capable mkpasswd',
+   dist_abstract => 'bcrypt-capable mkpasswd(1) and exported helpers',
    dist_author   => 'Jon Portnoy <avenj@cobaltirc.org>',
    license => 'perl',
    
@@ -22,10 +22,16 @@ my $build = Module::Build->new(
    
    requires => {
      'perl' => '5.8.0',
+
+     'Crypt::Eksblowfish' => '0.003',
+     
+     'strictures'    => 1,
+
      'Getopt::Long'  => '2.24',
      'Time::HiRes'   => 0,
      
-     'Crypt::Eksblowfish' => '0.003',
+     'Try::Tiny'     => 0,
+     
      'Term::ReadKey' => 0,
    },
    

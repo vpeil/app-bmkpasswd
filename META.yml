@@ -1,5 +1,5 @@
 ---
-abstract: 'A bcrypt-capable mkpasswd'
+abstract: 'bcrypt-capable mkpasswd(1) and exported helpers'
 author:
   - 'Jon Portnoy <avenj@cobaltirc.org>'
 build_requires:
@@ -7,7 +7,7 @@ build_requires:
 configure_requires:
   Module::Build: 0.36
 dynamic_config: 1
-generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.112150'
+generated_by: 'Module::Build version 0.4, CPAN::Meta::Converter version 2.120921'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -16,15 +16,17 @@ name: App-bmkpasswd
 provides:
   App::bmkpasswd:
     file: lib/App/bmkpasswd.pm
-    version: 0.05
+    version: 1.01
 recommends:
   Crypt::Passwd::XS: 0
 requires:
   Crypt::Eksblowfish: 0.003
-  Getopt::Long: 0
+  Getopt::Long: 2.24
   Term::ReadKey: 0
   Time::HiRes: 0
+  Try::Tiny: 0
   perl: v5.8.0
+  strictures: 1
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.05
+version: 1.01

@@ -200,7 +200,8 @@ other Perl modules/applications:
   $crypted = mkpasswd($passwd, 'sha256');
   $crypted = mkpasswd($passwd, 'sha512');
 
-  ## Compare a password against a hash:
+  ## Compare a password against a hash
+  ## passwdcmp() will return the hash if it is a match
   $pwd_matched++ if passwdcmp($passwd, $hash);
 
 =head1 BUGS
