@@ -1,5 +1,5 @@
 package App::bmkpasswd;
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 use strictures 1;
 
@@ -31,9 +31,14 @@ sub mkpasswd {
   TYPE: {
     if ($type =~ /^bcrypt$/i) {
       $cost = '08' unless $cost;
+
+      croak "Work cost factor must be numeric"
+        unless $cost =~ /^[0-9]+$/;
+
       $cost = '0$cost' if length $cost == 1;
       $salt = en_base64( join '', map { chr int rand 256 } 1 .. 16 );
       my $bsettings = join '', '$2a$', $cost, '$', $salt;
+
       return bcrypt($pwd, $bsettings)
     }
 
