@@ -50,8 +50,8 @@ GetOptions(
       "   Default: -m bcrypt\n",
       "   Types: \n",
       "   - bcrypt (recommended)\n",
-      "   - sha256 (requires Crypt::Passwd::XS or glibc2.7+)\n",
-      "   - sha512 (requires Crypt::Passwd::XS or glibc2.7+)\n",
+      "   - sha256 (requires Crypt::Passwd::XS or recent libc)\n",
+      "   - sha512 (requires Crypt::Passwd::XS or recent libc)\n",
       "   - md5 (fast, portable, insecure)\n",
       "\n",
       " -c, --check=<HASH>\n",
@@ -119,14 +119,14 @@ __END__
  -h, --help
 
  -b, --benchmark
-     Show timers.
+     Show timers; useful for comparing hash generation times.
 
  -m, --method <TYPE>
      crypt method.
      Types:
        bcrypt (default; requires Crypt::Eksblowfish)
-       sha512 (requires glibc2.7+)
-       sha256 (requires glibc2.7+)
+       sha512 (requires recent libc or Crypt::Passwd::XS)
+       sha256 (requires recent libc or Crypt::Passwd::XS)
        md5 (fast, portable, weak)
 
  -c, --check <HASH>
@@ -146,10 +146,10 @@ Simple bcrypt-enabled mkpasswd.
 While SHA512 isn't a bad choice if you have it, bcrypt has the 
 advantage of including a configurable work cost factor.
 
-A higher work cost factor exponentially increases hashing time.
+A higher work cost factor exponentially increases hashing time, meaning 
+a brute-force attack against stolen hashes can take a B<very> long time.
 
-That means it takes significantly longer to compare a very large 
-number of passwords against yours.
+See L<App::bmkpasswd> for more details.
 
 =head1 AUTHOR
 

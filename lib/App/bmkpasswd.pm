@@ -1,5 +1,5 @@
 package App::bmkpasswd;
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 use strictures 1;
 
@@ -160,6 +160,9 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
   
   ## Compare a hash:
   bmkpasswd --check=HASH
+
+  ## Check hash generation times:
+  bmkpasswd --benchmark
 
 =head1 DESCRIPTION
 
