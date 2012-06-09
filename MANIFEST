@@ -7,7 +7,6 @@ META.json
 META.yml
 README
 Changes
-t/01_loadable.t
-t/02_md5.t
-t/03_bcrypt.t
-t/04_sha.t
+t/01_md5.t
+t/02_bcrypt.t
+t/03_sha.t

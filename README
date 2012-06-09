@@ -17,6 +17,9 @@ SYNOPSIS
       ## Compare a hash:
       bmkpasswd --check=HASH
 
+      ## Check hash generation times:
+      bmkpasswd --benchmark
+
 DESCRIPTION
     App::bmkpasswd is a simple bcrypt-enabled mkpasswd. (Helper functions
     are also exported for use in other applications; see "EXPORTED".)

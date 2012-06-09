@@ -1,5 +1,11 @@
 Revision history for App::bmkpasswd
 
+1.04  2012-06-09
+
+  Fix a broken test on systems missing SHA support.
+
+  More consistent POD between bmkpasswd(1) and App::bmkpasswd
+
 1.03  2012-06-08
 
   croak() if specified work cost factor is not numeric.

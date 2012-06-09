@@ -42,7 +42,7 @@
    "provides" : {
       "App::bmkpasswd" : {
          "file" : "lib/App/bmkpasswd.pm",
-         "version" : "1.03"
+         "version" : "1.04"
       }
    },
    "release_status" : "stable",
@@ -51,5 +51,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "1.03"
+   "version" : "1.04"
 }

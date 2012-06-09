@@ -43,7 +43,6 @@ sub mkpasswd {
     }
 
     # SHA requires Crypt::Passwd::XS or glibc2.7+, recent fBSD etc
-    # Ulrich Drepper's been evangelizing a bit . . .
     if ($type =~ /sha-?512/i) {
       croak "SHA hash requested but no SHA support available" 
         unless have_sha(512);
@@ -71,7 +70,6 @@ sub mkpasswd {
     croak "Unknown type specified: $type"
   }
 
-  ## have_sha() called above will set our package HAVE_PASSWD_XS:
   return Crypt::Passwd::XS::crypt($pwd, $salt)
     if $HAVE_PASSWD_XS;
 

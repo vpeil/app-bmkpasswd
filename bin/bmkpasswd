@@ -85,7 +85,7 @@ my $timer = [gettimeofday()] if $bench;
 
 if ($check) {
   if ( passwdcmp($pwd, $check) ) {
-    print "Match\n", "hash: $check\n";
+    print "Match\n", "$check\n";
   } else {
     exit 1
   }
