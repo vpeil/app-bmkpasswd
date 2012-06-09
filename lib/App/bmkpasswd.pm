@@ -25,8 +25,8 @@ sub mkpasswd {
   
   # a default (randomized) salt
   # can be used for md5 or built on for SHA
-  my @p = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9, '.', '/' );
-  my $salt = join '', map { $p[rand@p] } 1 .. 8;
+  my @chrs = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9, '.', '/' );
+  my $salt = join '', map { $chrs[rand @chrs] } 1 .. 8;
   
   TYPE: {
     if ($type =~ /^bcrypt$/i) {
@@ -49,7 +49,7 @@ sub mkpasswd {
       # SHA has variable length salts (max 16)
       # Drepper claims this can slow down attacks.
       # ...I'm under-convinced, but there you are:
-      $salt .= $p[rand@p] for 1 .. rand 8;
+      $salt .= $chrs[rand @chrs] for 1 .. rand 8;
       $salt = '$6$'.$salt.'$';
       last TYPE
     }
@@ -57,7 +57,7 @@ sub mkpasswd {
     if ($type =~ /sha(-?256)?/i) {
       croak "SHA hash requested but no SHA support available" 
         unless have_sha(256);
-      $salt .= $p[rand@p] for 1 .. rand 8;
+      $salt .= $chrs[rand @chrs] for 1 .. rand 8;
       $salt = '$5$'.$salt.'$';
       last TYPE
     }
