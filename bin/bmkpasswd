@@ -90,12 +90,7 @@ if ($check) {
     exit 1
   }
 } else {
-  my $crypted = mkpasswd($pwd, $type, $bcost);
-  if ($crypted) {
-    print $crypted, "\n";
-  } else {
-    print "Failed to generate password; unimplemented --method?\n";
-  }
+  print mkpasswd($pwd, $type, $bcost)."\n";
 }
 
 if ($bench) {
