@@ -8,7 +8,9 @@ SKIP: {
   unless ( App::bmkpasswd::have_sha(256) ) {
     diag("No SHA support found\n",
           "You may want to install Crypt::Passwd::XS");
+
     skip( "No SHA support", 8 );
+
   } else {
     diag("Found SHA support");
   }
@@ -18,6 +20,7 @@ SKIP: {
   } else {
     diag("Using system crypt() for SHA");
   }
+
   my $sha;
   ok( $sha = mkpasswd('snacks', 'sha256'), 'SHA256 crypt()' );
   ok( index($sha, '$5$') == 0, 'Looks like SHA256' );

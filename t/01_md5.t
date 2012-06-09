@@ -5,8 +5,6 @@ BEGIN {
 }
 
 SKIP: {
-  my $md5;
-
   ## Call have_sha to set HAVE_PASSWD_XS
   App::bmkpasswd::have_sha();
   if ( !$App::bmkpasswd::HAVE_PASSWD_XS ) {
@@ -20,6 +18,7 @@ SKIP: {
     }
   }
 
+  my $md5;
   ok( $md5 = mkpasswd('snacks', 'md5'), 'MD5 crypt()' );
   ok( index($md5, '$1$') == 0, 'Looks like MD5' );
   ok( passwdcmp('snacks', $md5), 'MD5 compare' );
