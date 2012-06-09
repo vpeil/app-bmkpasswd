@@ -2,7 +2,9 @@ Revision history for App::bmkpasswd
 
 1.06  2012-06-09
 
-  Missing changelog. (Don't release while irritated.)
+  Small t/ readability cleanup.
+
+  Missing changelog for 1.05.
 
 1.05  2012-06-09
 
