@@ -16,7 +16,7 @@ name: App-bmkpasswd
 provides:
   App::bmkpasswd:
     file: lib/App/bmkpasswd.pm
-    version: 1.06
+    version: 1.07
 recommends:
   Crypt::Passwd::XS: 0
 requires:
@@ -29,4 +29,4 @@ requires:
   strictures: 1
 resources:
   license: http://dev.perl.org/licenses/
-version: 1.06
+version: 1.07

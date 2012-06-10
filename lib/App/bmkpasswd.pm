@@ -1,5 +1,5 @@
 package App::bmkpasswd;
-our $VERSION = '1.07';
+our $VERSION = '1.08_01';
 
 use strictures 1;
 
@@ -169,9 +169,13 @@ are also exported for use in other applications; see L</EXPORTED>.)
 
 See C<bmkpasswd --help> for usage information.
 
-Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords. 
-(See L<http://codahale.com/how-to-safely-store-a-password/> for why you 
-ought to be using bcrypt or similar "adaptive" techniques).
+Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords. Bcrypt hashes 
+come with a configurable work-cost factor; that allows hash generation 
+to become configurably slower as computers get faster, thereby 
+impeding brute-force hash generation attempts.
+
+See L<http://codahale.com/how-to-safely-store-a-password/> for more 
+on why you ought to be using bcrypt or similar "adaptive" techniques.
 
 B<SHA-256> and B<SHA-512> are supported if available. You'll need 
 either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA, 

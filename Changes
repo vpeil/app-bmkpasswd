@@ -1,5 +1,11 @@
 Revision history for App::bmkpasswd
 
+1.07  2012-06-10
+
+  Slightly more sane Crypt::Passwd::XS checking.
+
+  Improved POD.
+
 1.06  2012-06-09
 
   Small t/ readability cleanup.
