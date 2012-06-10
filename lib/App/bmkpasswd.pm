@@ -1,5 +1,5 @@
 package App::bmkpasswd;
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 
 use strictures 1;
 
@@ -17,6 +17,17 @@ our @EXPORT_OK = qw/
 /;
 
 our $HAVE_PASSWD_XS;
+
+sub have_passwd_xs {
+  $HAVE_PASSWD_XS = 0;
+
+  try {
+    require Crypt::Passwd::XS;
+    $HAVE_PASSWD_XS = 1
+  };
+  
+  return $HAVE_PASSWD_XS
+}
 
 sub mkpasswd {
   my ($pwd, $type, $cost) = @_;
@@ -71,7 +82,7 @@ sub mkpasswd {
   }
 
   return Crypt::Passwd::XS::crypt($pwd, $salt)
-    if $HAVE_PASSWD_XS;
+    if have_passwd_xs();
 
   return crypt($pwd, $salt)
 }
@@ -81,40 +92,29 @@ sub passwdcmp {
   return unless defined $pwd and $crypt;
   
   if ($crypt =~ /^\$2a\$\d{2}\$/) {
-    return unless $crypt eq bcrypt($pwd, $crypt)
+    ## Looks like bcrypt.
+    return $crypt if $crypt eq bcrypt($pwd, $crypt)
   } else {
-    my $really_have_xs;
-    try {
-      require Crypt::Passwd::XS;
-      $really_have_xs = 1
-    };
-
-    if ($really_have_xs) {
-      return unless $crypt eq Crypt::Passwd::XS::crypt($pwd, $crypt)
+    if ( have_passwd_xs() ) {
+      return $crypt
+        if $crypt eq Crypt::Passwd::XS::crypt($pwd, $crypt)
     } else {
-      return unless $crypt eq crypt($pwd, $crypt)
+      return $crypt
+        if $crypt eq crypt($pwd, $crypt)
     }
   }
 
-  return $crypt  
+  return
 }
 
 sub have_sha {
+  ## if we have Crypt::Passwd::XS, just use that:
+  return 1 if have_passwd_xs();
+
   my ($rate) = @_;
   $rate = 512 unless $rate;
   ## determine (the slow way) if SHA256/512 are available
   ## requires glibc2.7+ or Crypt::Passwd::XS
-
-  ## if we have Crypt::Passwd::XS, just use that:
-  $HAVE_PASSWD_XS = 0;
-  try {
-    require Crypt::Passwd::XS;
-    $HAVE_PASSWD_XS = 1
-  };
-  
-  return 1 if $HAVE_PASSWD_XS;
-  
-  ## otherwise, find out the slow way:
   my %tests = (
     256 => sub {
       my $testcrypt = crypt('a', '$5$abc$');
@@ -177,9 +177,9 @@ B<SHA-256> and B<SHA-512> are supported if available. You'll need
 either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA, 
 such as glibc-2.7+ or newer FreeBSD builds.
 
-B<MD5> uses the system's crypt() -- support for it is fairly 
-universal, but it is known insecure and there is really no valid excuse 
-to be using it ;-)
+B<MD5> support is fairly universal, but it is known insecure and there 
+is really no valid excuse to be using it; it is included here for 
+compatibility with ancient hashes.
 
 Salts are randomly generated.
 
@@ -189,17 +189,24 @@ You can use the exported B<mkpasswd> and B<passwdcmp> functions in
 other Perl modules/applications:
 
   use App::bmkpasswd qw/mkpasswd passwdcmp/;
+
   ## Generate a bcrypted passwd with work-cost 08:
   $bcrypted = mkpasswd($passwd);
+
   ## Generate a bcrypted passwd with other work-cost:
   $bcrypted = mkpasswd($passwd, 'bcrypt', '06');
+
   ## SHA:
   $crypted = mkpasswd($passwd, 'sha256');
   $crypted = mkpasswd($passwd, 'sha512');
 
   ## Compare a password against a hash
   ## passwdcmp() will return the hash if it is a match
-  $pwd_matched++ if passwdcmp($passwd, $hash);
+  if ( passwdcmp($passwd, $hash) ) {
+    ## Successful match
+  } else {
+    ## Failed match
+  }
 
 =head1 BUGS
 
