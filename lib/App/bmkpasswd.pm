@@ -9,7 +9,8 @@ use Crypt::Eksblowfish::Bcrypt qw/
 /;
 
 use Crypt::Random::Seed;
-my $crs = Crypt::Random::Seed->new(NonBlocking => 1);
+my $crs   = Crypt::Random::Seed->new;
+my $crsnb = Crypt::Random::Seed->new(NonBlocking => 1);
 
 use Exporter 'import';
 our @EXPORT_OK = qw/
@@ -61,22 +62,24 @@ sub have_sha {
 
 
 sub _saltgen {
-  my ($type) = @_;
+  my ($type, $strong) = @_;
+
+  my $rnd = $strong ? $crs : $crsnb ;
 
   SALT: {
     if ($type eq 'bcrypt') {
-      return en_base64( $crs->random_bytes(16) );
+      return en_base64( $rnd->random_bytes(16) );
     }
 
     if ($type eq 'sha') {
-      my $max = en_base64( $crs->random_bytes(16) );
+      my $max = en_base64( $rnd->random_bytes(16) );
       my $initial = substr $max, 0, 8, '';
       $initial .= substr $max, 0, 1, '' for  1 .. rand 8;
       return $initial
     }
 
     if ($type eq 'md5') {
-      return en_base64( $crs->random_bytes(6) );
+      return en_base64( $rnd->random_bytes(6) );
     }
   }
 
@@ -84,7 +87,7 @@ sub _saltgen {
 }
 
 sub mkpasswd {
-  my ($pwd, $type, $cost) = @_;
+  my ($pwd, $type, $cost, $strong) = @_;
 
   $type = 'bcrypt' unless $type;
   my $salt;
@@ -97,7 +100,7 @@ sub mkpasswd {
         unless $cost =~ /^[0-9]+$/;
       $cost = '0$cost' if length $cost == 1;
 
-      $salt = _saltgen('bcrypt');
+      $salt = _saltgen('bcrypt', $strong);
       my $bsettings = join '', '$2a$', $cost, '$', $salt;
 
       return bcrypt($pwd, $bsettings)
@@ -107,19 +110,19 @@ sub mkpasswd {
     if ($type =~ /sha-?512/i) {
       croak "SHA hash requested but no SHA support available" 
         unless have_sha(512);
-      $salt = join '', '$6$', _saltgen('sha'), '$';
+      $salt = join '', '$6$', _saltgen('sha', $strong), '$';
       last TYPE
     }
 
     if ($type =~ /sha(-?256)?/i) {
       croak "SHA hash requested but no SHA support available" 
         unless have_sha(256);
-      $salt = join '', '$5$', _saltgen('sha'), '$';
+      $salt = join '', '$5$', _saltgen('sha', $strong), '$';
       last TYPE
     }
 
     if ($type =~ /^md5$/i) {
-      $salt = join '', '$1$', _saltgen('md5'), '$';
+      $salt = join '', '$1$', _saltgen('md5', $strong), '$';
       last TYPE
     }
 
@@ -233,6 +236,10 @@ other Perl modules/applications:
   ## SHA:
   $crypted = mkpasswd($passwd, 'sha256');
   $crypted = mkpasswd($passwd, 'sha512');
+
+  ## Use a strong random source (requires spare entropy):
+  $crypted = mkpasswd($passwd, 'bcrypt', '08', 1);
+  $crypted = mkpasswd($passwd, 'sha512', '', 1);
 
 =head2 passwdcmp
 

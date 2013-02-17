@@ -2,8 +2,6 @@ use Test::More tests => 5;
 use strict; use warnings;
 
 BEGIN {
-  diag "On a low-entropy system these tests may be very slow!";
-
   use_ok( 'App::bmkpasswd', qw/mkpasswd passwdcmp/ );
 }
 

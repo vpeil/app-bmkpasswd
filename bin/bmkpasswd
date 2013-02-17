@@ -9,12 +9,14 @@ use Time::HiRes    qw/ gettimeofday tv_interval /;
 my $type = 'bcrypt';
 my $bcost = '08';
 my $bench = 0;
+my $strong = 0;
 my $check;
 
 use Getopt::Long;
 GetOptions(
 
   'benchmark!'    => \$bench,
+  'strong!'       => \$strong,
   'check=s'       => \$check,
   'method|type=s' => \$type,
   'workcost=s'    => \$bcost,
@@ -54,6 +56,9 @@ GetOptions(
       " -c, --check=<HASH>\n",
       "   Compare password against specified hash.\n",
       "\n",
+      " -s, --strong\n",
+      "   Use a blocking random source to generate salts.\n",
+      "\n",
       " bcrypt-only:\n",
       " -w, --workcost=<two digit power of 2>\n",
       "   Default: -w 08\n",
@@ -87,7 +92,7 @@ if ($check) {
     exit 1
   }
 } else {
-  print mkpasswd($pwd, $type, $bcost)."\n";
+  print mkpasswd($pwd, $type, $bcost, $strong)."\n";
 }
 
 if ($bench) {
@@ -124,6 +129,10 @@ __END__
  -c, --check <HASH>
      Check password against <HASH>.
      Method will be auto-detected.
+
+ -s, --strong
+     Use a blocking random source like /dev/random
+     to generate salts.
 
  -w, --workcost <COST>
      bcrypt-only.
