@@ -6,7 +6,7 @@ BEGIN {
 
 SKIP: {
   App::bmkpasswd::have_passwd_xs();
-  if ( !$App::bmkpasswd::HAVE_PASSWD_XS ) {
+  if ( ! App::bmkpasswd::have_passwd_xs() ) {
     ## Apparently Win32 has a functional crypt() uh, "sometimes"
     unless ( index(mkpasswd('a', 'md5'), '$1$') == 0) {
       diag(
