@@ -1,4 +1,5 @@
-Revision history for App::bmkpasswd
+# Revision history for App::bmkpasswd
+
 
 1.081001  (17 Feb 2013)
 
@@ -7,6 +8,7 @@ Revision history for App::bmkpasswd
   systems.
 
   Switch to dzil & semantic versioning
+
 
 
 1.07  2012-06-10
@@ -46,8 +48,9 @@ Revision history for App::bmkpasswd
 
 1.02 2012-06-08
 
-  A couple of "derp" typo/style cleanups; non-fatal but aggravating my 
-  OCD.
+  Typo/style cleanups; non-fatal but aggravating my OCD.
+
+
 
 1.01 2012-06-08
 
@@ -61,7 +64,7 @@ Revision history for App::bmkpasswd
 
 0.05 2012-04-07
 
-Minor fixes:
+ Minor fixes:
 
   - t/04_sha: mention Crypt::Passwd::XS if SHA is missing
   - Include . / in standard salt possibles (MD5/SHA)
@@ -78,8 +81,3 @@ Minor fixes:
    - POD updates
    - Optional Crypt::Passwd::XS detection/use
    - Tests
-  
-Previous revision history lives in git:
-git://eris.cobaltirc.org/app-bmkpasswd
-
- - avenj@cobaltirc.org
