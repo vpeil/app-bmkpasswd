@@ -1,44 +1,39 @@
 package App::bmkpasswd;
-our $VERSION = '1.08_01';
-
 use strictures 1;
-
 use Carp;
-
 use Try::Tiny;
 
-use Crypt::Eksblowfish::Bcrypt qw/bcrypt en_base64/;
+use Crypt::Eksblowfish::Bcrypt qw/
+  bcrypt 
+  en_base64
+/;
 
-require Exporter;
-our @ISA = qw/Exporter/;
+use Exporter 'import';
 our @EXPORT_OK = qw/
   mkpasswd
   passwdcmp
 /;
 
 our $HAVE_PASSWD_XS;
-
 sub have_passwd_xs {
   $HAVE_PASSWD_XS = 0;
-
   try {
     require Crypt::Passwd::XS;
     $HAVE_PASSWD_XS = 1
   };
-  
-  return $HAVE_PASSWD_XS
+  $HAVE_PASSWD_XS
 }
 
 sub mkpasswd {
   my ($pwd, $type, $cost) = @_;
-  
+
   $type = 'bcrypt' unless $type;
-  
+
   # a default (randomized) salt
   # can be used for md5 or built on for SHA
   my @chrs = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9, '.', '/' );
   my $salt = join '', map { $chrs[rand @chrs] } 1 .. 8;
-  
+
   TYPE: {
     if ($type =~ /^bcrypt$/i) {
       $cost = '08' unless $cost;
@@ -64,7 +59,7 @@ sub mkpasswd {
       $salt = '$6$'.$salt.'$';
       last TYPE
     }
-    
+
     if ($type =~ /sha(-?256)?/i) {
       croak "SHA hash requested but no SHA support available" 
         unless have_sha(256);
@@ -72,7 +67,7 @@ sub mkpasswd {
       $salt = '$5$'.$salt.'$';
       last TYPE
     }
-    
+
     if ($type =~ /^md5$/i) {
       $salt = '$1$'.$salt.'$';
       last TYPE
@@ -90,11 +85,12 @@ sub mkpasswd {
 sub passwdcmp {
   my ($pwd, $crypt) = @_;
   return unless defined $pwd and $crypt;
-  
+
   if ($crypt =~ /^\$2a\$\d{2}\$/) {
     ## Looks like bcrypt.
     return $crypt if $crypt eq bcrypt($pwd, $crypt)
   } else {
+
     if ( have_passwd_xs() ) {
       return $crypt
         if $crypt eq Crypt::Passwd::XS::crypt($pwd, $crypt)
@@ -102,6 +98,7 @@ sub passwdcmp {
       return $crypt
         if $crypt eq crypt($pwd, $crypt)
     }
+
   }
 
   return
@@ -113,6 +110,7 @@ sub have_sha {
 
   my ($rate) = @_;
   $rate = 512 unless $rate;
+
   ## determine (the slow way) if SHA256/512 are available
   ## requires glibc2.7+ or Crypt::Passwd::XS
   my %tests = (
@@ -121,14 +119,14 @@ sub have_sha {
       return unless index($testcrypt, '$5$abc$') == 0;
       return 1
     },
-  
+
     512 => sub {
       my $testcrypt = crypt('b', '$6$abc$');
       return unless index($testcrypt, '$6$abc$') == 0;
       return 1
     },
   );
-  
+
   return unless defined $tests{$rate} and $tests{$rate}->();
   return 1
 }
@@ -144,6 +142,11 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 
 =head1 SYNOPSIS
 
+  ## From Perl:
+  use App::bmkpasswd 'mkpasswd';
+  my $bcrypted = mkpasswd($passwd);
+
+  ## From a shell:
   bmkpasswd --help
   
   ## Generate bcrypted passwords
