@@ -19,12 +19,45 @@ our @EXPORT_OK = qw/
 
 my %_can_haz;
 sub have_passwd_xs {
-  unless ($_can_haz{passwdxs}) {
+  unless (defined $_can_haz{passwdxs}) {
     try { require Crypt::Passwd::XS;  $_can_haz{passwdxs} = 1 } 
-     catch { delete $_can_haz{passwdxs}  };
+     catch { $_can_haz{passwdxs} = 0 };
    }
   $_can_haz{passwdxs}
 }
+
+sub have_sha {
+  ## if we have Crypt::Passwd::XS, just use that:
+  return 1 if have_passwd_xs();
+
+  my ($rate) = @_;
+  $rate = 512 unless $rate;
+  my $type = 'sha' . $rate;
+  return $_can_haz{$type} if defined $_can_haz{$type};
+
+  ## determine (the slow way) if SHA256/512 are available
+  ## requires glibc2.7+ or Crypt::Passwd::XS
+  my %tests = (
+    sha256 => sub {
+      my $testcrypt = crypt('a', '$5$abc$');
+      return unless index($testcrypt, '$5$abc$') == 0;
+      1
+    },
+
+    sha512 => sub {
+      my $testcrypt = crypt('b', '$6$abc$');
+      return unless index($testcrypt, '$6$abc$') == 0;
+      1
+    },
+  );
+
+  if (defined $tests{$type} && $tests{$type}->()) {
+    return $_can_haz{$type} = 1
+  }
+
+  $_can_haz{$type} = 0
+}
+
 
 sub _saltgen {
   my ($type) = @_;
@@ -120,33 +153,6 @@ sub passwdcmp {
   return
 }
 
-sub have_sha {
-  ## if we have Crypt::Passwd::XS, just use that:
-  return 1 if have_passwd_xs();
-
-  my ($rate) = @_;
-  $rate = 512 unless $rate;
-
-  ## determine (the slow way) if SHA256/512 are available
-  ## requires glibc2.7+ or Crypt::Passwd::XS
-  my %tests = (
-    256 => sub {
-      my $testcrypt = crypt('a', '$5$abc$');
-      return unless index($testcrypt, '$5$abc$') == 0;
-      return 1
-    },
-
-    512 => sub {
-      my $testcrypt = crypt('b', '$6$abc$');
-      return unless index($testcrypt, '$6$abc$') == 0;
-      return 1
-    },
-  );
-
-  return unless defined $tests{$rate} and $tests{$rate}->();
-  return 1
-}
-
 1;
 __END__
 
@@ -217,6 +223,8 @@ other Perl modules/applications:
 
   use App::bmkpasswd qw/mkpasswd passwdcmp/;
 
+=head2 mkpasswd
+
   ## Generate a bcrypted passwd with work-cost 08:
   $bcrypted = mkpasswd($passwd);
 
@@ -226,6 +234,8 @@ other Perl modules/applications:
   ## SHA:
   $crypted = mkpasswd($passwd, 'sha256');
   $crypted = mkpasswd($passwd, 'sha512');
+
+=head2 passwdcmp
 
   ## Compare a password against a hash
   ## passwdcmp() will return the hash if it is a match
@@ -245,5 +255,7 @@ patches welcome? ;-)
 =head1 AUTHOR
 
 Jon Portnoy <avenj@cobaltirc.org>
+
+=for Pod::Coverage have_(?i:[A-Z_]+)
 
 =cut
