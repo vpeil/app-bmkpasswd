@@ -15,7 +15,7 @@ SKIP: {
     diag("Found SHA support");
   }
   
-  if ( $App::bmkpasswd::HAVE_PASSWD_XS ) {
+  if ( App::bmkpasswd::have_passwd_xs() ) {
     diag("Using Crypt::Passwd::XS for SHA");
   } else {
     diag("Using system crypt() for SHA");

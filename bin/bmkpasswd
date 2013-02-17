@@ -14,12 +14,9 @@ my $check;
 use Getopt::Long;
 GetOptions(
 
-  'benchmark!' => \$bench,
-
-  'check=s'    => \$check,
-  
+  'benchmark!'    => \$bench,
+  'check=s'       => \$check,
   'method|type=s' => \$type,
-  
   'workcost=s'    => \$bcost,
   
   'version' => sub {
@@ -143,6 +140,8 @@ advantage of including a configurable work cost factor.
 
 A higher work cost factor exponentially increases hashing time, meaning 
 a brute-force attack against stolen hashes can take a B<very> long time.
+
+Salts are randomly generated using L<Crypt::Random::Seed>.
 
 See L<App::bmkpasswd> for more details.
 
