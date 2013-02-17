@@ -9,7 +9,7 @@ use Crypt::Eksblowfish::Bcrypt qw/
 /;
 
 use Crypt::Random::Seed;
-my $crs = Crypt::Random::Seed->new;
+my $crs = Crypt::Random::Seed->new(NonBlocking => 1);
 
 use Exporter 'import';
 our @EXPORT_OK = qw/
@@ -196,8 +196,6 @@ are also exported for use in other applications; see L</EXPORTED>.)
 See C<bmkpasswd --help> for usage information.
 
 Uses L<Crypt::Random::Seed> to generate random salts.
-This means that systems with low entropy may block on B<mkpasswd> 
-(try L<http://www.issihosts.com/haveged/>).
 
 Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords. Bcrypt hashes 
 come with a configurable work-cost factor; that allows hash generation 
