@@ -31,7 +31,7 @@ GetOptions(
      print "  SHA512 available\n" if App::bmkpasswd::have_sha(512);
 
      print "  Using Crypt::Passwd::XS\n" 
-       if $App::bmkpasswd::HAVE_PASSWD_XS;
+       if App::bmkpasswd::have_passwd_xs;
      
      exit 0
    },
