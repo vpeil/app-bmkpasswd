@@ -55,7 +55,8 @@ sub have_sha {
     return $_can_haz{$type} = 1
   }
 
-  $_can_haz{$type} = 0
+  $_can_haz{$type} = 0;
+  return
 }
 
 

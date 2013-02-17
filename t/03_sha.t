@@ -1,4 +1,5 @@
 use Test::More tests => 9;
+use strict; use warnings;
 
 BEGIN {
   use_ok( 'App::bmkpasswd', qw/mkpasswd passwdcmp/ );
