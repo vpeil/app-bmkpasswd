@@ -1,5 +1,9 @@
 # Revision history for App::bmkpasswd
 
+1.082000  (17 Feb 2013)
+
+  Use NonBlocking => 1 unless --strong is specified
+
 1.081002  (17 Feb 2013)
 
   Fix stray reference to deprecated HAVE_PASSWD_XS in bin/bmkpasswd
