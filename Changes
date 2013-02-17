@@ -2,6 +2,10 @@ Revision history for App::bmkpasswd
 
 1.081001  (17 Feb 2013)
 
+  Use Crypt::Random::Seed in blocking mode to generate salts securely.
+  This means that mkpasswd operations could block on low-entropy
+  systems.
+
   Switch to dzil & semantic versioning
 
 
