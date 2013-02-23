@@ -1,8 +1,12 @@
 # Revision history for App::bmkpasswd
 
+1.082002  (23 Feb 2013)
+
+  Lazy-build Bytes::Random::Secure instances
+
 1.082001  (23 Feb 2013)
 
-  Use OO interface to Bytes::Random::Secure
+  Use Bytes::Random::Secure-0.24
 
 1.082000  (17 Feb 2013)
 
