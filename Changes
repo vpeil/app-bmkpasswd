@@ -1,5 +1,9 @@
 # Revision history for App::bmkpasswd
 
+1.082001  (23 Feb 2013)
+
+  Use OO interface to Bytes::Random::Secure
+
 1.082000  (17 Feb 2013)
 
   Use NonBlocking => 1 unless --strong is specified
