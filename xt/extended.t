@@ -4,7 +4,9 @@ use strict; use warnings;
 use Benchmark 'timethis';
 
 BEGIN {
-  diag "This test will need a solid source of entropy; try haveged.";
+  diag "\n",
+    "This test will need a solid source of entropy; try haveged.\n",
+    ' . . . or wiggling your mouse a lot \o/', "\n\n";
   use_ok( 'App::bmkpasswd', qw/mkpasswd passwdcmp/ );
 }
 
@@ -19,15 +21,17 @@ SKIP: {
   }
 
   my $md5;
-  ok( $md5 = mkpasswd('snacks', 'md5', 0, 1), 'MD5 crypt()' );
+  ok( $md5 = mkpasswd('snacks', 'md5', 0, 0), 'MD5 crypt()' );
   ok( index($md5, '$1$') == 0, 'Looks like MD5' );
+  ok( $md5 = mkpasswd('snacks', 'md5', 0, 1), 'MD5 crypt() strong' );
   ok( passwdcmp('snacks', $md5), 'MD5 compare' );
   ok( !passwdcmp('things', $md5), 'MD5 negative compare' );
 }
 
 my $bc;
-ok( $bc = mkpasswd('snacks', 'bcrypt', '02', 1), 'Bcrypt tuned workcost' );
+ok( $bc = mkpasswd('snacks', 'bcrypt', '02', 0), 'Bcrypt tuned' );
 ok( passwdcmp('snacks', $bc), 'Bcrypt tuned workcost compare' );
+ok( $bc = mkpasswd('snacks', 'bcrypt', '02', 1), 'Bcrypt tuned strong' );
 ok( !passwdcmp('things', $bc), 'Bcrypt tuned negative compare' );
 
 SKIP: {
@@ -35,9 +39,9 @@ SKIP: {
     skip( "No SHA support", 8 );
   }
   my $sha256;
-  ok( $sha256 = mkpasswd('snacks', 'sha256', 0, 1), 'SHA256 crypt()' );
-  ok( index($sha256, '$5$') == 0, 'Looks like SHA256' );
+  ok( $sha256 = mkpasswd('snacks', 'sha256', 0, 1), 'SHA256 strong' );
   ok( passwdcmp('snacks', $sha256), 'SHA256 compare' );
+  ok( $sha256 = mkpasswd('snacks', 'sha256', 0, 0), 'SHA256' );
   ok( !passwdcmp('things', $sha256), 'SHA256 negative compare' );
 }
 })->() for 1 .. 100;

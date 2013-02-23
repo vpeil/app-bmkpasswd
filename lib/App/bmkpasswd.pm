@@ -8,9 +8,12 @@ use Crypt::Eksblowfish::Bcrypt qw/
   en_base64
 /;
 
-use Crypt::Random::Seed;
-my $crs   = Crypt::Random::Seed->new;
-my $crsnb = Crypt::Random::Seed->new(NonBlocking => 1);
+use Bytes::Random::Secure;
+my $brs   = Bytes::Random::Secure->new;
+my $brsnb = Bytes::Random::Secure->new(
+  Bits => 64,
+  NonBlocking => 1
+);
 
 use Exporter 'import';
 our @EXPORT_OK = qw/
@@ -64,22 +67,22 @@ sub have_sha {
 sub _saltgen {
   my ($type, $strong) = @_;
 
-  my $rnd = $strong ? $crs : $crsnb ;
+  my $rnd = $strong ? $brs : $brsnb ;
 
   SALT: {
     if ($type eq 'bcrypt') {
-      return en_base64( $rnd->random_bytes(16) );
+      return en_base64( $rnd->bytes(16) );
     }
 
     if ($type eq 'sha') {
-      my $max = en_base64( $rnd->random_bytes(16) );
+      my $max = en_base64( $rnd->bytes(16) );
       my $initial = substr $max, 0, 8, '';
       $initial .= substr $max, 0, 1, '' for  1 .. rand 8;
       return $initial
     }
 
     if ($type eq 'md5') {
-      return en_base64( $rnd->random_bytes(6) );
+      return en_base64( $rnd->bytes(6) );
     }
   }
 
@@ -215,8 +218,6 @@ such as glibc-2.7+ or newer FreeBSD builds.
 B<MD5> support is fairly universal, but it is known insecure and there 
 is really no valid excuse to be using it; it is included here for 
 compatibility with ancient hashes.
-
-Salts are randomly generated.
 
 =head1 EXPORTED
 

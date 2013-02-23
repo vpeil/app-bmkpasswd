@@ -151,6 +151,8 @@ A higher work cost factor exponentially increases hashing time, meaning
 a brute-force attack against stolen hashes can take a B<very> long time.
 
 Salts are randomly generated using L<Crypt::Random::Seed>.
+Using the C<--strong> option requires a reliable source of entropy; try
+B<haveged> (L<http://www.issihosts.com/haveged/downloads.html>).
 
 See L<App::bmkpasswd> for more details.
 
