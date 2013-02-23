@@ -8,18 +8,28 @@ use Crypt::Eksblowfish::Bcrypt qw/
   en_base64
 /;
 
-use Bytes::Random::Secure;
-my $brs   = Bytes::Random::Secure->new(Bits => 128);
-my $brsnb = Bytes::Random::Secure->new(
-  Bits => 64,
-  NonBlocking => 1
-);
-
 use Exporter 'import';
 our @EXPORT_OK = qw/
   mkpasswd
   passwdcmp
 /;
+
+use Bytes::Random::Secure;
+my ($brs, $brsnb);
+my $getbrs = sub {
+  my ($strong) = @_;
+  if ($strong) {
+    return 
+      $brs ||= Bytes::Random::Secure->new(
+        Bits => 128,
+      )
+  }
+  return
+    $brsnb ||= Bytes::Random::Secure->new(
+      Bits        => 128,
+      NonBlocking => 1,
+    )
+};
 
 my %_can_haz;
 sub have_passwd_xs {
@@ -67,7 +77,7 @@ sub have_sha {
 sub _saltgen {
   my ($type, $strong) = @_;
 
-  my $rnd = $strong ? $brs : $brsnb ;
+  my $rnd = $strong ? $getbrs->(strong => 1) : $getbrs->() ;
 
   SALT: {
     if ($type eq 'bcrypt') {
