@@ -9,7 +9,7 @@ use Crypt::Eksblowfish::Bcrypt qw/
 /;
 
 use Bytes::Random::Secure;
-my $brs   = Bytes::Random::Secure->new;
+my $brs   = Bytes::Random::Secure->new(Bits => 128);
 my $brsnb = Bytes::Random::Secure->new(
   Bits => 64,
   NonBlocking => 1
@@ -201,7 +201,7 @@ are also exported for use in other applications; see L</EXPORTED>.)
 
 See C<bmkpasswd --help> for usage information.
 
-Uses L<Crypt::Random::Seed> to generate random salts.
+Uses L<Bytes::Random::Secure> to generate random salts.
 
 Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords. Bcrypt hashes 
 come with a configurable work-cost factor; that allows hash generation 

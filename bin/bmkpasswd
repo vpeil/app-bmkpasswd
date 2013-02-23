@@ -150,7 +150,7 @@ advantage of including a configurable work cost factor.
 A higher work cost factor exponentially increases hashing time, meaning 
 a brute-force attack against stolen hashes can take a B<very> long time.
 
-Salts are randomly generated using L<Crypt::Random::Seed>.
+Salts are randomly generated using L<Bytes::Random::Secure>.
 Using the C<--strong> option requires a reliable source of entropy; try
 B<haveged> (L<http://www.issihosts.com/haveged/downloads.html>).
 
