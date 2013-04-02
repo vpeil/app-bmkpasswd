@@ -248,7 +248,7 @@ other Perl modules/applications:
   $crypted = mkpasswd($passwd, 'sha256');
   $crypted = mkpasswd($passwd, 'sha512');
 
-  ## Use a strong random source (requires spare entropy):
+  ## Use a strongly-random salt (requires spare entropy):
   $crypted = mkpasswd($passwd, 'bcrypt', '08', 'strong');
   $crypted = mkpasswd($passwd, 'sha512', 0, 'strong');
 
