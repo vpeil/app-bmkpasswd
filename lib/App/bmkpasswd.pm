@@ -183,27 +183,29 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 =head1 SYNOPSIS
 
   ## From Perl:
+
   use App::bmkpasswd 'mkpasswd', 'passwdcmp';
   my $bcrypted = mkpasswd($passwd);
   say 'matched' if passwdcmp($passwd, $bcrypted);
 
   ## From a shell:
+
   bmkpasswd --help
   
-  ## Generate bcrypted passwords
-  ## Defaults to work cost factor '08':
+  # Generate bcrypted passwords
+  # Defaults to work cost factor '08':
   bmkpasswd
   bmkpasswd --workcost='06'
 
-  ## Use other methods:
+  # Use other methods:
   bmkpasswd --method='md5'
   # SHA requires Crypt::Passwd::XS or glibc2.7+
   bmkpasswd --method='sha512'
   
-  ## Compare a hash:
+  # Compare a hash:
   bmkpasswd --check=HASH
 
-  ## Check hash generation times:
+  # Check hash generation times:
   bmkpasswd --benchmark
 
 =head1 DESCRIPTION
