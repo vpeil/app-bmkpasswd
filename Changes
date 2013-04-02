@@ -1,5 +1,9 @@
 # Revision history for App::bmkpasswd
 
+1.082003  (01 Apr 2013)
+
+  POD tweaks
+
 1.082002  (23 Feb 2013)
 
   Lazy-build Bytes::Random::Secure instances
