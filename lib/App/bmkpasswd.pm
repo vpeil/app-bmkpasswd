@@ -87,6 +87,7 @@ sub _saltgen {
     if ($type eq 'sha') {
       my $max = en_base64( $rnd->bytes(16) );
       my $initial = substr $max, 0, 8, '';
+      ## Drepper recommends random-length salts:
       $initial .= substr $max, 0, 1, '' for  1 .. rand 8;
       return $initial
     }
@@ -182,8 +183,9 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 =head1 SYNOPSIS
 
   ## From Perl:
-  use App::bmkpasswd 'mkpasswd';
+  use App::bmkpasswd 'mkpasswd', 'passwdcmp';
   my $bcrypted = mkpasswd($passwd);
+  say 'matched' if passwdcmp($passwd, $bcrypted);
 
   ## From a shell:
   bmkpasswd --help
