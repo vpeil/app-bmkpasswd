@@ -197,8 +197,6 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
   bmkpasswd
   bmkpasswd --workcost='06'
 
-  # Use other methods:
-  bmkpasswd --method='md5'
   # SHA requires Crypt::Passwd::XS or glibc2.7+
   bmkpasswd --method='sha512'
   

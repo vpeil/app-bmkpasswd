@@ -124,7 +124,7 @@ __END__
        bcrypt  (default; requires Crypt::Eksblowfish)
        sha512  (requires recent libc or Crypt::Passwd::XS)
        sha256  (requires recent libc or Crypt::Passwd::XS)
-       md5     (if system crypt() supports it)
+       md5     (if system crypt() supports it -- weak)
 
  -c, --check <HASH>
      Check password against <HASH>.
