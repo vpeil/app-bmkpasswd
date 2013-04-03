@@ -213,8 +213,6 @@ are also exported for use in other applications; see L</EXPORTED>.)
 
 See C<bmkpasswd --help> for usage information.
 
-Uses L<Bytes::Random::Secure> to generate random salts.
-
 Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords. Bcrypt hashes 
 come with a configurable work-cost factor; that allows hash generation 
 to become configurably slower as computers get faster, thereby 
@@ -226,6 +224,8 @@ on why you ought to be using bcrypt or similar "adaptive" techniques.
 B<SHA-256> and B<SHA-512> are supported if available. You'll need 
 either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA, 
 such as glibc-2.7+ or newer FreeBSD builds.
+
+Uses L<Bytes::Random::Secure> to generate random salts.
 
 =head1 EXPORTED
 

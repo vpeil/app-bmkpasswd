@@ -115,9 +115,6 @@ __END__
 
  -h, --help
 
- -b, --benchmark
-     Show timers; useful for comparing hash generation times.
-
  -m, --method <TYPE>
      crypt method.
      Types:
@@ -140,6 +137,9 @@ __END__
      Must be a two-digit power of 2.
      Pad with zeros as necessary.
 
+ -b, --benchmark
+     Show timers; useful for comparing hash generation times.
+
 =head1 DESCRIPTION
 
 Simple bcrypt-enabled mkpasswd.
@@ -152,7 +152,8 @@ a brute-force attack against stolen hashes can take a B<very> long time.
 
 Salts are randomly generated using L<Bytes::Random::Secure>.
 Using the C<--strong> option requires a reliable source of entropy; try
-B<haveged> (L<http://www.issihosts.com/haveged/downloads.html>).
+B<haveged> (L<http://www.issihosts.com/haveged/downloads.html>), especially on
+headless Linux systems.
 
 See L<App::bmkpasswd> for more details (or if you'd like to use bcrypted
 passwords from your own modules).
