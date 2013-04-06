@@ -1,5 +1,11 @@
 # Revision history for App::bmkpasswd
 
+1.082004  (05 Apr 2013)
+
+  Use constant time comparison when comparing hashes.
+
+  POD enhancements.
+
 1.082003  (01 Apr 2013)
 
   POD tweaks

@@ -5,28 +5,29 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 # SYNOPSIS
 
     ## From Perl:
-    use App::bmkpasswd 'mkpasswd';
+
+    use App::bmkpasswd 'mkpasswd', 'passwdcmp';
     my $bcrypted = mkpasswd($passwd);
+    say 'matched' if passwdcmp($passwd, $bcrypted);
 
     ## From a shell:
+
     bmkpasswd --help
     
 
-    ## Generate bcrypted passwords
-    ## Defaults to work cost factor '08':
+    # Generate bcrypted passwords
+    # Defaults to work cost factor '08':
     bmkpasswd
     bmkpasswd --workcost='06'
 
-    ## Use other methods:
-    bmkpasswd --method='md5'
     # SHA requires Crypt::Passwd::XS or glibc2.7+
     bmkpasswd --method='sha512'
     
 
-    ## Compare a hash:
+    # Compare a hash:
     bmkpasswd --check=HASH
 
-    ## Check hash generation times:
+    # Check hash generation times:
     bmkpasswd --benchmark
 
 # DESCRIPTION
@@ -35,8 +36,6 @@ __App::bmkpasswd__ is a simple bcrypt-enabled mkpasswd. (Helper functions
 are also exported for use in other applications; see ["EXPORTED"](#EXPORTED).)
 
 See `bmkpasswd --help` for usage information.
-
-Uses [Bytes::Random::Secure](http://search.cpan.org/perldoc?Bytes::Random::Secure) to generate random salts.
 
 Uses [Crypt::Eksblowfish::Bcrypt](http://search.cpan.org/perldoc?Crypt::Eksblowfish::Bcrypt) for bcrypted passwords. Bcrypt hashes 
 come with a configurable work-cost factor; that allows hash generation 
@@ -49,6 +48,8 @@ on why you ought to be using bcrypt or similar "adaptive" techniques.
 __SHA-256__ and __SHA-512__ are supported if available. You'll need 
 either [Crypt::Passwd::XS](http://search.cpan.org/perldoc?Crypt::Passwd::XS) or a system crypt() that can handle SHA, 
 such as glibc-2.7+ or newer FreeBSD builds.
+
+Uses [Bytes::Random::Secure](http://search.cpan.org/perldoc?Bytes::Random::Secure) to generate random salts.
 
 # EXPORTED
 
@@ -69,7 +70,7 @@ other Perl modules/applications:
     $crypted = mkpasswd($passwd, 'sha256');
     $crypted = mkpasswd($passwd, 'sha512');
 
-    ## Use a strong random source (requires spare entropy):
+    ## Use a strongly-random salt (requires spare entropy):
     $crypted = mkpasswd($passwd, 'bcrypt', '08', 'strong');
     $crypted = mkpasswd($passwd, 'sha512', 0, 'strong');
 
