@@ -94,11 +94,11 @@ if ($check) {
 } else {
   print mkpasswd($pwd, $type, $bcost, $strong)."\n";
 }
-
 if ($bench) {
   my $interval = tv_interval($timer);
   print " bench: $type, timer0 -> $interval\n";
 }
+exit 0
 
 __END__
 =pod

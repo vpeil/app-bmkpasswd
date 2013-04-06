@@ -149,21 +149,33 @@ sub mkpasswd {
   return crypt($pwd, $salt)
 }
 
+sub _const_t_eq {
+  my ($first, $second) = @_;
+  my $unequal;
+  my $n = 0;
+  no warnings 'substr';
+  while ($n < length $first) {
+    ++$unequal if substr($first, $n, 1) ne substr($second, $n, 1);
+    ++$n;
+  }
+  $unequal ? () : 1
+}
+
 sub passwdcmp {
   my ($pwd, $crypt) = @_;
   return unless defined $pwd and $crypt;
 
   if ($crypt =~ /^\$2a\$\d{2}\$/) {
     ## Looks like bcrypt.
-    return $crypt if $crypt eq bcrypt($pwd, $crypt)
+    return $crypt if _const_t_eq( $crypt, bcrypt($pwd, $crypt) )
   } else {
 
     if ( have_passwd_xs() ) {
       return $crypt
-        if $crypt eq Crypt::Passwd::XS::crypt($pwd, $crypt)
+        if _const_t_eq( $crypt, Crypt::Passwd::XS::crypt($pwd, $crypt) )
     } else {
       return $crypt
-        if $crypt eq crypt($pwd, $crypt)
+        if _const_t_eq( $crypt, crypt($pwd, $crypt) )
     }
 
   }
