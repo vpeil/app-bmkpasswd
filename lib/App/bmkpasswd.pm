@@ -156,9 +156,8 @@ sub _const_t_eq {
   no warnings 'substr';
   while ($n < length $first) {
     my $schr = substr($second, $n, 1);
-    $schr = defined $schr ? $schr : '';
     ++$unequal
-      if substr($first, $n, 1) ne $schr;
+      if substr($first, $n, 1) ne (defined $schr ? $schr : '');
     ++$n;
   }
   $unequal ? () : 1
