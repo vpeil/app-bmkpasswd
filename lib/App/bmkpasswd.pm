@@ -150,9 +150,10 @@ sub mkpasswd {
 }
 
 sub _const_t_eq {
+  ## Constant time comparison is probably overrated for comparing
+  ## hashed passwords ... but hey, why not?
   my ($first, $second) = @_;
-  my $unequal;
-  my $n = 0;
+  my ($n, $unequal) = 0;
   no warnings 'substr';
   while ($n < length $first) {
     my $schr = substr($second, $n, 1);
