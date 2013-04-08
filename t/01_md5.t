@@ -10,7 +10,7 @@ SKIP: {
   App::bmkpasswd::have_passwd_xs();
   if ( ! App::bmkpasswd::have_passwd_xs() ) {
     ## Apparently Win32 has a functional crypt() uh, "sometimes"
-    unless ( index(mkpasswd('a', 'md5'), '$1$') == 0) {
+    unless (eval { index(mkpasswd('a', 'md5'), '$1$') == 0 }) {
       diag(
         "crypt() appears to be lacking MD5 support.\n",
         "You may want to install Crypt::Passwd::XS"

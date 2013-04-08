@@ -6,7 +6,7 @@ BEGIN {
 }
 
 SKIP: {
-  unless ( App::bmkpasswd::have_sha(256) ) {
+  unless (eval { App::bmkpasswd::have_sha(256) }) {
     diag("No SHA support found\n",
           "You may want to install Crypt::Passwd::XS");
 
