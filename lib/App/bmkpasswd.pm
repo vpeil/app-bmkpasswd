@@ -53,14 +53,18 @@ sub have_sha {
   ## requires glibc2.7+ or Crypt::Passwd::XS
   my %tests = (
     sha256 => sub {
-      my $testcrypt = crypt('a', '$5$abc$');
-      return unless index($testcrypt, '$5$abc$') == 0;
+      my $testcrypt;
+      try { $testcrypt = crypt('a', '$5$abc$') }
+        catch { warn $_ };
+      return unless $testcrypt and index($testcrypt, '$5$abc$') == 0;
       1
     },
 
     sha512 => sub {
-      my $testcrypt = crypt('b', '$6$abc$');
-      return unless index($testcrypt, '$6$abc$') == 0;
+      my $testcrypt;
+      try { $testcrypt = crypt('b', '$6$abc$') }
+        catch { warn $_ };
+      return unless $testcrypt and index($testcrypt, '$6$abc$') == 0;
       1
     },
   );
