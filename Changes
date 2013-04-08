@@ -1,5 +1,12 @@
 # Revision history for App::bmkpasswd
 
+1.082005  (08 Apr 2013)
+
+  Better passwdcmp() argument-checking
+
+  Trap dying 'crypt()' calls in tests to avoid fuzzy fails like
+  http://www.cpantesters.org/cpan/report/be021b42-9e64-11e2-8d62-e95aab8f1a3b
+
 1.082004  (05 Apr 2013)
 
   Use constant time comparison when comparing hashes.
