@@ -166,23 +166,24 @@ sub _const_t_eq {
 
 sub passwdcmp {
   my ($pwd, $crypt) = @_;
-  return unless defined $pwd and $crypt;
+  croak 'Expected a password string and hash'
+    unless defined $pwd and $crypt;
+
+  carp 'Possibly passed an invalid hash'
+    unless index($crypt, '$') == 0;
 
   if ($crypt =~ /^\$2a\$\d{2}\$/) {
     ## Looks like bcrypt.
     return $crypt if _const_t_eq( $crypt, bcrypt($pwd, $crypt) )
   } else {
-
-    if ( have_passwd_xs() ) {
+    if (have_passwd_xs) {
       return $crypt
         if _const_t_eq( $crypt, Crypt::Passwd::XS::crypt($pwd, $crypt) )
     } else {
       return $crypt
         if _const_t_eq( $crypt, crypt($pwd, $crypt) )
     }
-
   }
-
   return
 }
 
