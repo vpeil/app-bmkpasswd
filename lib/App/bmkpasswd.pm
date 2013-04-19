@@ -53,18 +53,18 @@ sub have_sha {
   ## requires glibc2.7+ or Crypt::Passwd::XS
   my %tests = (
     sha256 => sub {
-      my $testcrypt;
-      try { $testcrypt = crypt('a', '$5$abc$') }
+      my $testc;
+      try { $testc = crypt('a', '$5$abc$') }
         catch { warn $_ };
-      return unless $testcrypt and index($testcrypt, '$5$abc$') == 0;
+      return unless $testc and index($testc, '$5$abc$') == 0;
       1
     },
 
     sha512 => sub {
-      my $testcrypt;
-      try { $testcrypt = crypt('b', '$6$abc$') }
+      my $testc;
+      try { $testc = crypt('b', '$6$abc$') }
         catch { warn $_ };
-      return unless $testcrypt and index($testcrypt, '$6$abc$') == 0;
+      return unless $testc and index($testc, '$6$abc$') == 0;
       1
     },
   );
@@ -180,7 +180,7 @@ sub passwdcmp {
     ## Looks like bcrypt.
     return $crypt if _const_t_eq( $crypt, bcrypt($pwd, $crypt) )
   } else {
-    if (have_passwd_xs) {
+    if (have_passwd_xs()) {
       return $crypt
         if _const_t_eq( $crypt, Crypt::Passwd::XS::crypt($pwd, $crypt) )
     } else {
