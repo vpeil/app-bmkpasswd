@@ -32,8 +32,11 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 
 # DESCRIPTION
 
-__App::bmkpasswd__ is a simple bcrypt-enabled mkpasswd. (Helper functions 
-are also exported for use in other applications; see ["EXPORTED"](#EXPORTED).)
+__App::bmkpasswd__ is a simple bcrypt-enabled mkpasswd. 
+
+Helper functions 
+are also exported for use in other applications; see ["EXPORTED"](#EXPORTED).
+[Crypt::Bcrypt::Easy](http://search.cpan.org/perldoc?Crypt::Bcrypt::Easy) provides an easier programmatic interface.
 
 See `bmkpasswd --help` for usage information.
 
@@ -53,8 +56,10 @@ Uses [Bytes::Random::Secure](http://search.cpan.org/perldoc?Bytes::Random::Secur
 
 # EXPORTED
 
-You can use the exported __mkpasswd__ and __passwdcmp__ functions in 
-other Perl modules/applications:
+[Crypt::Bcrypt::Easy](http://search.cpan.org/perldoc?Crypt::Bcrypt::Easy) provides an easier programmatic interface, if you're
+only interested in generating bcrypt passwords.  If you'd like to make use of
+other password types, ou can use the exported __mkpasswd__ and __passwdcmp__
+functions:
 
     use App::bmkpasswd qw/mkpasswd passwdcmp/;
 

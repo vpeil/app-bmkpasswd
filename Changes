@@ -1,5 +1,9 @@
 # Revision history for App::bmkpasswd
 
+2.000001  (19 Apr 2013)
+
+  Add Crypt::Bcrypt::Easy
+
 1.082005  (08 Apr 2013)
 
   Better passwdcmp() argument-checking
