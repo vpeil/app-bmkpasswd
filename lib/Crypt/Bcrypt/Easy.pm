@@ -105,7 +105,8 @@ Or use defaults:
 
 Create and return a new password hash.
 
-Specifying a boolean true 'strong =>' parameter enables strongly-random salts.
+Specifying a boolean true 'strong =>' parameter enables strongly-random salts
+(see L<App::bmkpasswd>).
 
 =head3 compare
 
