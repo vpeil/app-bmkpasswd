@@ -228,8 +228,11 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 
 =head1 DESCRIPTION
 
-B<App::bmkpasswd> is a simple bcrypt-enabled mkpasswd. (Helper functions 
-are also exported for use in other applications; see L</EXPORTED>.)
+B<App::bmkpasswd> is a simple bcrypt-enabled mkpasswd. 
+
+Helper functions 
+are also exported for use in other applications; see L</EXPORTED>.
+L<Crypt::Bcrypt::Easy> provides an easier programmatic interface.
 
 See C<bmkpasswd --help> for usage information.
 
@@ -249,8 +252,10 @@ Uses L<Bytes::Random::Secure> to generate random salts.
 
 =head1 EXPORTED
 
-You can use the exported B<mkpasswd> and B<passwdcmp> functions in 
-other Perl modules/applications:
+L<Crypt::Bcrypt::Easy> provides an easier programmatic interface, if you're
+only interested in generating bcrypt passwords.  If you'd like to make use of
+other password types, ou can use the exported B<mkpasswd> and B<passwdcmp>
+functions:
 
   use App::bmkpasswd qw/mkpasswd passwdcmp/;
 
@@ -274,7 +279,7 @@ other Perl modules/applications:
 
   ## Compare a password against a hash
   ## passwdcmp() will return the hash if it is a match
-  if ( passwdcmp($passwd, $hash) ) {
+  if ( passwdcmp($plaintext, $crypted) ) {
     ## Successful match
   } else {
     ## Failed match

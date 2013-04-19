@@ -155,8 +155,8 @@ Using the C<--strong> option requires a reliable source of entropy; try
 B<haveged> (L<http://www.issihosts.com/haveged/downloads.html>), especially on
 headless Linux systems.
 
-See L<App::bmkpasswd> for more details (or if you'd like to use bcrypted
-passwords from your own modules).
+See L<App::bmkpasswd> for more details, and L<Crypt::Bcrypt::Easy> if you'd
+like to use bcrypted passwords from your own modules.
 
 =head1 AUTHOR
 
