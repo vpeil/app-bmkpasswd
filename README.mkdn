@@ -78,7 +78,7 @@ other Perl modules/applications:
 
     ## Compare a password against a hash
     ## passwdcmp() will return the hash if it is a match
-    if ( passwdcmp($passwd, $hash) ) {
+    if ( passwdcmp($plaintext, $crypted) ) {
       ## Successful match
     } else {
       ## Failed match
