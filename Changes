@@ -1,5 +1,15 @@
 # Revision history for App::bmkpasswd
 
+2.000002  (19 Apr 2013)
+
+  Fix single-digit work-cost adjustment
+
+  Crypt::Bcrypt::Easy;
+    Add ->cost() method
+
+    Possible to pass a 'type =>' to ->crypt()
+    (undocumented -- bcrypt is your friend, use it)
+
 2.000001  (19 Apr 2013)
 
   Add Crypt::Bcrypt::Easy
