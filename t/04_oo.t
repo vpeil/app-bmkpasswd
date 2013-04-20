@@ -58,4 +58,10 @@ ok(
   'negative obj tuned ->compare() ok'
 );
 
+undef $passwd;
+undef $bc;
+
+ok( $bc = bcrypt( cost => 10 ), 'simple bcrypt constructor ok' );
+ok( $bc->cost == 10, 'cost() ok' );
+
 done_testing;

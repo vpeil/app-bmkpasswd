@@ -3,6 +3,8 @@ use Carp;
 use strictures 1;
 use App::bmkpasswd 'mkpasswd', 'passwdcmp';
 
+use Scalar::Util 'blessed';
+
 use Exporter 'import';
 our @EXPORT = 'bcrypt';
 sub bcrypt {  Crypt::Bcrypt::Easy->new(@_)  }
@@ -15,9 +17,12 @@ sub bcrypt {  Crypt::Bcrypt::Easy->new(@_)  }
 
 sub new {
   my ($cls, %params) = @_;
+  $cls = blessed($cls) || $cls;
   my $cost = $params{cost} || '08';
   bless \$cost, $cls
 }
+
+sub cost { my ($self) = @_; $$self }
 
 sub compare {
   my ($self, %params) = @_;
@@ -117,6 +122,10 @@ Specifying a boolean true 'strong =>' parameter enables strongly-random salts
 
 Returns boolean true if hashes match.
 See C<passwdcmp> from L<App::bmkpasswd>.
+
+=head3 cost
+
+Returns the current work-cost value.
 
 =head1 AUTHOR
 
