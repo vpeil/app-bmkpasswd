@@ -19,7 +19,7 @@ ok(
 undef $passwd;
 
 ok( 
-  $passwd = bcrypt->crypt( text  => 'pie', cost  => '04' ),
+  $passwd = bcrypt->crypt( text  => 'pie', cost  => 4 ),
   'tuned cost ->crypt() ok'
 );
 ok(

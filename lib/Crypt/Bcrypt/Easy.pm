@@ -72,7 +72,7 @@ Crypt::Bcrypt::Easy - Simple interface to bcrypted passwords
   # Same (default cost 08):
   my $passwd = bcrypt->crypt( $plain );
   my $passwd = bcrypt->crypt( text => $plain );
-  my $passwd = bcrypt->crypt( text => $plain, cost => '08' );
+  my $passwd = bcrypt->crypt( text => $plain, cost => 8 );
 
   if (bcrypt->compare( text => $plain, crypt => $passwd )) {
     # Successful match
@@ -104,7 +104,7 @@ see L</crypt>.
 
   my $passwd = bcrypt->crypt(
     text   => 'my_password',
-    cost   => '08',
+    cost   => 8,
     strong => 0,
   );
 
@@ -119,7 +119,7 @@ Specifying a boolean true 'strong =>' parameter enables strongly-random salts
 
 =head3 compare
 
-  if (bcrypt->compare( text => 'my_password', crypt => $passwd)) {
+  if (bcrypt->compare(text => 'my_password', crypt => $passwd)) {
      ...
   }
 
