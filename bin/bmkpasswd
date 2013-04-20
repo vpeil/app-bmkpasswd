@@ -51,7 +51,7 @@ GetOptions(
       "   - bcrypt (recommended)\n",
       "   - sha256 (requires Crypt::Passwd::XS or recent libc)\n",
       "   - sha512 (requires Crypt::Passwd::XS or recent libc)\n",
-      "   - md5 (fast, portable, insecure)\n",
+      "   - md5 (insecure, not recommended)\n",
       "\n",
       " -c, --check=<HASH>\n",
       "   Compare password against specified hash.\n",
@@ -121,7 +121,7 @@ __END__
        bcrypt  (default; requires Crypt::Eksblowfish)
        sha512  (requires recent libc or Crypt::Passwd::XS)
        sha256  (requires recent libc or Crypt::Passwd::XS)
-       md5     (if system crypt() supports it -- weak)
+       md5     (weak, not recommended)
 
  -c, --check <HASH>
      Check password against <HASH>.
@@ -155,8 +155,11 @@ Using the C<--strong> option requires a reliable source of entropy; try
 B<haveged> (L<http://www.issihosts.com/haveged/downloads.html>), especially on
 headless Linux systems.
 
-See L<App::bmkpasswd> for more details, and L<Crypt::Bcrypt::Easy> if you'd
-like to use bcrypted passwords from your own modules.
+See L<App::bmkpasswd> for more details on bcrypt and the inner workings of
+this software.
+
+See L<Crypt::Bcrypt::Easy> if you'd like a simple interface to creating and
+comparing bcrypted passwords from your own modules.
 
 =head1 AUTHOR
 

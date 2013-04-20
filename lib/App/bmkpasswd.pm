@@ -116,7 +116,7 @@ sub mkpasswd {
 
       croak "Work cost factor must be numeric"
         unless $cost =~ /^[0-9]+$/;
-      $cost = '0$cost' if length $cost == 1;
+      $cost = "0$cost" if length $cost == 1;
 
       $salt = _saltgen('bcrypt', $strong);
       my $bsettings = join '', '$2a$', $cost, '$', $salt;
@@ -230,14 +230,17 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 
 B<App::bmkpasswd> is a simple bcrypt-enabled mkpasswd. 
 
-Helper functions 
-are also exported for use in other applications; see L</EXPORTED>.
-L<Crypt::Bcrypt::Easy> provides an easier programmatic interface.
+Helper functions are also exported for use in other applications; see
+L</EXPORTED>.
+
+L<Crypt::Bcrypt::Easy> provides an easier bcrypt-specific
+programmatic interface.
 
 See C<bmkpasswd --help> for usage information.
 
-Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords. Bcrypt hashes 
-come with a configurable work-cost factor; that allows hash generation 
+Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords.
+
+Bcrypt comes with a configurable work-cost factor; that allows hash generation 
 to become configurably slower as computers get faster, thereby 
 impeding brute-force hash generation attempts.
 
@@ -246,15 +249,17 @@ on why you ought to be using bcrypt or similar "adaptive" techniques.
 
 B<SHA-256> and B<SHA-512> are supported if available. You'll need 
 either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA, 
-such as glibc-2.7+ or newer FreeBSD builds.
+such as glibc-2.7+ or modern FreeBSD builds.
 
-Uses L<Bytes::Random::Secure> to generate random salts.
+Uses L<Bytes::Random::Secure> to generate random salts. For the paranoid,
+constant time comparison is used when comparing hashes; strongly-random salts
+can also be enabled.
 
 =head1 EXPORTED
 
 L<Crypt::Bcrypt::Easy> provides an easier programmatic interface, if you're
 only interested in generating bcrypt passwords.  If you'd like to make use of
-other password types, ou can use the exported B<mkpasswd> and B<passwdcmp>
+other password types, you can use the exported B<mkpasswd> and B<passwdcmp>
 functions:
 
   use App::bmkpasswd qw/mkpasswd passwdcmp/;
@@ -265,7 +270,7 @@ functions:
   $bcrypted = mkpasswd($passwd);
 
   ## Generate a bcrypted passwd with other work-cost:
-  $bcrypted = mkpasswd($passwd, 'bcrypt', '06');
+  $bcrypted = mkpasswd($passwd, 'bcrypt', '10');
 
   ## SHA:
   $crypted = mkpasswd($passwd, 'sha256');
