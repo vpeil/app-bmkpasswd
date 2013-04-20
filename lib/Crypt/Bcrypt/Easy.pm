@@ -51,7 +51,7 @@ sub crypt {
 
   mkpasswd( $params{text} => 
     ($params{type}   || 'bcrypt'), 
-    ($params{cost}   || $$self), 
+    ($params{cost}   || $self->cost), 
     ($params{strong} || () )
   )
 }
