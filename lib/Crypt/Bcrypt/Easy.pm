@@ -31,7 +31,7 @@ sub compare {
     confess "Expected 'text =>' and 'crypt =>' params"
   }
 
-  passwdcmp($params{text} => $params{crypt})
+  passwdcmp $params{text} => $params{crypt}
 }
 
 sub crypt {
@@ -46,14 +46,13 @@ sub crypt {
     confess "Expected 'text =>' param"
       unless defined $params{text};
   } else {
-    confess "Not enough arguments; expected a password"
+    confess 'Not enough arguments; expected a password'
   }
 
-  mkpasswd( $params{text} => 
+  mkpasswd $params{text} => 
     ($params{type}   || 'bcrypt'), 
     ($params{cost}   || $self->cost), 
     ($params{strong} || () )
-  )
 }
 
 1;
