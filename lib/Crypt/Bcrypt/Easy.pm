@@ -61,7 +61,7 @@ sub crypt {
 
 =head1 NAME
 
-Crypt::Bcrypt::Easy - Simple bcrypted passwords
+Crypt::Bcrypt::Easy - Simple interface to bcrypted passwords
 
 =head1 SYNOPSIS
 
@@ -69,20 +69,24 @@ Crypt::Bcrypt::Easy - Simple bcrypted passwords
 
   my $plain = 'my_password';
 
+  # Same (default cost 08):
+  my $passwd = bcrypt->crypt( $plain );
+  my $passwd = bcrypt->crypt( text => $plain );
   my $passwd = bcrypt->crypt( text => $plain, cost => '08' );
 
   if (bcrypt->compare( text => $plain, crypt => $passwd )) {
     # Successful match
   }
 
-  # Generate passwords using a different default workcost
+  # Generate passwords using a different default workcost:
   my $bcrypt  = bcrypt( cost => 10 );
   my $crypted = $bcrypt->crypt( $plain );
 
 =head1 DESCRIPTION
 
 This module provides an alternate interface to L<App::bmkpasswd>'s exported
-helpers (which were created to power L<bmkpasswd> and are a bit awkward).
+helpers (which were created to power L<bmkpasswd> and are a bit awkward to use
+directly).
 
 This POD briefly covers usage of this interface; 
 see L<App::bmkpasswd> for more details.
