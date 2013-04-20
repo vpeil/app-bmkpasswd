@@ -120,8 +120,8 @@ Specifying a boolean true 'strong =>' parameter enables strongly-random salts
      ...
   }
 
-Returns boolean true if hashes match.
-See C<passwdcmp> from L<App::bmkpasswd>.
+Returns boolean true if hashes match. Accepts any type of hash supported by
+your L<App::bmkpasswd>; see C<passwdcmp> from L<App::bmkpasswd>.
 
 =head3 cost
 
