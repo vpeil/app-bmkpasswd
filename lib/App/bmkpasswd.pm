@@ -46,7 +46,7 @@ sub have_sha {
 
   my ($rate) = @_;
   $rate = 512 unless $rate;
-  my $type = 'sha' . $rate;
+  my $type = "sha$rate";
   return $_can_haz{$type} if defined $_can_haz{$type};
 
   ## determine (the slow way) if SHA256/512 are available
@@ -114,7 +114,7 @@ sub mkpasswd {
     if ($type =~ /^bcrypt$/i) {
       $cost = '08' unless $cost;
 
-      croak "Work cost factor must be numeric"
+      croak 'Work cost factor must be numeric'
         unless $cost =~ /^[0-9]+$/;
       $cost = "0$cost" if length $cost == 1;
 
@@ -126,14 +126,14 @@ sub mkpasswd {
 
     # SHA requires Crypt::Passwd::XS or glibc2.7+, recent fBSD etc
     if ($type =~ /sha-?512/i) {
-      croak "SHA hash requested but no SHA support available" 
+      croak 'SHA hash requested but no SHA support available' 
         unless have_sha(512);
       $salt = join '', '$6$', _saltgen('sha', $strong), '$';
       last TYPE
     }
 
     if ($type =~ /sha(-?256)?/i) {
-      croak "SHA hash requested but no SHA support available" 
+      croak 'SHA hash requested but no SHA support available' 
         unless have_sha(256);
       $salt = join '', '$5$', _saltgen('sha', $strong), '$';
       last TYPE
