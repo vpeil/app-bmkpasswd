@@ -26,28 +26,29 @@ sub compare {
     confess "Expected 'text =>' and 'crypt =>' params"
   }
 
-  passwdcmp($params{text}, $params{crypt})
+  passwdcmp($params{text} => $params{crypt})
 }
 
 sub crypt {
   my $self = shift;
 
-  my ($text, $cost, $strong);
+  my %params;
 
   if (@_ == 1) {
-    $text = $_[0]
+    $params{text} = $_[0]
   } elsif (@_ > 1) {
-    my %params = @_;
+    %params = @_;
     confess "Expected 'text =>' param"
       unless defined $params{text};
-    $text = $params{text};
-    $cost = $params{cost};
-    $strong = $params{strong};
   } else {
     confess "Not enough arguments; expected a password"
   }
 
-  mkpasswd( $text, 'bcrypt', ($cost || $$self), $strong )
+  mkpasswd( $params{text} => 
+    ($params{type}   || 'bcrypt'), 
+    ($params{cost}   || $$self), 
+    ($params{strong} || () )
+  )
 }
 
 1;
