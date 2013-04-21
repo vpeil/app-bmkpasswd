@@ -96,7 +96,7 @@ if ($check) {
 }
 if ($bench) {
   my $interval = tv_interval($timer);
-  print " bench: $type, timer0 -> $interval\n";
+  print " bench: $type, time -> $interval\n";
 }
 exit 0
 
