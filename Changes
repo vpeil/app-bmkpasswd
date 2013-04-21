@@ -1,5 +1,11 @@
 # Revision history for App::bmkpasswd
 
+2.000003  (21 Apr 2013)
+
+  Cleaner --bench output
+
+  POD/test cleanups
+
 2.000002  (19 Apr 2013)
 
   Fix single-digit work-cost adjustment
