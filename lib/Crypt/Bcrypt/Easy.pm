@@ -79,8 +79,8 @@ Crypt::Bcrypt::Easy - Simple interface to bcrypted passwords
   }
 
   # Generate passwords using a different default workcost:
-  my $bcrypt  = bcrypt( cost => 10 );
-  my $crypted = $bcrypt->crypt( $plain );
+  my $bc = bcrypt( cost => 10 );
+  my $crypted = $bc->crypt( $plain );
 
 =head1 DESCRIPTION
 

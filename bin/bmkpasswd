@@ -40,8 +40,7 @@ GetOptions(
 
   'help' => sub {
     print(
-      "bmkpasswd [OPTS]... [PASSWD]\n",
-      "Opts:\n",
+      "bmkpasswd [OPTS]... [PASSWD]\n\n",
       " -b, --benchmark\n",
       "   Show timers. [Default: off]\n",
       "\n",
@@ -51,7 +50,6 @@ GetOptions(
       "   - bcrypt (recommended)\n",
       "   - sha256 (requires Crypt::Passwd::XS or recent libc)\n",
       "   - sha512 (requires Crypt::Passwd::XS or recent libc)\n",
-      "   - md5 (insecure, not recommended)\n",
       "\n",
       " -c, --check=<HASH>\n",
       "   Compare password against specified hash.\n",
@@ -121,7 +119,6 @@ __END__
        bcrypt  (default; requires Crypt::Eksblowfish)
        sha512  (requires recent libc or Crypt::Passwd::XS)
        sha256  (requires recent libc or Crypt::Passwd::XS)
-       md5     (weak, not recommended)
 
  -c, --check <HASH>
      Check password against <HASH>.
