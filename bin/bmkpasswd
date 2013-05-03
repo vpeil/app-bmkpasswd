@@ -76,7 +76,6 @@ if (@ARGV) {
   my $haz_readkey;
   try {
     require Term::ReadKey;
-    Term::ReadKey->import('ReadMode');
     $haz_readkey = 1
   };
   if ($haz_readkey) { 
