@@ -29,9 +29,9 @@ SKIP: {
 }
 
 my $bc;
-ok( $bc = mkpasswd('snacks', 'bcrypt', '02', 0), 'Bcrypt tuned' );
+ok( $bc = mkpasswd('snacks', 'bcrypt', 2, 0), 'Bcrypt tuned' );
 ok( passwdcmp('snacks', $bc), 'Bcrypt tuned workcost compare' );
-ok( $bc = mkpasswd('snacks', 'bcrypt', '02', 1), 'Bcrypt tuned strong' );
+ok( $bc = mkpasswd('snacks', 'bcrypt', 2, 1), 'Bcrypt tuned strong' );
 ok( !passwdcmp('things', $bc), 'Bcrypt tuned negative compare' );
 
 SKIP: {
