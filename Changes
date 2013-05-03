@@ -1,5 +1,11 @@
 # Revision history for App::bmkpasswd
 
+2.001000  (02 May 2013)
+
+  Output `bmkpasswd` prompts to STDERR for more sensible redirection
+
+  Make Term::ReadKey optional and warn if we don't have it
+
 2.000003  (21 Apr 2013)
 
   Cleaner --bench output
