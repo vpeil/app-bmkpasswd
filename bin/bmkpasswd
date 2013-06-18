@@ -2,6 +2,8 @@
 
 use strictures 1;
 
+use POSIX ();
+
 use App::bmkpasswd qw/ mkpasswd passwdcmp /;
 use Time::HiRes    qw/ gettimeofday tv_interval /;
 use Try::Tiny;
@@ -73,23 +75,21 @@ my $pwd;
 if (@ARGV) {
   $pwd = $ARGV[0];
 } else {
-  my $haz_readkey;
-  try {
-    require Term::ReadKey;
-    $haz_readkey = 1
-  };
-  if ($haz_readkey) { 
-    Term::ReadKey::ReadMode(2)
-  } else {
-    warn "WARNING: Could not load Term::ReadKey\n",
-      ">> Typed passwords will be visible!\n",
-      ">> Ctrl+C to quit.\n",
-  }
+  $|++; 
   print {*STDERR} "Password: ";
+
+  my $term = POSIX::Termios->new;
+  $term->getattr(0);
+  $term->setlflag( $term->getlflag & ~POSIX::ECHO );
+  $term->setattr(0);
+
   $pwd = <STDIN>;
-  if ($haz_readkey) { Term::ReadKey::ReadMode(0) }
+
+  $term->setlflag( $term->getlflag | POSIX::ECHO );
+  $term->setattr(0);
+
   chomp($pwd);
-  warn "\n";
+  print {*STDERR} "\n";
 }
 
 my $timer = [gettimeofday()] if $bench;
