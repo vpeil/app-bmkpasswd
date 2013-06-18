@@ -1,16 +1,26 @@
 # Revision history for App::bmkpasswd
 
+
+2.001001  (18 Jun 2013)
+
+  Kill Term::ReadKey dependency entirely; instead use POSIX::Termios to turn
+  off terminal echo.  (haarg clued me in to this in a conversation he was
+  having with tobyink on irc.perl.org #web-simple -- thanks!)
+
+
 2.001000  (02 May 2013)
 
   Output `bmkpasswd` prompts to STDERR for more sensible redirection
 
   Make Term::ReadKey optional and warn if we don't have it
 
+
 2.000003  (21 Apr 2013)
 
   Cleaner --bench output
 
   POD/test cleanups
+
 
 2.000002  (19 Apr 2013)
 
@@ -22,9 +32,12 @@
     Possible to pass a 'type =>' to ->crypt()
     (undocumented -- bcrypt is your friend, use it)
 
+
 2.000001  (19 Apr 2013)
 
   Add Crypt::Bcrypt::Easy
+
+
 
 1.082005  (08 Apr 2013)
 
@@ -33,31 +46,38 @@
   Trap dying 'crypt()' calls in tests to avoid fuzzy fails like
   http://www.cpantesters.org/cpan/report/be021b42-9e64-11e2-8d62-e95aab8f1a3b
 
+
 1.082004  (05 Apr 2013)
 
   Use constant time comparison when comparing hashes.
 
   POD enhancements.
 
+
 1.082003  (01 Apr 2013)
 
   POD tweaks
+
 
 1.082002  (23 Feb 2013)
 
   Lazy-build Bytes::Random::Secure instances
 
+
 1.082001  (23 Feb 2013)
 
   Use Bytes::Random::Secure-0.24
+
 
 1.082000  (17 Feb 2013)
 
   Use NonBlocking => 1 unless --strong is specified
 
+
 1.081002  (17 Feb 2013)
 
   Fix stray reference to deprecated HAVE_PASSWD_XS in bin/bmkpasswd
+
 
 1.081001  (17 Feb 2013)
 
@@ -75,11 +95,13 @@
 
   Improved POD.
 
+
 1.06  2012-06-09
 
   Small t/ readability cleanup.
 
   Missing changelog for 1.05.
+
 
 1.05  2012-06-09
 
@@ -88,11 +110,13 @@
   Fixes test failures on Windows builds without proper crypt(),
   MD5 is only included for compat with ancient hashes anyway.
 
+
 1.04  2012-06-09
 
   Fix a broken test on systems missing SHA support.
 
   More consistent POD between bmkpasswd(1) and App::bmkpasswd
+
 
 1.03  2012-06-08
 
@@ -104,10 +128,10 @@
   do the Right Thing if Crypt::Passwd::XS is missing, so we don't need 
   to check if someone was stupidly futzing with package variables.
 
+
 1.02 2012-06-08
 
   Typo/style cleanups; non-fatal but aggravating my OCD.
-
 
 
 1.01 2012-06-08
@@ -116,9 +140,11 @@
   - Use strictures
   - Improved tests
 
+
 1.00 2012-05-23
 
   - Minor cleanups, 1.00
+
 
 0.05 2012-04-07
 
@@ -128,9 +154,11 @@
   - Include . / in standard salt possibles (MD5/SHA)
   - croak() rather than die() from bmkpasswd.pm
 
+
 0.04 2012-04-02
 
   Don't export mkpasswd/passwdcmp unless requested.
+
 
 0.03 2012-03-29
 
