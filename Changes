@@ -1,4 +1,8 @@
-# Revision history for App::bmkpasswd
+Revision history for Perl module App::bmkpasswd
+
+2.001002 2013-08-09
+
+  - No code changes; fix 'Changes' to match CPAN::Changes::Spec
 
 2.001001 2013-06-18
 
