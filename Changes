@@ -1,5 +1,9 @@
 Revision history for Perl module App::bmkpasswd
 
+2.002000 2013-09-12
+
+  - Use Exporter::Tiny
+
 2.001003 2013-09-01
 
   - No code changes; drop prereq to perl-5.6
