@@ -5,7 +5,7 @@ use App::bmkpasswd 'mkpasswd', 'passwdcmp';
 
 use Scalar::Util 'blessed';
 
-use Exporter 'import';
+use parent 'Exporter::Tiny';
 our @EXPORT = 'bcrypt';
 sub bcrypt {  Crypt::Bcrypt::Easy->new(@_)  }
 
@@ -90,6 +90,11 @@ directly).
 
 This POD briefly covers usage of this interface; 
 see L<App::bmkpasswd> for more details.
+
+This module uses L<Exporter::Tiny>; you can rename the L</bcrypt> function
+as-needed:
+
+  use Crypt::Bcrypt::Easy 'bcrypt' => { -as => 'bc' };
 
 =head2 bcrypt
 

@@ -8,7 +8,7 @@ use Crypt::Eksblowfish::Bcrypt qw/
   en_base64
 /;
 
-use Exporter 'import';
+use parent 'Exporter::Tiny';
 our @EXPORT_OK = qw/
   mkpasswd
   passwdcmp
@@ -261,7 +261,12 @@ only interested in generating bcrypt passwords.  If you'd like to make use of
 other password types, you can use the exported B<mkpasswd> and B<passwdcmp>
 functions:
 
-  use App::bmkpasswd qw/mkpasswd passwdcmp/;
+  use App::bmkpasswd 'mkpasswd', 'passwdcmp';
+  # Same as:
+  use App::bmkpasswd -all;
+
+This module uses L<Exporter::Tiny> to export functions. This provides for
+flexible import options. See the L<Exporter::Tiny> docs for details.
 
 =head2 mkpasswd
 
