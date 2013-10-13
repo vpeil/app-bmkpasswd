@@ -8,6 +8,7 @@ BEGIN {
     "This test will need a solid source of entropy; try haveged.\n",
     ' . . . or wiggling your mouse a lot \o/', "\n\n";
   use_ok( 'App::bmkpasswd', qw/mkpasswd passwdcmp/ );
+  sleep 2;
 }
 
 (sub {

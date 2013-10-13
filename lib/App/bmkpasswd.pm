@@ -296,9 +296,9 @@ flexible import options. See the L<Exporter::Tiny> docs for details.
 
 =head1 BUGS
 
-There is currently no easy way to pass your own salt; frankly, 
-this thing is aimed at some projects of mine where that issue is 
-unlikely to come up and randomized is appropriate. If that's a problem, 
+There is currently no easy way to pass your own salt when generating new
+hashes; frankly, this thing is aimed at some projects of mine where that issue
+is unlikely to come up and randomized is appropriate. If that's a problem,
 patches welcome? ;-)
 
 =head1 AUTHOR
