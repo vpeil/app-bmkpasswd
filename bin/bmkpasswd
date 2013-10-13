@@ -41,10 +41,7 @@ GetOptions(
      exit 0
    },
 
-  'help' => sub {
-    pod2usage(0)
-  },  
-
+  'help' => sub { pod2usage(0) },
 );
 
 my $pwd;
@@ -104,7 +101,6 @@ __END__
        bcrypt  (recommended; guaranteed available)
        sha512  (requires recent libc or Crypt::Passwd::XS)
        sha256  (requires recent libc or Crypt::Passwd::XS)
-       md5     (insecure, not recommended)
 
  -c, --check <HASH>
      Compare password against specified <HASH>.
