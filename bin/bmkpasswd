@@ -14,6 +14,7 @@ my $bench = 0;
 my $strong = 0;
 my $check;
 
+use Pod::Usage;
 use Getopt::Long;
 GetOptions(
 
@@ -41,32 +42,7 @@ GetOptions(
    },
 
   'help' => sub {
-    print(
-      "bmkpasswd [OPTS]... [PASSWD]\n\n",
-      " -b, --benchmark\n",
-      "   Show timers. [Default: off]\n",
-      "\n",
-      " -m, --method=<TYPE>\n",
-      "   Default: -m bcrypt\n",
-      "   Types: \n",
-      "   - bcrypt (recommended)\n",
-      "   - sha256 (requires Crypt::Passwd::XS or recent libc)\n",
-      "   - sha512 (requires Crypt::Passwd::XS or recent libc)\n",
-      "\n",
-      " -c, --check=<HASH>\n",
-      "   Compare password against specified hash.\n",
-      "\n",
-      " -s, --strong\n",
-      "   Use a blocking random source to generate salts.\n",
-      "\n",
-      " bcrypt-only:\n",
-      " -w, --workcost=<two digit power of 2>\n",
-      "   Default: -w 08\n",
-      "   bcrypt work cost factor; higher is slower.\n",
-      "   When it comes to comparing passwds, slower can be better.\n",
-      "   See http://codahale.com/how-to-safely-store-a-password/\n",
-    );
-    exit 0
+    pod2usage(0)
   },  
 
 );
@@ -122,28 +98,25 @@ __END__
 
 =head1 OPTIONS
 
- -h, --help
-
- -m, --method <TYPE>
+ -m, --method <TYPE>  [default: bcrypt]
      crypt method.
      Types:
-       bcrypt  (default; requires Crypt::Eksblowfish)
+       bcrypt  (recommended; guaranteed available)
        sha512  (requires recent libc or Crypt::Passwd::XS)
        sha256  (requires recent libc or Crypt::Passwd::XS)
+       md5     (insecure, not recommended)
 
  -c, --check <HASH>
-     Check password against <HASH>.
-     Method will be auto-detected.
+     Compare password against specified <HASH>.
+     (The method is auto-detected.)
 
- -s, --strong
+ -s, --strong  [default: off]
      Use a blocking random source like /dev/random
      to generate salts.
 
- -w, --workcost <COST>
-     bcrypt-only.
-     Specify a work cost factor. Higher is slower.
-     Must be a two-digit power of 2.
-     Pad with zeros as necessary.
+ -w, --workcost <COST>  [default: 08]  (bcrypt only)
+     Use a specified work cost factor; higher is slower.
+     Should be a two-digit power of 2.
 
  -b, --benchmark
      Show timers; useful for comparing hash generation times.
