@@ -165,10 +165,8 @@ sub mkpasswd {
     croak "Unknown type specified: $type"
   }
 
-  return Crypt::Passwd::XS::crypt($pwd, $salt)
-    if have_passwd_xs();
-
-  crypt($pwd, $salt)
+  have_passwd_xs() ?
+    Crypt::Passwd::XS::crypt($pwd, $salt) : crypt($pwd, $salt)
 }
 
 sub _const_t_eq {
@@ -206,7 +204,8 @@ sub passwdcmp {
         if _const_t_eq( $crypt, crypt($pwd, $crypt) )
     }
   }
-  return
+
+  ()
 }
 
 1;
@@ -296,7 +295,8 @@ Compare a password against a hash.
     ## Failed match
   }
 
-B<passwdcmp> will return the hash if it is a match.
+B<passwdcmp> will return the hash if it is a match; otherwise, an empty list
+is returned.
 
 =head2 mkpasswd
 
