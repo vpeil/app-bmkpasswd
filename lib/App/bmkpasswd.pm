@@ -17,26 +17,27 @@ our @EXPORT_OK = qw/
 use Bytes::Random::Secure;
 my ($brs, $brsnb);
 my $getbrs = sub {
-  my ($strong) = @_;
-  if ($strong) {
+  my (%params) = @_;
+
+  if ($params{strong}) {
     return 
       $brs ||= Bytes::Random::Secure->new(
         Bits => 128,
       )
   }
-  return
-    $brsnb ||= Bytes::Random::Secure->new(
-      Bits        => 128,
-      NonBlocking => 1,
-    )
+
+  $brsnb ||= Bytes::Random::Secure->new(
+    Bits        => 128,
+    NonBlocking => 1,
+  )
 };
 
 my %_can_haz;
 sub have_passwd_xs {
   unless (defined $_can_haz{passwdxs}) {
     try { require Crypt::Passwd::XS;  $_can_haz{passwdxs} = 1 } 
-     catch { $_can_haz{passwdxs} = 0 };
-   }
+      catch { $_can_haz{passwdxs} = 0 };
+  }
   $_can_haz{passwdxs}
 }
 
@@ -50,7 +51,7 @@ sub have_sha {
   return $_can_haz{$type} if defined $_can_haz{$type};
 
   ## determine (the slow way) if SHA256/512 are available
-  ## requires glibc2.7+ or Crypt::Passwd::XS
+  ## (need a recent libc or Crypt::Passwd::XS)
   my %tests = (
     sha256 => sub {
       my $testc;
@@ -81,7 +82,7 @@ sub have_sha {
 sub _saltgen {
   my ($type, $strong) = @_;
 
-  my $rnd = $strong ? $getbrs->(strong => 1) : $getbrs->() ;
+  my $rnd = $getbrs->(strong => $strong);
 
   SALT: {
     if ($type eq 'bcrypt') {
@@ -124,7 +125,6 @@ sub mkpasswd {
       return bcrypt($pwd, $bsettings)
     }
 
-    # SHA requires Crypt::Passwd::XS or glibc2.7+, recent fBSD etc
     if ($type =~ /sha-?512/i) {
       croak 'SHA hash requested but no SHA support available' 
         unless have_sha(512);
@@ -217,7 +217,7 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
   bmkpasswd
   bmkpasswd --workcost='06'
 
-  # SHA requires Crypt::Passwd::XS or glibc2.7+
+  # SHA requires Crypt::Passwd::XS or a recent libc:
   bmkpasswd --method='sha512'
   
   # Compare a hash:
@@ -247,8 +247,8 @@ See L<http://codahale.com/how-to-safely-store-a-password/> for more
 on why you ought to be using bcrypt or similar "adaptive" techniques.
 
 B<SHA-256> and B<SHA-512> are supported if available. You'll need 
-either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA, 
-such as glibc-2.7+ or modern FreeBSD builds.
+either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA
+(such as glibc-2.7+ or modern FreeBSD builds).
 
 Uses L<Bytes::Random::Secure> to generate random salts. For the paranoid,
 constant time comparison is used when comparing hashes; strongly-random salts

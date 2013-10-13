@@ -37,7 +37,7 @@ ok( !passwdcmp('things', $bc), 'Bcrypt tuned negative compare' );
 
 SKIP: {
   unless ( App::bmkpasswd::have_sha(256) ) {
-    skip( "No SHA support", 8 );
+    skip( "No SHA support", 4 );
   }
   my $sha256;
   ok( $sha256 = mkpasswd('snacks', 'sha256', 0, 1), 'SHA256 strong' );
