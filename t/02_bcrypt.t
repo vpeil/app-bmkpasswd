@@ -1,4 +1,4 @@
-use Test::More tests => 8;
+use Test::More tests => 9;
 use strict; use warnings;
 
 BEGIN {
@@ -13,5 +13,6 @@ ok( !passwdcmp('things', $bc), 'Bcrypt negative compare' );
 
 $bc = undef;
 ok( $bc = mkpasswd('snacks', 'bcrypt', 6), 'Bcrypt tuned workcost' );
+ok( index($bc, '$2a$06') == 0, 'Bcrypt tuned workcost looks ok' );
 ok( passwdcmp('snacks', $bc), 'Bcrypt tuned workcost compare' );
 ok( !passwdcmp('things', $bc), 'Bcrypt tuned negative compare' );

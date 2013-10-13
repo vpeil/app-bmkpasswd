@@ -106,20 +106,38 @@ sub _saltgen {
 }
 
 sub mkpasswd {
-  my ($pwd, $type, $cost, $strong) = @_;
+  # mkpasswd $passwd => $type, $cost, $strongsalt;
+  # mkpasswd $passwd => +{
+  #   type => $type,
+  #   cost => $cost,
+  #   saltgen => $coderef,
+  #   strong => $strongsalt,
+  # }
+  my $pwd = shift;
+  croak "mkpasswd passed an undef password"
+    unless defined $pwd;
 
-  $type = 'bcrypt' unless $type;
+  my %opts;
+  if (ref $_[0] eq 'HASH') {
+    %opts = %{ $_[0] };
+  } elsif (@_) {
+    @opts{qw/type cost strong/} = @_;
+  }
+
+  my $type = defined $opts{type} ? $opts{type} : 'bcrypt';
+
+  my $saltgen = $opts{saltgen} || \&_saltgen;
   my $salt;
 
   TYPE: {
     if ($type =~ /^bcrypt$/i) {
-      $cost = '08' unless $cost;
+      my $cost = $opts{cost} || '08';
 
       croak 'Work cost factor must be numeric'
         unless $cost =~ /^[0-9]+$/;
       $cost = "0$cost" if length $cost == 1;
 
-      $salt = _saltgen('bcrypt', $strong);
+      $salt = $saltgen->('bcrypt', $opts{strong});
       my $bsettings = join '', '$2a$', $cost, '$', $salt;
 
       return bcrypt($pwd, $bsettings)
@@ -128,29 +146,27 @@ sub mkpasswd {
     if ($type =~ /sha-?512/i) {
       croak 'SHA hash requested but no SHA support available' 
         unless have_sha(512);
-      $salt = join '', '$6$', _saltgen('sha', $strong), '$';
+      $salt = join '', '$6$', $saltgen->('sha', $opts{strong}), '$';
       last TYPE
     }
 
     if ($type =~ /sha(-?256)?/i) {
       croak 'SHA hash requested but no SHA support available' 
         unless have_sha(256);
-      $salt = join '', '$5$', _saltgen('sha', $strong), '$';
+      $salt = join '', '$5$', $saltgen->('sha', $opts{strong}), '$';
       last TYPE
     }
 
     if ($type =~ /^md5$/i) {
-      $salt = join '', '$1$', _saltgen('md5', $strong), '$';
+      $salt = join '', '$1$', $saltgen->('md5', $opts{strong}), '$';
       last TYPE
     }
 
     croak "Unknown type specified: $type"
   }
 
-  return Crypt::Passwd::XS::crypt($pwd, $salt)
-    if have_passwd_xs();
-
-  crypt($pwd, $salt)
+  have_passwd_xs() ?
+    Crypt::Passwd::XS::crypt($pwd, $salt) : crypt($pwd, $salt)
 }
 
 sub _const_t_eq {
@@ -188,7 +204,8 @@ sub passwdcmp {
         if _const_t_eq( $crypt, crypt($pwd, $crypt) )
     }
   }
-  return
+
+  ()
 }
 
 1;
@@ -235,7 +252,7 @@ L</EXPORTED>.
 L<Crypt::Bcrypt::Easy> provides an easier bcrypt-specific
 programmatic interface for Perl programmers.
 
-See C<bmkpasswd --help> for usage information.
+See C<bmkpasswd --help> for command-line usage information.
 
 Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords.
 
@@ -268,38 +285,83 @@ functions:
 This module uses L<Exporter::Tiny> to export functions. This provides for
 flexible import options. See the L<Exporter::Tiny> docs for details.
 
-=head2 mkpasswd
-
-  ## Generate a bcrypted passwd with work-cost 08:
-  $bcrypted = mkpasswd($passwd);
-
-  ## Generate a bcrypted passwd with other work-cost:
-  $bcrypted = mkpasswd($passwd, 'bcrypt', '10');
-
-  ## SHA:
-  $crypted = mkpasswd($passwd, 'sha256');
-  $crypted = mkpasswd($passwd, 'sha512');
-
-  ## Use a strongly-random salt (requires spare entropy):
-  $crypted = mkpasswd($passwd, 'bcrypt', '08', 'strong');
-  $crypted = mkpasswd($passwd, 'sha512', 0, 'strong');
-
 =head2 passwdcmp
 
-  ## Compare a password against a hash
-  ## passwdcmp() will return the hash if it is a match
+Compare a password against a hash.
+
   if ( passwdcmp($plaintext, $crypted) ) {
     ## Successful match
   } else {
     ## Failed match
   }
 
-=head1 BUGS
+B<passwdcmp> will return the hash if it is a match; otherwise, an empty list
+is returned.
 
-There is currently no easy way to pass your own salt when generating new
-hashes; frankly, this thing is aimed at some projects of mine where that issue
-is unlikely to come up and randomized is appropriate. If that's a problem,
-patches welcome? ;-)
+=head2 mkpasswd
+
+  my $crypted = mkpasswd($passwd);
+  my $crypted = mkpasswd($passwd, $type);
+  my $crypted = mkpasswd($passwd, 'bcrypt', $cost);
+  my $crypted = mkpasswd($passwd, $type, $cost, $strongsalt);
+
+  my $crypted = mkpasswd( $passwd => 
+    +{
+      type    => $type,
+      cost    => $cost,
+      strong  => $strongsalt,
+      saltgen => $saltgenerator,
+    }
+  );
+
+Generate hashed passwords.
+
+By default, generates a bcrypted passwd with work-cost 08:
+
+  $bcrypted = mkpasswd($passwd);
+
+A different work-cost can be specified for bcrypt passwds:
+
+  $bcrypted = mkpasswd($passwd, 'bcrypt', '10');
+
+SHA is supported, in which case the work-cost value is ignored:
+
+  $crypted = mkpasswd($passwd, 'sha256');
+  $crypted = mkpasswd($passwd, 'sha512');
+
+If a fourth boolean-true argument is specified, a strongly-random salt is
+generated. This requires spare entropy:
+
+  $crypted = mkpasswd($passwd, 'bcrypt', '08', 'strong');
+  $crypted = mkpasswd($passwd, 'sha512', 0, 'strong');
+
+Options can be passed as a HASH, instead. This also lets you pass in a salt
+generator coderef:
+
+  $crypted = mkpasswd( $passwd => +{
+      type => 'bcrypt',
+      cost => '10',
+      strong  => 0,
+      saltgen => $saltgenerator,
+    }
+  );
+
+The salt generator is passed the type (one of: C<bcrypt>, C<sha>, C<md5>) and
+the value of the B<strong> option (default false).
+
+  my $saltgenerator = sub {
+    my ($type, $strongsalt) = @_;
+    if ($type eq 'bcrypt') {
+      # ...
+    } elsif ($type eq 'sha') {
+      # ...
+    } else {
+      die "Don't know how to create a salt for type '$type'!"
+    }
+  };
+
+(Most people want random salts, in which case the default salt generator
+should be fine.)
 
 =head1 AUTHOR
 
