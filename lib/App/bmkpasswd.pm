@@ -106,20 +106,38 @@ sub _saltgen {
 }
 
 sub mkpasswd {
-  my ($pwd, $type, $cost, $strong) = @_;
+  # mkpasswd $passwd => $type, $cost, $strongsalt;
+  # mkpasswd $passwd => +{
+  #   type => $type,
+  #   cost => $cost,
+  #   saltgen => $coderef,
+  #   strong => $strongsalt,
+  # }
+  my $pwd = shift;
+  croak "mkpasswd passed an undef password"
+    unless defined $pwd;
 
-  $type = 'bcrypt' unless $type;
+  my %opts;
+  if (ref $_[0] eq 'HASH') {
+    %opts = %{ $_[0] };
+  } elsif (@_) {
+    @opts{qw/type cost strong/} = @_;
+  }
+
+  my $type = defined $opts{type} ? $opts{type} : 'bcrypt';
+
+  my $saltgen = $opts{saltgen} || \&_saltgen;
   my $salt;
 
   TYPE: {
     if ($type =~ /^bcrypt$/i) {
-      $cost = '08' unless $cost;
+      my $cost = $opts{cost} || '08';
 
       croak 'Work cost factor must be numeric'
         unless $cost =~ /^[0-9]+$/;
       $cost = "0$cost" if length $cost == 1;
 
-      $salt = _saltgen('bcrypt', $strong);
+      $salt = $saltgen->('bcrypt', $opts{strong});
       my $bsettings = join '', '$2a$', $cost, '$', $salt;
 
       return bcrypt($pwd, $bsettings)
@@ -128,19 +146,19 @@ sub mkpasswd {
     if ($type =~ /sha-?512/i) {
       croak 'SHA hash requested but no SHA support available' 
         unless have_sha(512);
-      $salt = join '', '$6$', _saltgen('sha', $strong), '$';
+      $salt = join '', '$6$', $saltgen->('sha', $opts{strong}), '$';
       last TYPE
     }
 
     if ($type =~ /sha(-?256)?/i) {
       croak 'SHA hash requested but no SHA support available' 
         unless have_sha(256);
-      $salt = join '', '$5$', _saltgen('sha', $strong), '$';
+      $salt = join '', '$5$', $saltgen->('sha', $opts{strong}), '$';
       last TYPE
     }
 
     if ($type =~ /^md5$/i) {
-      $salt = join '', '$1$', _saltgen('md5', $strong), '$';
+      $salt = join '', '$1$', $saltgen->('md5', $opts{strong}), '$';
       last TYPE
     }
 
