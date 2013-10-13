@@ -253,7 +253,7 @@ L</EXPORTED>.
 L<Crypt::Bcrypt::Easy> provides an easier bcrypt-specific
 programmatic interface for Perl programmers.
 
-See C<bmkpasswd --help> for usage information.
+See C<bmkpasswd --help> for command-line usage information.
 
 Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords.
 
@@ -286,38 +286,82 @@ functions:
 This module uses L<Exporter::Tiny> to export functions. This provides for
 flexible import options. See the L<Exporter::Tiny> docs for details.
 
-=head2 mkpasswd
-
-  ## Generate a bcrypted passwd with work-cost 08:
-  $bcrypted = mkpasswd($passwd);
-
-  ## Generate a bcrypted passwd with other work-cost:
-  $bcrypted = mkpasswd($passwd, 'bcrypt', '10');
-
-  ## SHA:
-  $crypted = mkpasswd($passwd, 'sha256');
-  $crypted = mkpasswd($passwd, 'sha512');
-
-  ## Use a strongly-random salt (requires spare entropy):
-  $crypted = mkpasswd($passwd, 'bcrypt', '08', 'strong');
-  $crypted = mkpasswd($passwd, 'sha512', 0, 'strong');
-
 =head2 passwdcmp
 
-  ## Compare a password against a hash
-  ## passwdcmp() will return the hash if it is a match
+Compare a password against a hash.
+
   if ( passwdcmp($plaintext, $crypted) ) {
     ## Successful match
   } else {
     ## Failed match
   }
 
-=head1 BUGS
+B<passwdcmp> will return the hash if it is a match.
 
-There is currently no easy way to pass your own salt when generating new
-hashes; frankly, this thing is aimed at some projects of mine where that issue
-is unlikely to come up and randomized is appropriate. If that's a problem,
-patches welcome? ;-)
+=head2 mkpasswd
+
+  my $crypted = mkpasswd($passwd);
+  my $crypted = mkpasswd($passwd, $type);
+  my $crypted = mkpasswd($passwd, 'bcrypt', $cost);
+  my $crypted = mkpasswd($passwd, $type, $cost, $strongsalt);
+
+  my $crypted = mkpasswd( $passwd => 
+    +{
+      type    => $type,
+      cost    => $cost,
+      strong  => $strongsalt,
+      saltgen => $saltgenerator,
+    }
+  );
+
+Generate hashed passwords.
+
+By default, generates a bcrypted passwd with work-cost 08:
+
+  $bcrypted = mkpasswd($passwd);
+
+A different work-cost can be specified for bcrypt passwds:
+
+  $bcrypted = mkpasswd($passwd, 'bcrypt', '10');
+
+SHA is supported, in which case the work-cost value is ignored:
+
+  $crypted = mkpasswd($passwd, 'sha256');
+  $crypted = mkpasswd($passwd, 'sha512');
+
+If a fourth boolean-true argument is specified, a strongly-random salt is
+generated. This requires spare entropy:
+
+  $crypted = mkpasswd($passwd, 'bcrypt', '08', 'strong');
+  $crypted = mkpasswd($passwd, 'sha512', 0, 'strong');
+
+Options can be passed as a HASH, instead. This also lets you pass in a salt
+generator coderef:
+
+  $crypted = mkpasswd( $passwd => +{
+      type => 'bcrypt',
+      cost => '10',
+      strong  => 0,
+      saltgen => $saltgenerator,
+    }
+  );
+
+The salt generator is passed the type (one of: C<bcrypt>, C<sha>, C<md5>) and
+the value of the B<strong> option (default false).
+
+  my $saltgenerator = sub {
+    my ($type, $strongsalt) = @_;
+    if ($type eq 'bcrypt') {
+      # ...
+    } elsif ($type eq 'sha') {
+      # ...
+    } else {
+      die "Don't know how to create a salt for type '$type'!"
+    }
+  };
+
+(Most people want random salts, in which case the default salt generator
+should be fine.)
 
 =head1 AUTHOR
 
