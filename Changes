@@ -1,5 +1,11 @@
 Revision history for Perl module App::bmkpasswd
 
+2.003000 2013-10-13
+
+  - Support for passing in a salt generator coderef
+  
+  - mkpasswd() can accept parameters via a HASH
+
 2.002000 2013-09-12
 
   - Use Exporter::Tiny
