@@ -22,7 +22,7 @@ sub new {
   bless \$cost, $cls
 }
 
-sub cost { my ($self) = @_; $$self }
+sub cost { ${ $_[0] } }
 
 sub compare {
   my ($self, %params) = @_;
@@ -69,7 +69,6 @@ Crypt::Bcrypt::Easy - Simple interface to bcrypted passwords
 
   my $plain = 'my_password';
 
-  # Same (default cost 08):
   my $passwd = bcrypt->crypt( $plain );
   my $passwd = bcrypt->crypt( text => $plain );
   my $passwd = bcrypt->crypt( text => $plain, cost => 8 );
@@ -89,7 +88,8 @@ helpers (which were created to power L<bmkpasswd> and are a bit awkward to use
 directly).
 
 This POD briefly covers usage of this interface; 
-see L<App::bmkpasswd> for more details.
+see L<App::bmkpasswd> for more details on internals and documentation
+regarding the more flexible functional interface.
 
 This module uses L<Exporter::Tiny>; you can rename the L</bcrypt> function
 as-needed:
@@ -107,7 +107,7 @@ see L</crypt>.
 
 =head3 crypt
 
-  my $passwd = bcrypt->crypt(
+  my $crypted = bcrypt->crypt(
     text   => 'my_password',
     cost   => 8,
     strong => 0,
@@ -115,7 +115,7 @@ see L</crypt>.
 
 Or use defaults:
 
-  my $passwd = bcrypt->crypt( 'my_password' );
+  my $crypted = bcrypt->crypt( 'my_password' );
 
 Create and return a new password hash.
 
@@ -124,7 +124,7 @@ Specifying a boolean true 'strong =>' parameter enables strongly-random salts
 
 =head3 compare
 
-  if (bcrypt->compare(text => 'my_password', crypt => $passwd)) {
+  if (bcrypt->compare(text => 'my_password', crypt => $crypted)) {
      ...
   }
 
