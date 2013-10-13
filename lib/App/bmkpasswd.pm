@@ -269,7 +269,7 @@ either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA
 
 Uses L<Bytes::Random::Secure> to generate random salts. For the paranoid,
 constant time comparison is used when comparing hashes; strongly-random salts
-can also be enabled.
+can also be enabled (see L</mkpasswd>).
 
 =head1 EXPORTED
 
@@ -330,7 +330,7 @@ SHA is supported, in which case the work-cost value is ignored:
   $crypted = mkpasswd($passwd, 'sha512');
 
 If a fourth boolean-true argument is specified, a strongly-random salt is
-generated. This requires spare entropy:
+generated. This requires spare entropy, and will block if entropy-starved:
 
   $crypted = mkpasswd($passwd, 'bcrypt', '08', 'strong');
   $crypted = mkpasswd($passwd, 'sha512', 0, 'strong');
