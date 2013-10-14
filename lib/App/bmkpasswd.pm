@@ -54,17 +54,13 @@ sub have_sha {
   ## (need a recent libc or Crypt::Passwd::XS)
   my %tests = (
     sha256 => sub {
-      my $testc;
-      try { $testc = crypt('a', '$5$abc$') }
-        catch { warn $_ };
+      my $testc = try { crypt('a', '$5$abc$') } catch { warn $_; () };
       return unless $testc and index($testc, '$5$abc$') == 0;
       1
     },
 
     sha512 => sub {
-      my $testc;
-      try { $testc = crypt('b', '$6$abc$') }
-        catch { warn $_ };
+      my $testc = try { crypt('b', '$6$abc$') } catch { warn $_; () };
       return unless $testc and index($testc, '$6$abc$') == 0;
       1
     },
@@ -74,8 +70,7 @@ sub have_sha {
     return $_can_haz{$type} = 1
   }
 
-  $_can_haz{$type} = 0;
-  return
+  return $_can_haz{$type} = 0
 }
 
 
@@ -189,8 +184,7 @@ sub passwdcmp {
   croak 'Expected a password string and hash'
     unless defined $pwd and $crypt;
 
-  carp 'Possibly passed an invalid hash'
-    unless index($crypt, '$') == 0;
+  carp 'Possibly passed an invalid hash' unless index($crypt, '$') == 0;
 
   if ($crypt =~ /^\$2a\$\d{2}\$/) {
     ## Looks like bcrypt.

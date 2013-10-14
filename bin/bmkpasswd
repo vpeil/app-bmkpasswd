@@ -8,10 +8,8 @@ use Time::HiRes    qw/ gettimeofday tv_interval /;
 use Try::Tiny;
 
 my $type    = 'bcrypt';
-my $bcost   = '08';
-my $bench   = 0;
-my $strong  = 0;
-my $check;
+my $bcost   = 8;
+my ($bench, $strong, $check);
 
 use Pod::Usage;
 use Getopt::Long;
@@ -27,15 +25,17 @@ GetOptions(
      require Crypt::Eksblowfish::Bcrypt;
      print(
            "App::bmkpasswd $App::bmkpasswd::VERSION\n\n",
-           "  Crypt::Eksblowfish::Bcrypt-", 
-            $Crypt::Eksblowfish::Bcrypt::VERSION, "\n\n",
+           "  Using Crypt::Eksblowfish::Bcrypt-", 
+            $Crypt::Eksblowfish::Bcrypt::VERSION, "\n",
      );
-     
-     print "  SHA256 available\n" if App::bmkpasswd::have_sha(256);
-     print "  SHA512 available\n" if App::bmkpasswd::have_sha(512);
 
-     print "  Using Crypt::Passwd::XS\n" 
-       if App::bmkpasswd::have_passwd_xs;
+     my $vialib = App::bmkpasswd::have_passwd_xs() ? 
+       'Crypt::Passwd::XS' : 'system crypt';
+    
+     my @avail;
+     push @avail, 'SHA256' if App::bmkpasswd::have_sha(256);
+     push @avail, 'SHA512' if App::bmkpasswd::have_sha(512);
+     print '  ', join(', ', @avail), " available (via $vialib)\n";
      
      exit 0
    },
@@ -100,15 +100,12 @@ __END__
      Types:  bcrypt  (recommended; guaranteed available)
              sha512  (requires recent libc or Crypt::Passwd::XS)
              sha256  (requires recent libc or Crypt::Passwd::XS)
-
- -c, --check=HASH   Compare password against given HASH
-
- -s, --strong       Use strongly-random salt generation
-
  -w, --workcost=NUM Bcrypt work-cost factor; default 08.
                     Higher is slower. Should be a two-digit power of 2.
-
+ -c, --check=HASH   Compare password against given HASH
+ -s, --strong       Use strongly-random salt generation
  -b, --benchmark    Show timers; useful for comparing hash generation
+ --version          Display version information and available methods
 
 If PASSWD is missing, it is prompted for interactively.
 
