@@ -1,5 +1,4 @@
 #!perl
-
 use strictures 1;
 
 use POSIX ();
@@ -8,10 +7,10 @@ use App::bmkpasswd qw/ mkpasswd passwdcmp /;
 use Time::HiRes    qw/ gettimeofday tv_interval /;
 use Try::Tiny;
 
-my $type = 'bcrypt';
-my $bcost = '08';
-my $bench = 0;
-my $strong = 0;
+my $type    = 'bcrypt';
+my $bcost   = '08';
+my $bench   = 0;
+my $strong  = 0;
 my $check;
 
 use Pod::Usage;
@@ -95,27 +94,21 @@ __END__
 
 =head1 OPTIONS
 
- -m, --method <TYPE>  [default: bcrypt]
-     crypt method.
-     Types:
-       bcrypt  (recommended; guaranteed available)
-       sha512  (requires recent libc or Crypt::Passwd::XS)
-       sha256  (requires recent libc or Crypt::Passwd::XS)
+ -m, --method=TYPE  [default: bcrypt]
+     Types:  bcrypt  (recommended; guaranteed available)
+             sha512  (requires recent libc or Crypt::Passwd::XS)
+             sha256  (requires recent libc or Crypt::Passwd::XS)
 
- -c, --check <HASH>
-     Compare password against specified <HASH>.
-     (The method is auto-detected.)
+ -c, --check=HASH   Compare password against given HASH
 
- -s, --strong  [default: off]
-     Use a blocking random source like /dev/random
-     to generate salts.
+ -s, --strong       Use strongly-random salt generation
 
- -w, --workcost <COST>  [default: 08]  (bcrypt only)
-     Use a specified work cost factor; higher is slower.
-     Should be a two-digit power of 2.
+ -w, --workcost=NUM Bcrypt work-cost factor; default 08.
+                    Higher is slower. Should be a two-digit power of 2.
 
- -b, --benchmark
-     Show timers; useful for comparing hash generation times.
+ -b, --benchmark    Show timers; useful for comparing hash generation
+
+If PASSWD is missing, it is prompted for interactively.
 
 =head1 DESCRIPTION
 
