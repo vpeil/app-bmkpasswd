@@ -12,8 +12,6 @@ ok passwdcmp('snacks', $bc), 'bcrypt compare ok';
 
 SKIP: {
   unless (App::bmkpasswd::have_sha(256)) {
-    diag "No SHA support found\n",
-         "You may want to install Crypt::Passwd::XS";
     skip "No SHA support", 3
   }
   my $sha = mkpasswd( snacks => +{
