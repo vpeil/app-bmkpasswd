@@ -1,5 +1,11 @@
 Revision history for Perl module App::bmkpasswd
 
+2.003001 2013-10-14
+
+  - Fix failing t/04_hashopts.t on machines without SHA support
+
+  - Use Pod::Usage to provide --help / --usage / --man
+
 2.003000 2013-10-13
 
   - Support for passing in a salt generator coderef
