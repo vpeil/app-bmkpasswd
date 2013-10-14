@@ -17,11 +17,11 @@ use Pod::Usage;
 use Getopt::Long;
 GetOptions(
 
-  'benchmark!'    => \$bench,
-  'strong!'       => \$strong,
-  'check=s'       => \$check,
-  'method|type=s' => \$type,
-  'workcost=s'    => \$bcost,
+  'benchmark!'       => \$bench,
+  'strong!'          => \$strong,
+  'check=s'          => \$check,
+  'm|method|type=s'  => \$type,
+  'workcost=s'       => \$bcost,
   
   'version' => sub {
      require Crypt::Eksblowfish::Bcrypt;
@@ -40,7 +40,9 @@ GetOptions(
      exit 0
    },
 
-  'help' => sub { pod2usage(0) },
+  'help'   => sub { pod2usage(0) },
+  'man'    => sub { pod2usage(-verbose => 2, -noperldoc => 1) },
+  'usage'  => sub { pod2usage(2) },
 );
 
 my $pwd;
