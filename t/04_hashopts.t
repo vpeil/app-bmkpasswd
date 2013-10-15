@@ -11,7 +11,7 @@ ok index($bc, '$2a$06') == 0, 'bcrypt looks ok';
 ok passwdcmp('snacks', $bc), 'bcrypt compare ok';
 
 SKIP: {
-  unless (App::bmkpasswd::have_sha(256)) {
+  unless ( mkpasswd_available('sha256') ) {
     skip "No SHA support", 3
   }
   my $sha = mkpasswd( snacks => +{
