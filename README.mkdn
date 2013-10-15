@@ -66,7 +66,6 @@ other password types, you can use the exported __mkpasswd__ and __passwdcmp__
 functions:
 
     use App::bmkpasswd 'mkpasswd', 'passwdcmp';
-    # Same as:
     use App::bmkpasswd -all;
 
 This module uses [Exporter::Tiny](http://search.cpan.org/perldoc?Exporter::Tiny) to export functions. This provides for
@@ -84,6 +83,17 @@ Compare a password against a hash.
 
 __passwdcmp__ will return the hash if it is a match; otherwise, an empty list
 is returned.
+
+## mkpasswd\_available
+
+    my @available = mkpasswd_available;
+
+    if ( mkpasswd_available('sha512') ) { ... }
+
+Given no arguments, returns the list of available hash types.
+
+Given a type (see ["mkpasswd"](#mkpasswd)), returns boolean true if the method is available. ('bcrypt' is
+always available.)
 
 ## mkpasswd
 
@@ -111,7 +121,7 @@ A different work-cost can be specified for bcrypt passwds:
 
     $bcrypted = mkpasswd($passwd, 'bcrypt', '10');
 
-SHA is supported, in which case the work-cost value is ignored:
+SHA-256 and SHA-512 are supported, in which case the work-cost value is ignored:
 
     $crypted = mkpasswd($passwd, 'sha256');
     $crypted = mkpasswd($passwd, 'sha512');

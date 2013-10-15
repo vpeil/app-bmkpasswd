@@ -1,5 +1,9 @@
 Revision history for Perl module App::bmkpasswd
 
+2.004000 2013-10-15
+
+  - Add mkpasswd_available function for checking avail hash methods
+
 2.003001 2013-10-14
 
   - Fix failing t/04_hashopts.t on machines without SHA support
