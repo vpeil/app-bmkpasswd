@@ -1,12 +1,10 @@
-use Test::More tests => 9;
+use Test::More tests => 8;
 use strict; use warnings;
 
-BEGIN {
-  use_ok( 'App::bmkpasswd', qw/mkpasswd passwdcmp/ );
-}
+use App::bmkpasswd -all;
 
 SKIP: {
-  unless ( App::bmkpasswd::have_sha(256) ) {
+  unless ( mkpasswd_available('sha256') ) {
     diag("No SHA support found\n",
           "You may want to install Crypt::Passwd::XS");
     skip( "No SHA support", 8 );

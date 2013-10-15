@@ -3,7 +3,7 @@ use strictures 1;
 
 use POSIX ();
 
-use App::bmkpasswd qw/ mkpasswd passwdcmp /;
+use App::bmkpasswd -all;
 use Time::HiRes    qw/ gettimeofday tv_interval /;
 use Try::Tiny;
 
@@ -23,8 +23,9 @@ GetOptions(
   
   'version' => sub {
      require Crypt::Eksblowfish::Bcrypt;
+     my $bvers = $App::bmkpasswd::VERSION || '(git)';
      print(
-           "App::bmkpasswd $App::bmkpasswd::VERSION\n\n",
+           "App::bmkpasswd $bvers\n\n",
            "  Using Crypt::Eksblowfish::Bcrypt-", 
             $Crypt::Eksblowfish::Bcrypt::VERSION, "\n",
      );
@@ -33,8 +34,9 @@ GetOptions(
        'Crypt::Passwd::XS' : 'system crypt';
     
      my @avail;
-     push @avail, 'SHA256' if App::bmkpasswd::have_sha(256);
-     push @avail, 'SHA512' if App::bmkpasswd::have_sha(512);
+     push @avail, 'SHA256' if mkpasswd_available('sha256');
+     push @avail, 'SHA512' if mkpasswd_available('sha512');
+
      print '  ', join(', ', @avail), " available (via $vialib)\n";
      
      exit 0
