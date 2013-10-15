@@ -34,6 +34,7 @@ my $getbrs = sub {
   )
 };
 
+
 my %_can_haz;
 sub have_passwd_xs {
   unless (defined $_can_haz{passwdxs}) {
@@ -98,15 +99,10 @@ sub mkpasswd_available {
     );
   }
 
-  if ($type =~ /^sha-?(\d{3})$/i) {
-    return have_sha($1)
-  } elsif ($type =~ /^bcrypt$/i) {
-    return 1
-  } elsif ($type =~ /^md5$/i) {
-    return have_md5()
-  }
-
-  ()
+  return 1 if lc($type) eq 'bcrypt';
+  return have_sha($1) if $type =~ /^sha-?(\d{3})$/i;
+  return have_md5()   if lc($type) eq 'md5';
+  return
 }
 
 
