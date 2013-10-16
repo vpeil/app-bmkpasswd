@@ -58,21 +58,18 @@ sub have_sha {
   my %tests = (
     sha256 => sub {
       my $testc = try { crypt('a', '$5$abc$') } catch { warn $_; () };
-      return unless $testc and index($testc, '$5$abc$') == 0;
-      1
+      $testc && index($testc, '$5$abc$') == 0 ? 1 : ()
     },
 
     sha512 => sub {
       my $testc = try { crypt('b', '$6$abc$') } catch { warn $_; () };
-      return unless $testc and index($testc, '$6$abc$') == 0;
-      1
+      $testc && index($testc, '$6$abc$') == 0 ? 1 : ()
     },
   );
 
   if (defined $tests{$type} && $tests{$type}->()) {
     return $_can_haz{$type} = 1
   }
-
   return $_can_haz{$type} = 0
 }
 
