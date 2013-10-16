@@ -65,7 +65,9 @@ only interested in generating bcrypt passwords.  If you'd like to make use of
 other password types, you can use the exported __mkpasswd__ and __passwdcmp__
 functions:
 
+    # Import selectively:
     use App::bmkpasswd 'mkpasswd', 'passwdcmp';
+    # Or import all functions:
     use App::bmkpasswd -all;
 
 This module uses [Exporter::Tiny](http://search.cpan.org/perldoc?Exporter::Tiny) to export functions. This provides for
