@@ -6,7 +6,7 @@ use App::bmkpasswd -all;
 SKIP: {
   unless ( mkpasswd_available('md5') ) {
     diag(
-      "crypt() appears to be lacking MD5 support.\n",
+      "No MD5 support found",
       "You may want to install Crypt::Passwd::XS"
     );
     skip( "No MD5 support", 4 );

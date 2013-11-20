@@ -18,7 +18,7 @@ our @EXPORT_OK = qw/
 
 use Bytes::Random::Secure;
 my ($brs, $brsnb);
-my $getbrs = sub {
+sub get_brs {
   my (%params) = @_;
 
   if ($params{strong}) {
@@ -32,7 +32,7 @@ my $getbrs = sub {
     Bits        => 128,
     NonBlocking => 1,
   )
-};
+}
 
 
 my %_can_haz;
@@ -103,11 +103,10 @@ sub mkpasswd_available {
   return
 }
 
-
-sub _saltgen {
+my $_saltgen = sub {
   my ($type, $strong) = @_;
 
-  my $rnd = $getbrs->(strong => $strong);
+  my $rnd = get_brs(strong => $strong);
 
   SALT: {
     if ($type eq 'bcrypt') {
@@ -128,7 +127,7 @@ sub _saltgen {
   }
 
   confess "_saltgen fell through, unknown type $type"
-}
+};
 
 sub mkpasswd {
   # mkpasswd $passwd => $type, $cost, $strongsalt;
@@ -151,7 +150,7 @@ sub mkpasswd {
 
   my $type = defined $opts{type} ? $opts{type} : 'bcrypt';
 
-  my $saltgen = $opts{saltgen} || \&_saltgen;
+  my $saltgen = $opts{saltgen} || $_saltgen;
   my $salt;
 
   TYPE: {
