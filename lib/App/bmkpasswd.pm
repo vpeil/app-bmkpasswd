@@ -215,12 +215,12 @@ sub passwdcmp {
   croak 'Expected a password string and hash'
     unless defined $pwd and $crypt;
 
+  my $pos_a = index $crypt, '$';
+  my $pos_b = index $crypt, '$', 2;
   carp 'Possibly passed an invalid hash' 
-    unless index($crypt, '$') == 0
-    and do {
-      my $pos = index($crypt, '$', 2);
-      $pos == 2 || $pos == 3
-    };
+    unless $pos_a == 0
+    and    $pos_b == 2
+    or     $pos_b == 3;
 
   if ($crypt =~ /^\$2a\$\d{2}\$/) {
     ## Looks like bcrypt.
