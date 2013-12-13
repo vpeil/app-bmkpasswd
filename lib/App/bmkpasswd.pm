@@ -226,7 +226,7 @@ sub passwdcmp {
     ## Looks like bcrypt.
     return $crypt if _const_t_eq( $crypt, bcrypt($pwd, $crypt) )
   } else {
-    if (have_passwd_xs()) {
+    if (have_passwd_xs) {
       return $crypt
         if _const_t_eq( $crypt, Crypt::Passwd::XS::crypt($pwd, $crypt) )
     } else {
