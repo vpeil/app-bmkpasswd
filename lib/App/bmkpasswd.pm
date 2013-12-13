@@ -21,17 +21,9 @@ my ($brs, $brsnb);
 sub get_brs {
   my (%params) = @_;
 
-  if ($params{strong}) {
-    return 
-      $brs ||= Bytes::Random::Secure->new(
-        Bits => 128,
-      )
-  }
-
-  $brsnb ||= Bytes::Random::Secure->new(
-    Bits        => 128,
-    NonBlocking => 1,
-  )
+  $params{strong} ?
+    $brs ||= Bytes::Random::Secure->new(Bits => 128)
+    : $brsnb ||= Bytes::Random::Secure->new(Bits => 128, NonBlocking => 1)
 }
 
 
