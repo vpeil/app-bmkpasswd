@@ -20,7 +20,6 @@ use Bytes::Random::Secure;
 my ($brs, $brsnb);
 sub get_brs {
   my (%params) = @_;
-
   $params{strong} ?
     $brs ||= Bytes::Random::Secure->new(Bits => 128)
     : $brsnb ||= Bytes::Random::Secure->new(Bits => 128, NonBlocking => 1)
