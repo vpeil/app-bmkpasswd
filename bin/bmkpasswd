@@ -68,7 +68,7 @@ if (@ARGV) {
   print {*STDERR} "\n";
 }
 
-my $timer = [gettimeofday()] if $bench;
+my $timer = $bench ? [gettimeofday] : ();
 
 if ($check) {
   if ( passwdcmp($pwd, $check) ) {
