@@ -400,6 +400,6 @@ should be fine.)
 
 Jon Portnoy <avenj@cobaltirc.org>
 
-=for Pod::Coverage have_(?i:[a-z0-9_]+)
+=for Pod::Coverage have_\w+ get_\w+
 
 =cut
