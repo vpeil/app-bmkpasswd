@@ -1,5 +1,9 @@
 Revision history for Perl module App::bmkpasswd
 
+2.004002 2014-05-12
+
+  - Minor cleanups & test improvements
+
 2.004001 2013-10-16
 
   - Fix MD5 failures on machines without Crypt::Passwd::XS
