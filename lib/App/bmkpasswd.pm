@@ -1,4 +1,5 @@
 package App::bmkpasswd;
+
 use strictures 1;
 use Carp;
 use Try::Tiny;
@@ -250,9 +251,10 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 
   bmkpasswd --help
   
-  # Generate bcrypted passwords
-  # Defaults to work cost factor '08':
+  # Generate bcrypted passwords:
   bmkpasswd
+
+  # Defaults to work cost factor '08':
   bmkpasswd --workcost='06'
 
   # SHA requires Crypt::Passwd::XS or a recent libc:
@@ -319,6 +321,8 @@ Compare a password against a hash.
 
 B<passwdcmp> will return the hash if it is a match; otherwise, an empty list
 is returned.
+
+Uses constant time comparison to help mitigate against timing attacks.
 
 =head2 mkpasswd_available
 
