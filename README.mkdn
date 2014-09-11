@@ -14,9 +14,10 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 
     bmkpasswd --help
     
-    # Generate bcrypted passwords
-    # Defaults to work cost factor '08':
+    # Generate bcrypted passwords:
     bmkpasswd
+
+    # Defaults to work cost factor '08':
     bmkpasswd --workcost='06'
 
     # SHA requires Crypt::Passwd::XS or a recent libc:
@@ -30,7 +31,7 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 
 # DESCRIPTION
 
-**App::bmkpasswd** is a simple bcrypt-enabled mkpasswd. 
+**App::bmkpasswd** is a bcrypt-enabled `mkpasswd` implementation.
 
 Helper functions are also exported for use in other applications; see
 ["EXPORTED"](#exported).
@@ -41,20 +42,21 @@ See `bmkpasswd --help` for command-line usage information.
 
 Uses [Crypt::Eksblowfish::Bcrypt](https://metacpan.org/pod/Crypt::Eksblowfish::Bcrypt) for bcrypted passwords.
 
-Bcrypt comes with a configurable work-cost factor; that allows hash generation 
-to become configurably slower as computers get faster, thereby 
+Bcrypt leverages a work-cost factor allowing hash generation
+to become configurably slower as computers get faster, thereby
 impeding brute-force hash generation attempts.
-
-See [http://codahale.com/how-to-safely-store-a-password/](http://codahale.com/how-to-safely-store-a-password/) for more 
+See [http://codahale.com/how-to-safely-store-a-password/](http://codahale.com/how-to-safely-store-a-password/) for more
 on why you ought to be using bcrypt or similar "adaptive" techniques.
 
-**SHA-256** and **SHA-512** are supported if available. You'll need 
-either [Crypt::Passwd::XS](https://metacpan.org/pod/Crypt::Passwd::XS) or a system crypt() that can handle SHA
-(such as glibc-2.7+ or modern FreeBSD builds).
+**SHA-256** and **SHA-512** are supported if available. SHA support requires
+either [Crypt::Passwd::XS](https://metacpan.org/pod/Crypt::Passwd::XS) or a system crypt() that can handle SHA (such as
+glibc-2.7+ or modern FreeBSD builds).
 
-Uses [Bytes::Random::Secure](https://metacpan.org/pod/Bytes::Random::Secure) to generate random salts. For the paranoid,
-constant time comparison is used when comparing hashes; strongly-random salts
-can also be enabled (see ["mkpasswd"](#mkpasswd)).
+Uses [Bytes::Random::Secure](https://metacpan.org/pod/Bytes::Random::Secure) to generate random salts. Strongly-random salts
+can also be enabled; see ["mkpasswd"](#mkpasswd).
+
+For added security in public-facing applications, constant time comparison is
+used when comparing hashes.
 
 # EXPORTED
 
@@ -83,6 +85,8 @@ Compare a password against a hash.
 
 **passwdcmp** will return the hash if it is a match; otherwise, an empty list
 is returned.
+
+Uses constant time comparison to help mitigate against timing attacks.
 
 ## mkpasswd\_available
 
