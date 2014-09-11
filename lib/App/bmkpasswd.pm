@@ -193,7 +193,7 @@ sub _const_t_eq {
   my ($first, $second) = @_;
   my ($n, $unequal) = 0;
   no warnings 'substr';
-  while ($n < length $first) {
+  while ($n <= length $first) {
     my $schr = substr($second, $n, 1);
     ++$unequal
       if substr($first, $n, 1) ne (defined $schr ? $schr : '');
