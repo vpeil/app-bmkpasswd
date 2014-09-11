@@ -191,6 +191,7 @@ sub _const_t_eq {
   ## Constant time comparison is probably overrated for comparing
   ## hashed passwords ... but hey, why not?
   my ($first, $second) = @_;
+  return unless length $first == length $second;
   my ($n, $unequal) = 0;
   no warnings 'substr';
   while ($n <= length $first) {
