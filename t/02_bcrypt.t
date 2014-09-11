@@ -1,4 +1,4 @@
-use Test::More tests => 9;
+use Test::More;
 use strict; use warnings;
 
 BEGIN {
@@ -16,3 +16,5 @@ ok( $bc = mkpasswd('snacks', 'bcrypt', 6), 'Bcrypt tuned workcost' );
 ok( index($bc, '$2a$06') == 0, 'Bcrypt tuned workcost looks ok' );
 ok( passwdcmp('snacks', $bc), 'Bcrypt tuned workcost compare' );
 ok( !passwdcmp('things', $bc), 'Bcrypt tuned negative compare' );
+
+done_testing

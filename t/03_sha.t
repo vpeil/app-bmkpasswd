@@ -1,4 +1,4 @@
-use Test::More tests => 8;
+use Test::More;
 use strict; use warnings;
 
 use App::bmkpasswd -all;
@@ -30,3 +30,5 @@ SKIP: {
   ok( passwdcmp('snacks', $sha512), 'SHA512 compare' );
   ok( !passwdcmp('things', $sha512), 'SHA512 negative compare' );
 }
+
+done_testing

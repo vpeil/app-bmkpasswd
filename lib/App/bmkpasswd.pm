@@ -268,7 +268,7 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 
 =head1 DESCRIPTION
 
-B<App::bmkpasswd> is a simple bcrypt-enabled mkpasswd. 
+B<App::bmkpasswd> is a bcrypt-enabled C<mkpasswd> implementation.
 
 Helper functions are also exported for use in other applications; see
 L</EXPORTED>.
@@ -279,20 +279,21 @@ See C<bmkpasswd --help> for command-line usage information.
 
 Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords.
 
-Bcrypt comes with a configurable work-cost factor; that allows hash generation 
-to become configurably slower as computers get faster, thereby 
+Bcrypt leverages a work-cost factor allowing hash generation
+to become configurably slower as computers get faster, thereby
 impeding brute-force hash generation attempts.
-
-See L<http://codahale.com/how-to-safely-store-a-password/> for more 
+See L<http://codahale.com/how-to-safely-store-a-password/> for more
 on why you ought to be using bcrypt or similar "adaptive" techniques.
 
-B<SHA-256> and B<SHA-512> are supported if available. You'll need 
-either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA
-(such as glibc-2.7+ or modern FreeBSD builds).
+B<SHA-256> and B<SHA-512> are supported if available. SHA support requires
+either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA (such as
+glibc-2.7+ or modern FreeBSD builds).
 
-Uses L<Bytes::Random::Secure> to generate random salts. For the paranoid,
-constant time comparison is used when comparing hashes; strongly-random salts
-can also be enabled (see L</mkpasswd>).
+Uses L<Bytes::Random::Secure> to generate random salts. Strongly-random salts
+can also be enabled; see L</mkpasswd>.
+
+For added security in public-facing applications, constant time comparison is
+used when comparing hashes.
 
 =head1 EXPORTED
 

@@ -1,4 +1,4 @@
-use Test::More tests => 5;
+use Test::More;
 use strict; use warnings FATAL => 'all';
 
 use App::bmkpasswd -all;
@@ -12,7 +12,7 @@ ok passwdcmp('snacks', $bc), 'bcrypt compare ok';
 
 SKIP: {
   unless ( mkpasswd_available('sha256') ) {
-    skip "No SHA support", 3
+    skip "No SHA support", 4
   }
   my $sha = mkpasswd( snacks => +{
       type    => 'sha256',
@@ -26,5 +26,7 @@ SKIP: {
     }
   );
   ok index($sha, '$5$ababcdcd$') == 0, 'sha with saltgen looks ok';
+  ok passwdcmp('snacks', $sha), 'sha with saltgen compares ok';
 }
 
+done_testing
