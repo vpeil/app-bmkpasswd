@@ -200,7 +200,7 @@ sub _const_t_eq {
       if substr($first, $n, 1) ne (defined $schr ? $schr : '');
     ++$n;
   }
-  $unequal ? () : 1
+  ! $unequal
 }
 
 sub passwdcmp {
