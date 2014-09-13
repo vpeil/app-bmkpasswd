@@ -36,30 +36,26 @@ sub have_passwd_xs {
   $_can_haz{passwdxs}
 }
 
+my %_tests = (
+  sha256 => sub {
+    my $testc = try { crypt('a', '$5$abc$') } catch { warn $_; () };
+    $testc && index($testc, '$5$abc$') == 0 ? 1 : ()
+  },
+
+  sha512 => sub {
+    my $testc = try { crypt('b', '$6$abc$') } catch { warn $_; () };
+    $testc && index($testc, '$6$abc$') == 0 ? 1 : ()
+  },
+);
 sub have_sha {
-  ## if we have Crypt::Passwd::XS, just use that:
+  # if we have Crypt::Passwd::XS, just use that:
   return 1 if have_passwd_xs();
 
-  my ($rate) = @_;
-  $rate = 512 unless $rate;
+  # else determine (the slow way) if SHA256/512 are available via libc:
+  my $rate = $_[0] || 512;
   my $type = "sha$rate";
   return $_can_haz{$type} if defined $_can_haz{$type};
-
-  ## determine (the slow way) if SHA256/512 are available
-  ## (need a recent libc or Crypt::Passwd::XS)
-  my %tests = (
-    sha256 => sub {
-      my $testc = try { crypt('a', '$5$abc$') } catch { warn $_; () };
-      $testc && index($testc, '$5$abc$') == 0 ? 1 : ()
-    },
-
-    sha512 => sub {
-      my $testc = try { crypt('b', '$6$abc$') } catch { warn $_; () };
-      $testc && index($testc, '$6$abc$') == 0 ? 1 : ()
-    },
-  );
-
-  if (defined $tests{$type} && $tests{$type}->()) {
+  if (defined $_tests{$type} && $_tests{$type}->()) {
     return $_can_haz{$type} = 1
   }
   return $_can_haz{$type} = 0
