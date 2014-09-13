@@ -17,9 +17,8 @@ sub bcrypt {  Crypt::Bcrypt::Easy->new(@_)  }
 
 sub new {
   my ($cls, %params) = @_;
-  $cls = blessed($cls) || $cls;
   my $cost = $params{cost} || '08';
-  bless \$cost, $cls
+  bless \$cost, blessed($cls) || $cls
 }
 
 sub cost { ${ $_[0] } }
@@ -104,6 +103,9 @@ Creates and returns a new Crypt::Bcrypt::Easy object.
 
 The default workcost is '08'. This can be also be tuned for individual runs;
 see L</crypt>.
+
+(This is merely a convenience function for calling C<<
+Crypt::Bcrypt::Easy->new >>.)
 
 =head3 crypt
 

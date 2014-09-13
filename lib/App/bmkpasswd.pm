@@ -104,7 +104,7 @@ my $_saltgen = sub {
     if ($type eq 'sha') {
       my $max = en_base64( $rnd->bytes(16) );
       my $initial = substr $max, 0, 8, '';
-      ## Drepper recommends random-length salts:
+      # Drepper recommends random-length salts:
       $initial .= substr $max, 0, 1, '' for  1 .. rand 8;
       return $initial
     }
@@ -184,8 +184,8 @@ sub mkpasswd {
 }
 
 sub _const_t_eq {
-  ## Constant time comparison is probably overrated for comparing
-  ## hashed passwords ... but hey, why not?
+  # Constant time comparison is probably overrated for comparing
+  # hashed passwords ... but hey, why not?
   my ($first, $second) = @_;
   return unless length $first == length $second;
   my ($n, $unequal) = 0;
@@ -212,7 +212,7 @@ sub passwdcmp {
     or     $pos_b == 3;
 
   if ($crypt =~ /^\$2a\$\d{2}\$/) {
-    ## Looks like bcrypt.
+    # Looks like bcrypt.
     return $crypt if _const_t_eq( $crypt, bcrypt($pwd, $crypt) )
   } else {
     if (have_passwd_xs) {

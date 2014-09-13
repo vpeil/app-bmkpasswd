@@ -6,6 +6,8 @@ use App::bmkpasswd ();
 my $cmpr = \&App::bmkpasswd::_const_t_eq;
 
 ok $cmpr->('foo', 'foo');
+ok $cmpr->('123foo', '123foo');
+ok $cmpr->('$5$foo$things', '$5$foo$things');
 
 ok !$cmpr->('foo', 'FOO');
 ok !$cmpr->('foo', 'bar');
