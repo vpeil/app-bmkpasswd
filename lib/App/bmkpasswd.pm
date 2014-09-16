@@ -36,17 +36,17 @@ sub have_passwd_xs {
   $_can_haz{passwdxs}
 }
 
-my %_tests = (
+my %_shatests = (
   sha256 => sub {
     my $testc = try { crypt('a', '$5$abc$') } catch { warn $_; () };
     $testc && index($testc, '$5$abc$') == 0 ? 1 : ()
   },
-
   sha512 => sub {
     my $testc = try { crypt('b', '$6$abc$') } catch { warn $_; () };
     $testc && index($testc, '$6$abc$') == 0 ? 1 : ()
   },
 );
+
 sub have_sha {
   # if we have Crypt::Passwd::XS, just use that:
   return 1 if have_passwd_xs();
@@ -55,7 +55,7 @@ sub have_sha {
   my $rate = $_[0] || 512;
   my $type = "sha$rate";
   return $_can_haz{$type} if defined $_can_haz{$type};
-  if (defined $_tests{$type} && $_tests{$type}->()) {
+  if (defined $_shatests{$type} && $_shatests{$type}->()) {
     return $_can_haz{$type} = 1
   }
   return $_can_haz{$type} = 0
@@ -186,14 +186,13 @@ sub mkpasswd {
 sub _const_t_eq {
   # Constant time comparison is probably overrated for comparing
   # hashed passwords ... but hey, why not?
-  my ($first, $second) = @_;
-  return unless length $first == length $second;
+  my ($input, $created) = @_;
   my ($n, $unequal) = 0;
   no warnings 'substr';
-  while ($n <= length $first) {
-    my $schr = substr($second, $n, 1);
+  while ($n <= length $created) {
+    my $schr = substr($input, $n, 1);
     ++$unequal
-      if substr($first, $n, 1) ne (defined $schr ? $schr : '');
+      if substr($created, $n, 1) ne (defined $schr ? $schr : '');
     ++$n;
   }
   ! $unequal
