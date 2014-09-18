@@ -55,7 +55,7 @@ sub have_sha {
   my $rate = $_[0] || 512;
   my $type = "sha$rate";
   return $_can_haz{$type} if defined $_can_haz{$type};
-  if (defined $_shatests{$type} && $_shatests{$type}->()) {
+  if (exists $_shatests{$type} && $_shatests{$type}->()) {
     return $_can_haz{$type} = 1
   }
   return $_can_haz{$type} = 0
@@ -96,22 +96,20 @@ my $_saltgen = sub {
 
   my $rnd = get_brs(strong => $strong);
 
-  SALT: {
-    if ($type eq 'bcrypt') {
-      return en_base64( $rnd->bytes(16) );
-    }
+  if ($type eq 'bcrypt') {
+    return en_base64( $rnd->bytes(16) );
+  }
 
-    if ($type eq 'sha') {
-      my $max = en_base64( $rnd->bytes(16) );
-      my $initial = substr $max, 0, 8, '';
-      # Drepper recommends random-length salts:
-      $initial .= substr $max, 0, 1, '' for  1 .. rand 8;
-      return $initial
-    }
+  if ($type eq 'sha') {
+    my $max = en_base64( $rnd->bytes(16) );
+    my $initial = substr $max, 0, 8, '';
+    # Drepper recommends random-length salts:
+    $initial .= substr $max, 0, 1, '' for  1 .. rand 8;
+    return $initial
+  }
 
-    if ($type eq 'md5') {
-      return en_base64( $rnd->bytes(6) );
-    }
+  if ($type eq 'md5') {
+    return en_base64( $rnd->bytes(6) );
   }
 
   confess "_saltgen fell through, unknown type $type"
