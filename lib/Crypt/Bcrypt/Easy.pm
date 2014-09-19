@@ -1,4 +1,5 @@
 package Crypt::Bcrypt::Easy;
+
 use Carp;
 use strictures 1;
 use App::bmkpasswd 'mkpasswd', 'passwdcmp';
@@ -82,13 +83,13 @@ Crypt::Bcrypt::Easy - Simple interface to bcrypted passwords
 
 =head1 DESCRIPTION
 
-This module provides an alternate interface to L<App::bmkpasswd>'s exported
-helpers (which were created to power L<bmkpasswd> and are a bit awkward to use
-directly).
+This module provides an easy interface to creating and comparing bcrypt-hashed
+passwords via L<App::bmkpasswd>'s exported helpers (which were created to
+power L<bmkpasswd> and are a bit awkward to use directly).
 
-This POD briefly covers usage of this interface; 
-see L<App::bmkpasswd> for more details on internals and documentation
-regarding the more flexible functional interface.
+This POD briefly covers usage of this interface; see L<App::bmkpasswd> for
+more details on bcrypt, internals, and documentation regarding the more
+flexible functional interface.
 
 This module uses L<Exporter::Tiny>; you can rename the L</bcrypt> function
 as-needed:
@@ -109,17 +110,17 @@ Crypt::Bcrypt::Easy->new >>.)
 
 =head3 crypt
 
-  my $crypted = bcrypt->crypt(
-    text   => 'my_password',
-    cost   => 8,
-    strong => 0,
-  );
-
-Or use defaults:
+Create and return a new password hash:
 
   my $crypted = bcrypt->crypt( 'my_password' );
 
-Create and return a new password hash.
+Override default options (see L<App::bmkpasswd>):
+
+  my $crypted = bcrypt->crypt(
+    text   => 'my_password',
+    cost   => 10,
+    strong => 1,
+  );
 
 Specifying a boolean true 'strong =>' parameter enables strongly-random salts
 (see L<App::bmkpasswd>).
@@ -131,11 +132,11 @@ Specifying a boolean true 'strong =>' parameter enables strongly-random salts
   }
 
 Returns boolean true if hashes match. Accepts any type of hash supported by
-your L<App::bmkpasswd>; see C<passwdcmp> from L<App::bmkpasswd>.
+L<App::bmkpasswd> and your system; see L<App::bmkpasswd/passwdcmp>.
 
 =head3 cost
 
-Returns the current work-cost value.
+Returns the current work-cost value; see L<App::bmkpasswd>.
 
 =head1 AUTHOR
 
