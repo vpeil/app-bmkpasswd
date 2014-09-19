@@ -67,12 +67,14 @@ Crypt::Bcrypt::Easy - Simple interface to bcrypted passwords
 
   use Crypt::Bcrypt::Easy;
 
+  # Generate bcrypted passwords:
   my $plain = 'my_password';
-
   my $passwd = bcrypt->crypt( $plain );
-  my $passwd = bcrypt->crypt( text => $plain );
+
+  # Generate passwords with non-default options:
   my $passwd = bcrypt->crypt( text => $plain, cost => 8 );
 
+  # Compare passwords:
   if (bcrypt->compare( text => $plain, crypt => $passwd )) {
     # Successful match
   }
