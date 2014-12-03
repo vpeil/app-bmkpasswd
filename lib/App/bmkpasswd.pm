@@ -181,21 +181,6 @@ sub mkpasswd {
     Crypt::Passwd::XS::crypt($pwd, $salt) : crypt($pwd, $salt)
 }
 
-sub _const_t_eq {
-  # Constant time comparison is probably overrated for comparing
-  # hashed passwords ... but hey, why not?
-  my ($input, $created) = @_;
-  my ($n, $unequal) = 0;
-  no warnings 'substr';
-  while ($n <= length $created) {
-    my $schr = substr($input, $n, 1);
-    ++$unequal
-      if substr($created, $n, 1) ne (defined $schr ? $schr : '');
-    ++$n;
-  }
-  ! $unequal
-}
-
 sub passwdcmp {
   my ($pwd, $crypt) = @_;
   croak 'Expected a password string and hash'
@@ -210,14 +195,12 @@ sub passwdcmp {
 
   if ($crypt =~ /^\$2a\$\d{2}\$/) {
     # Looks like bcrypt.
-    return $crypt if _const_t_eq( $crypt, bcrypt($pwd, $crypt) )
+    return $crypt if $crypt eq bcrypt($pwd, $crypt)
   } else {
     if (have_passwd_xs) {
-      return $crypt
-        if _const_t_eq( $crypt, Crypt::Passwd::XS::crypt($pwd, $crypt) )
+      return $crypt if $crypt eq Crypt::Passwd::XS::crypt($pwd, $crypt)
     } else {
-      return $crypt
-        if _const_t_eq( $crypt, crypt($pwd, $crypt) )
+      return $crypt if $crypt eq crypt($pwd, $crypt)
     }
   }
 
@@ -286,9 +269,6 @@ glibc-2.7+ or modern FreeBSD builds).
 Uses L<Bytes::Random::Secure> to generate random salts. Strongly-random salts
 can also be enabled; see L</mkpasswd>.
 
-For added security in public-facing applications, constant time comparison is
-used when comparing hashes.
-
 =head1 EXPORTED
 
 L<Crypt::Bcrypt::Easy> provides an easier programmatic interface, if you're
@@ -316,8 +296,6 @@ Compare a password against a hash.
 
 B<passwdcmp> will return the hash if it is a match; otherwise, an empty list
 is returned.
-
-Uses constant time comparison to help mitigate against timing attacks.
 
 =head2 mkpasswd_available
 
