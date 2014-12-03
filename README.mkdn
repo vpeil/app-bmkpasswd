@@ -55,9 +55,6 @@ glibc-2.7+ or modern FreeBSD builds).
 Uses [Bytes::Random::Secure](https://metacpan.org/pod/Bytes::Random::Secure) to generate random salts. Strongly-random salts
 can also be enabled; see ["mkpasswd"](#mkpasswd).
 
-For added security in public-facing applications, constant time comparison is
-used when comparing hashes.
-
 # EXPORTED
 
 [Crypt::Bcrypt::Easy](https://metacpan.org/pod/Crypt::Bcrypt::Easy) provides an easier programmatic interface, if you're
@@ -85,8 +82,6 @@ Compare a password against a hash.
 
 **passwdcmp** will return the hash if it is a match; otherwise, an empty list
 is returned.
-
-Uses constant time comparison to help mitigate against timing attacks.
 
 ## mkpasswd\_available
 

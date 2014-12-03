@@ -1,5 +1,12 @@
 Revision history for Perl module App::bmkpasswd
 
+2.005003 2014-12-02
+
+  - Kill constant time comparison completely; this was a silly addition that
+    has only introduced bugs.
+
+  - Switch to 'cpanfile' dependency list
+
 2.005002 2014-09-18
 
   - Better Crypt::Bcrypt::Easy documentation.
