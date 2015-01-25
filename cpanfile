@@ -16,3 +16,7 @@ recommends "Math::Random::ISAAC::XS"  => "0";
 on 'test' => sub {
   requires "Test::More" => "0.88";
 };
+
+on 'develop' => sub {
+  recommends "Test::Without::Module" => "0";
+};
