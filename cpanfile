@@ -4,7 +4,7 @@ requires "Exporter::Tiny"         => "0";
 requires "Pod::Usage"             => "1.51";
 requires "Try::Tiny"              => "0.12";
 
-requires "strictures"             => "1";
+requires "strictures"             => "2";
 requires "Carp"                   => "0";
 requires "Getopt::Long"           => "2.24";
 requires "POSIX"                  => "0";

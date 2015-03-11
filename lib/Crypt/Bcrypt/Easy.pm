@@ -1,7 +1,7 @@
 package Crypt::Bcrypt::Easy;
 
 use Carp;
-use strictures 1;
+use strictures 2;
 use App::bmkpasswd 'mkpasswd', 'passwdcmp';
 
 use Scalar::Util 'blessed';

@@ -1,6 +1,6 @@
 package App::bmkpasswd;
 
-use strictures 1;
+use strictures 2;
 use Carp;
 use Try::Tiny;
 
