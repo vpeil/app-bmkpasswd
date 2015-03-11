@@ -1,5 +1,11 @@
 Revision history for Perl module App::bmkpasswd
 
+2.005004 2015-03-11
+
+  - 'use strictures 2;' for saner fatal warnings behavior
+
+  - Faster tests
+
 2.005003 2014-12-02
 
   - Kill constant time comparison completely; this was a silly addition that
