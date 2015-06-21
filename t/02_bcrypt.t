@@ -15,9 +15,8 @@ $bc = undef;
 ok $bc = mkpasswd('snacks', 'bcrypt', 2), 'Bcrypt tuned workcost';
 ok index($bc, '$2a$02') == 0, 'Bcrypt tuned workcost looks ok';
 ok passwdcmp('snacks', $bc), 'Bcrypt tuned workcost compare';
-ok !passwdcmp('things', $bc), 'Bcrypt tuned negative compare';
-cmp_ok passwdcmp('things', $bc), 'eq', '', 
-  'failed passwdcmp returns empty string';
+ok ! passwdcmp('things', $bc), 'Bcrypt tuned negative compare';
+ok ! defined passwdcmp('things', $bc), 'failed passwdcmp returns undef';
 
 my $orig_brs = App::bmkpasswd::get_brs;
 ok $orig_brs == App::bmkpasswd::get_brs, 'get_brs ok';

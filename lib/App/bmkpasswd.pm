@@ -137,10 +137,9 @@ sub mkpasswd {
   my %opts =
     ref $_[0] eq 'HASH' ? %{ $_[0] }
     : map {; $_ => shift } qw/type cost strong/;
-
   my $type = defined $opts{type} ? $opts{type} : 'bcrypt';
-
   my $saltgen = $opts{saltgen} || $_saltgen;
+
   my $salt;
 
   TYPE: {
@@ -208,7 +207,7 @@ sub passwdcmp {
     }
   }
 
-  ''
+  undef
 }
 
 1;
@@ -298,8 +297,8 @@ Compare a password against a hash.
     ## Failed match
   }
 
-B<passwdcmp> will return the hash if it is a match; otherwise, an empty
-string is returned. (This is an API change in C<v2.7.1>; prior versions return
+B<passwdcmp> will return the hash if it is a match; otherwise, C<undef>
+is returned. (This is an API change in C<v2.7.1>; prior versions return
 an empty list on failure.)
 
 =head2 mkpasswd
