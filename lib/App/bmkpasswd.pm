@@ -134,12 +134,9 @@ sub mkpasswd {
   croak "mkpasswd passed an undef password"
     unless defined $pwd;
 
-  my %opts;
-  if (ref $_[0] eq 'HASH') {
-    %opts = %{ $_[0] };
-  } elsif (@_) {
-    @opts{qw/type cost strong/} = @_;
-  }
+  my %opts =
+    ref $_[0] eq 'HASH' ? %{ $_[0] }
+    : map {; $_ => shift } qw/type cost strong/;
 
   my $type = defined $opts{type} ? $opts{type} : 'bcrypt';
 
