@@ -15,6 +15,7 @@ our @EXPORT_OK = qw/
   passwdcmp
 
   mkpasswd_available
+  mkpasswd_forked
 /;
 
 use Bytes::Random::Secure;
@@ -26,6 +27,11 @@ sub get_brs {
     : $brsnb ||= Bytes::Random::Secure->new(Bits => 128, NonBlocking => 1)
 }
 
+sub mkpasswd_forked {
+  srand; # wrt random-length salts
+  undef $brs;
+  undef $brsnb;
+}
 
 my %_can_haz;
 sub have_passwd_xs {
@@ -297,17 +303,6 @@ Compare a password against a hash.
 B<passwdcmp> will return the hash if it is a match; otherwise, an empty list
 is returned.
 
-=head2 mkpasswd_available
-
-  my @available = mkpasswd_available;
-
-  if ( mkpasswd_available('sha512') ) { ... }
-
-Given no arguments, returns the list of available hash types.
-
-Given a type (see L</mkpasswd>), returns boolean true if the method is available. ('bcrypt' is
-always available.)
-
 =head2 mkpasswd
 
   my $crypted = mkpasswd($passwd);
@@ -370,8 +365,32 @@ the value of the B<strong> option (default false).
     }
   };
 
-(Most people want random salts, in which case the default salt generator
-should be fine.)
+Most people want random salts, in which case the default salt generator
+should be fine.
+
+See L</mkpasswd_forked> if your application loads this module before forking
+or creating threads that generate passwords.
+
+=head2 mkpasswd_available
+
+  my @available = mkpasswd_available;
+
+  if ( mkpasswd_available('sha512') ) { ... }
+
+Given no arguments, returns the list of available hash types.
+
+Given a type (see L</mkpasswd>), returns boolean true if the method is available. ('bcrypt' is
+always available.)
+
+=head2 mkpasswd_forked
+
+  # After a fork / new thread is created:
+  mkpasswd_forked;
+
+To retain secure salts after forking the process or creating a new thread, 
+it's advisable to either only load this module after creating the new process
+or call B<mkpasswd_forked> in the new process to reset the random seeds used
+by salt generators.
 
 =head1 AUTHOR
 
