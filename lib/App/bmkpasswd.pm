@@ -211,7 +211,7 @@ sub passwdcmp {
     }
   }
 
-  ()
+  ''
 }
 
 1;
@@ -301,8 +301,9 @@ Compare a password against a hash.
     ## Failed match
   }
 
-B<passwdcmp> will return the hash if it is a match; otherwise, an empty list
-is returned.
+B<passwdcmp> will return the hash if it is a match; otherwise, an empty
+string is returned. (This is an API change in C<v2.7.1>; prior versions return
+an empty list on failure.)
 
 =head2 mkpasswd
 
@@ -392,6 +393,8 @@ To retain secure salts after forking the process or creating a new thread,
 it's advisable to either only load this module after creating the new process
 or call B<mkpasswd_forked> in the new process to reset the random seeds used
 by salt generators.
+
+Added in C<v2.6.1>.
 
 =head1 AUTHOR
 

@@ -118,6 +118,8 @@ C<reset_seed> option:
 
   my $bcrypt = bcrypt( reset_seed => 1, cost => 8 );
 
+(The C<reset_seed> option was added in C<v2.7.1>.)
+
 =head3 crypt
 
 Create and return a new password hash:
