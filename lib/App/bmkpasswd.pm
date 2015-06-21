@@ -10,10 +10,11 @@ use Crypt::Eksblowfish::Bcrypt qw/
 /;
 
 use parent 'Exporter::Tiny';
-our @EXPORT_OK = qw/
+our @EXPORT = qw/
   mkpasswd
-  passwdcmp
-
+  passwdcmp 
+/;
+our @EXPORT_OK = qw/
   mkpasswd_available
   mkpasswd_forked
 /;
@@ -226,7 +227,7 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 
   ## From Perl:
 
-  use App::bmkpasswd 'mkpasswd', 'passwdcmp';
+  use App::bmkpasswd -all;
   my $bcrypted = mkpasswd($passwd);
   say 'matched' if passwdcmp($passwd, $bcrypted);
 

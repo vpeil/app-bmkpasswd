@@ -1,9 +1,7 @@
 use Test::More;
 use strict; use warnings;
 
-BEGIN {
-  use_ok( 'App::bmkpasswd', qw/mkpasswd passwdcmp mkpasswd_forked/ );
-}
+use App::bmkpasswd -all;
 
 my $bc;
 ok( $bc = mkpasswd('snacks'), 'Bcrypt crypt()' );
