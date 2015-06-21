@@ -6,7 +6,7 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 
     ## From Perl:
 
-    use App::bmkpasswd 'mkpasswd', 'passwdcmp';
+    use App::bmkpasswd -all;
     my $bcrypted = mkpasswd($passwd);
     say 'matched' if passwdcmp($passwd, $bcrypted);
 
@@ -80,8 +80,9 @@ Compare a password against a hash.
       ## Failed match
     }
 
-**passwdcmp** will return the hash if it is a match; otherwise, an empty list
-is returned.
+**passwdcmp** will return the hash if it is a match; otherwise, `undef`
+is returned. (This is an API change in `v2.7.1`; prior versions return
+an empty list on failure.)
 
 ## mkpasswd
 
@@ -171,6 +172,8 @@ To retain secure salts after forking the process or creating a new thread,
 it's advisable to either only load this module after creating the new process
 or call **mkpasswd\_forked** in the new process to reset the random seeds used
 by salt generators.
+
+Added in `v2.6.1`.
 
 # AUTHOR
 

@@ -1,5 +1,15 @@
 Revision history for Perl module App::bmkpasswd
 
+2.007001 2015-06-21
+
+  - API change; passwdcmp now returns explicit undef rather than an empty
+    list
+
+  - API change; export mkpasswd and passwdcmp by default
+
+  - Add 'reset_seed' option to Crypt::Bcrypt::Easy's constructor as sugar for
+    calling 'mkpasswd_forked' at object construction time
+
 2.006001 2015-06-21
 
   - Add 'mkpasswd_forked' function for resetting salt generator seeds in child
