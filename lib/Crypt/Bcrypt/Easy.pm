@@ -2,7 +2,7 @@ package Crypt::Bcrypt::Easy;
 
 use Carp;
 use strictures 2;
-use App::bmkpasswd 'mkpasswd', 'passwdcmp';
+use App::bmkpasswd 'mkpasswd', 'passwdcmp', 'mkpasswd_forked';
 
 use Scalar::Util 'blessed';
 
@@ -19,6 +19,7 @@ sub bcrypt {  Crypt::Bcrypt::Easy->new(@_)  }
 sub new {
   my ($cls, %params) = @_;
   my $cost = $params{cost} || '08';
+  mkpasswd_forked if $params{reset_seed};
   bless \$cost, blessed($cls) || $cls
 }
 
