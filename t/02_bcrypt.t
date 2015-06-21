@@ -18,6 +18,7 @@ ok( passwdcmp('snacks', $bc), 'Bcrypt tuned workcost compare' );
 ok( !passwdcmp('things', $bc), 'Bcrypt tuned negative compare' );
 
 my $orig_brs = App::bmkpasswd::get_brs;
+ok $orig_brs == App::bmkpasswd::get_brs, 'get_brs ok';
 mkpasswd_forked;
 $bc = mkpasswd('snacks');
 ok( index($bc, '$2a$') == 0, 'Bcrypt after mkpasswd_forked ok' );
