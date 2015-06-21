@@ -3,10 +3,7 @@ use strict; use warnings FATAL => 'all';
 
 use App::bmkpasswd -all;
 
-my $bc = mkpasswd( snacks => +{
-    cost => 6,
-  }
-);
+my $bc = mkpasswd snacks => +{ cost => 6 };
 ok index($bc, '$2a$06') == 0, 'bcrypt looks ok';
 ok passwdcmp('snacks', $bc), 'bcrypt compare ok';
 
