@@ -101,15 +101,22 @@ as-needed:
 
 =head2 bcrypt
 
-  my $bcrypt = bcrypt( cost => '10' );
+  my $bcrypt = bcrypt( cost => 10 );
 
 Creates and returns a new Crypt::Bcrypt::Easy object.
 
-The default workcost is '08'. This can be also be tuned for individual runs;
+The default C<cost> is '08'. This can be also be tuned for individual runs;
 see L</crypt>.
 
 (This is merely a convenience function for calling C<<
 Crypt::Bcrypt::Easy->new >>.)
+
+If your application generates passwords in multiple child processes or
+threads, you can cause L<App::bmkpasswd/mkpasswd_forked> to be automatically
+called during object construction in each individual process by specifying the
+C<reset_seed> option:
+
+  my $bcrypt = bcrypt( reset_seed => 1, cost => 8 );
 
 =head3 crypt
 
