@@ -17,8 +17,11 @@ ok( index($bc, '$2a$02') == 0, 'Bcrypt tuned workcost looks ok' );
 ok( passwdcmp('snacks', $bc), 'Bcrypt tuned workcost compare' );
 ok( !passwdcmp('things', $bc), 'Bcrypt tuned negative compare' );
 
+my $orig_brs = App::bmkpasswd::get_brs;
 mkpasswd_forked;
 $bc = mkpasswd('snacks');
 ok( index($bc, '$2a$') == 0, 'Bcrypt after mkpasswd_forked ok' );
+my $new_brs = App::bmkpasswd::get_brs;
+ok $orig_brs != $new_brs, 'mkpasswd_forked reset Bytes::Random::Secure';
 
 done_testing
