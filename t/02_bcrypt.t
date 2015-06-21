@@ -6,16 +6,18 @@ use App::bmkpasswd -all;
 ok mkpasswd_available('bcrypt'), 'mkpasswd_available ok';
 
 my $bc;
-ok( $bc = mkpasswd('snacks'), 'Bcrypt crypt()' );
-ok( index($bc, '$2a$') == 0, 'Looks like bcrypt' );
-ok( passwdcmp('snacks', $bc), 'Bcrypt compare' );
-ok( !passwdcmp('things', $bc), 'Bcrypt negative compare' );
+ok $bc = mkpasswd('snacks'), 'Bcrypt crypt()';
+ok index($bc, '$2a$') == 0, 'Looks like bcrypt';
+ok passwdcmp('snacks', $bc), 'Bcrypt compare';
+ok !passwdcmp('things', $bc), 'Bcrypt negative compare';
 
 $bc = undef;
-ok( $bc = mkpasswd('snacks', 'bcrypt', 2), 'Bcrypt tuned workcost' );
-ok( index($bc, '$2a$02') == 0, 'Bcrypt tuned workcost looks ok' );
-ok( passwdcmp('snacks', $bc), 'Bcrypt tuned workcost compare' );
-ok( !passwdcmp('things', $bc), 'Bcrypt tuned negative compare' );
+ok $bc = mkpasswd('snacks', 'bcrypt', 2), 'Bcrypt tuned workcost';
+ok index($bc, '$2a$02') == 0, 'Bcrypt tuned workcost looks ok';
+ok passwdcmp('snacks', $bc), 'Bcrypt tuned workcost compare';
+ok !passwdcmp('things', $bc), 'Bcrypt tuned negative compare';
+cmp_ok passwdcmp('things', $bc), 'eq', '', 
+  'failed passwdcmp returns empty string';
 
 my $orig_brs = App::bmkpasswd::get_brs;
 ok $orig_brs == App::bmkpasswd::get_brs, 'get_brs ok';
