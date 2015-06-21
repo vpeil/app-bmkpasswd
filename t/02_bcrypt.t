@@ -3,6 +3,8 @@ use strict; use warnings;
 
 use App::bmkpasswd -all;
 
+ok mkpasswd_available('bcrypt'), 'mkpasswd_available ok';
+
 my $bc;
 ok( $bc = mkpasswd('snacks'), 'Bcrypt crypt()' );
 ok( index($bc, '$2a$') == 0, 'Looks like bcrypt' );
