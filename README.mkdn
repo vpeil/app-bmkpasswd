@@ -83,17 +83,6 @@ Compare a password against a hash.
 **passwdcmp** will return the hash if it is a match; otherwise, an empty list
 is returned.
 
-## mkpasswd\_available
-
-    my @available = mkpasswd_available;
-
-    if ( mkpasswd_available('sha512') ) { ... }
-
-Given no arguments, returns the list of available hash types.
-
-Given a type (see ["mkpasswd"](#mkpasswd)), returns boolean true if the method is available. ('bcrypt' is
-always available.)
-
 ## mkpasswd
 
     my $crypted = mkpasswd($passwd);
@@ -156,8 +145,32 @@ the value of the **strong** option (default false).
       }
     };
 
-(Most people want random salts, in which case the default salt generator
-should be fine.)
+Most people want random salts, in which case the default salt generator
+should be fine.
+
+See ["mkpasswd\_forked"](#mkpasswd_forked) if your application loads this module before forking
+or creating threads that generate passwords.
+
+## mkpasswd\_available
+
+    my @available = mkpasswd_available;
+
+    if ( mkpasswd_available('sha512') ) { ... }
+
+Given no arguments, returns the list of available hash types.
+
+Given a type (see ["mkpasswd"](#mkpasswd)), returns boolean true if the method is available. ('bcrypt' is
+always available.)
+
+## mkpasswd\_forked
+
+    # After a fork / new thread is created:
+    mkpasswd_forked;
+
+To retain secure salts after forking the process or creating a new thread, 
+it's advisable to either only load this module after creating the new process
+or call **mkpasswd\_forked** in the new process to reset the random seeds used
+by salt generators.
 
 # AUTHOR
 

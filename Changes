@@ -1,5 +1,10 @@
 Revision history for Perl module App::bmkpasswd
 
+2.006001 2015-06-21
+
+  - Add 'mkpasswd_forked' function for resetting salt generator seeds in child
+    processes or threads.
+
 2.005004 2015-03-11
 
   - 'use strictures 2;' for saner fatal warnings behavior
