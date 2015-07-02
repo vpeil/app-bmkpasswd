@@ -19,13 +19,13 @@ our @EXPORT_OK = qw/
   mkpasswd_forked
 /;
 
-use Bytes::Random::Secure;
+use Bytes::Random::Secure::Tiny;
 my ($brs, $brsnb);
 sub get_brs {
   my (%params) = @_;
   $params{strong} ?
-    $brs ||= Bytes::Random::Secure->new(Bits => 128)
-    : $brsnb ||= Bytes::Random::Secure->new(Bits => 128, NonBlocking => 1)
+    $brs ||= Bytes::Random::Secure::Tiny->new(Bits => 128)
+    : $brsnb ||= Bytes::Random::Secure::Tiny->new(Bits => 128, NonBlocking => 1)
 }
 
 sub mkpasswd_forked {
@@ -269,7 +269,7 @@ B<SHA-256> and B<SHA-512> are supported if available. SHA support requires
 either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA (such as
 glibc-2.7+ or modern FreeBSD builds).
 
-Uses L<Bytes::Random::Secure> to generate random salts. Strongly-random salts
+Uses L<Bytes::Random::Secure::Tiny> to generate random salts. Strongly-random salts
 can also be enabled; see L</mkpasswd>.
 
 =head1 EXPORTED
