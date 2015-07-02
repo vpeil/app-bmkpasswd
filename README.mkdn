@@ -52,7 +52,7 @@ on why you ought to be using bcrypt or similar "adaptive" techniques.
 either [Crypt::Passwd::XS](https://metacpan.org/pod/Crypt::Passwd::XS) or a system crypt() that can handle SHA (such as
 glibc-2.7+ or modern FreeBSD builds).
 
-Uses [Bytes::Random::Secure](https://metacpan.org/pod/Bytes::Random::Secure) to generate random salts. Strongly-random salts
+Uses [Bytes::Random::Secure::Tiny](https://metacpan.org/pod/Bytes::Random::Secure::Tiny) to generate random salts. Strongly-random salts
 can also be enabled; see ["mkpasswd"](#mkpasswd).
 
 # EXPORTED

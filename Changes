@@ -1,5 +1,9 @@
 Revision history for Perl module App::bmkpasswd
 
+2.008001 2015-07-02
+
+  - Switch to Bytes::Random::Secure::Tiny
+
 2.007001 2015-06-21
 
   - API change; passwdcmp now returns explicit undef rather than an empty
