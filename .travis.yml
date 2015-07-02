@@ -23,7 +23,7 @@ perl:
   - "5.20"
 #  - "blead"   # git
 
-env:
+sudo: false
 
 matrix:
 #  include:
