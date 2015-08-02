@@ -1,5 +1,10 @@
 Revision history for Perl module App::bmkpasswd
 
+2.008002 2015-08-02
+
+  - Bytes::Random::Secure::Tiny now defaults to seeding from nonblocking
+    sources; fix our constructor call when 'strong' salts are enabled
+
 2.008001 2015-07-02
 
   - Switch to Bytes::Random::Secure::Tiny
