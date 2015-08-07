@@ -38,6 +38,11 @@ ok $bc->compare( text  => 'pie', crypt => $passwd ),
 ok ! $bc->compare( text => 'foo', crypt => $passwd ),
   'negative obj tuned ->compare() ok';
 
+ok $passwd = Crypt::Bcrypt::Easy->crypt('pie'),
+  '->crypt() as class method ok';
+ok !!Crypt::Bcrypt::Easy->compare(text => 'pie', crypt => $passwd),
+  '->compare() as class method ok';
+
 undef $passwd;
 undef $bc;
 
