@@ -10,20 +10,22 @@ use parent 'Exporter::Tiny';
 our @EXPORT = 'bcrypt';
 sub bcrypt {  Crypt::Bcrypt::Easy->new(@_)  }
 
+sub DEFAULT_COST () { '08' }
+
 =pod
 
-=for Pod::Coverage new
+=for Pod::Coverage new DEFAULT_COST
 
 =cut
 
 sub new {
   my ($cls, %params) = @_;
-  my $cost = $params{cost} || '08';
+  my $cost = $params{cost} || DEFAULT_COST;
   mkpasswd_forked if $params{reset_seed};
   bless \$cost, blessed($cls) || $cls
 }
 
-sub cost { ${ $_[0] } }
+sub cost { blessed $_[0] ? ${ $_[0] } : DEFAULT_COST }
 
 sub compare {
   my ($self, %params) = @_;
