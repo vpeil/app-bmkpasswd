@@ -1,5 +1,9 @@
 Revision history for Perl module App::bmkpasswd
 
+2.009001 2015-08-08
+
+  - Support calling Crypt::Bcrypt::Easy->crypt as a class method
+
 2.008002 2015-08-02
 
   - Bytes::Random::Secure::Tiny now defaults to seeding from nonblocking
