@@ -25,21 +25,21 @@ sub new {
   bless \$cost, blessed($cls) || $cls
 }
 
-sub cost { blessed $_[0] ? ${ $_[0] } : DEFAULT_COST }
+sub cost { 
+  my ($self) = @_;
+  blessed $self ? $$self : DEFAULT_COST
+}
 
 sub compare {
   my ($self, %params) = @_;
-
   unless (defined $params{text} && defined $params{crypt}) {
     confess "Expected 'text =>' and 'crypt =>' params"
   }
-
   passwdcmp $params{text} => $params{crypt}
 }
 
 sub crypt {
   my $self = shift;
-
   my %params;
 
   if (@_ == 1) {
