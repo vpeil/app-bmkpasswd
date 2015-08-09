@@ -38,13 +38,21 @@ ok $bc->compare( text  => 'pie', crypt => $passwd ),
 ok ! $bc->compare( text => 'foo', crypt => $passwd ),
   'negative obj tuned ->compare() ok';
 
+undef $passwd;
+undef $bc;
+
 ok $passwd = Crypt::Bcrypt::Easy->crypt('pie'),
   '->crypt() as class method ok';
 ok !!Crypt::Bcrypt::Easy->compare(text => 'pie', crypt => $passwd),
   '->compare() as class method ok';
 
 undef $passwd;
-undef $bc;
+
+$passwd = Crypt::Bcrypt::Easy->crypt(text => 'pie', cost => 10);
+ok index($passwd, '$2a$10') == 0, '->crypt() as class method with adjusted cost ok'
+  or diag explain $passwd;
+
+undef $passwd;
 
 ok $bc = bcrypt( cost => 2 ), 'simple bcrypt constructor ok';
 isa_ok $bc, 'Crypt::Bcrypt::Easy';
