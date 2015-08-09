@@ -75,22 +75,27 @@ Crypt::Bcrypt::Easy - Simple interface to bcrypted passwords
   my $passwd = bcrypt->crypt( $plain );
 
   # Generate passwords with non-default options:
-  my $passwd = bcrypt->crypt( text => $plain, cost => 8 );
+  my $passwd = bcrypt->crypt( text => $plain, cost => 10 );
 
   # Compare passwords:
   if (bcrypt->compare( text => $plain, crypt => $passwd )) {
     # Successful match
   }
 
-  # Generate passwords using a different default workcost:
+  # Spawn a new instance that will generate passwords using a different
+  # default workcost:
   my $bc = bcrypt( cost => 10 );
-  my $crypted = $bc->crypt( $plain );
+  my $passwd = $bc->crypt( $plain );
+
+  # Without imported constructor:
+  use Crypt::Bcrypt::Easy ();
+  my $passwd = Crypt::Bcrypt::Easy->crypt( text => $plain, cost => 10 )
 
 =head1 DESCRIPTION
 
 This module provides an easy interface to creating and comparing bcrypt-hashed
 passwords via L<App::bmkpasswd>'s exported helpers (which were created to
-power L<bmkpasswd> and are a bit awkward to use directly).
+power C<bmkpasswd(1)> and are a bit awkward to use directly).
 
 This POD briefly covers usage of this interface; see L<App::bmkpasswd> for
 more details on bcrypt, internals, and documentation regarding the more
