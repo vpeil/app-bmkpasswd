@@ -26,11 +26,17 @@ SKIP: {
   ok passwdcmp('snacks', $sha), 'SHA256 compare';  
   ok !passwdcmp('things', $sha), 'SHA256 negative compare';
 
+  ok $sha = mkpasswd('snacks', 'SHA-256'), 'SHA-256 crypt()';
+  ok index($sha, '$5$') == 0, 'Looks like SHA256 ("SHA-256")';
+
   my $sha512;
   ok $sha512 = mkpasswd('snacks', 'sha512'), 'SHA512 crypt()';
   ok index($sha512, '$6$') == 0, 'Looks like SHA512';
   ok passwdcmp('snacks', $sha512), 'SHA512 compare';
   ok !passwdcmp('things', $sha512), 'SHA512 negative compare';
+
+  ok $sha512 = mkpasswd('snacks', 'SHA-512'), 'SHA-512 crypt()';
+  ok index($sha512, '$6$') == 0, 'Looks like SHA512 ("SHA-512")';
 }
 
 done_testing
