@@ -186,8 +186,8 @@ sub mkpasswd {
 
 sub _eq {
   my ($orig, $created) = @_;
-  my $n = 0;
   my $unequal = ! (length $orig == length $created);
+  my $n = 0;
   no warnings 'substr';
   while ($n < length $created) {
     my $schr = substr $orig, $n, 1;
