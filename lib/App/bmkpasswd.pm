@@ -191,8 +191,8 @@ sub _eq {
   no warnings 'substr';
   while ($n < length $created) {
     my $schr = substr $orig, $n, 1;
-    ++$unequal
-      if substr($created, $n, 1) ne (defined $schr ? $schr : '');
+    $unequal = 1
+      if substr($created, $n, 1) ne (defined $schr ? $schr : ($unequal = 1));
     ++$n;
   }
   ! $unequal
