@@ -317,6 +317,8 @@ B<passwdcmp> will return the hash if it is a match; otherwise, C<undef>
 is returned. (This is an API change in C<v2.7.1>; prior versions return
 an empty list on failure.)
 
+As of C<v2.10>, a constant time comparison function is used to compare hashes.
+
 =head2 mkpasswd
 
   my $crypted = mkpasswd($passwd);
