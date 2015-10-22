@@ -23,7 +23,11 @@ ok !$cmp->('abcef', 'abce'), 'abcef ne abce';
 ok !$cmp->('abce', 'abcef'), 'abce ne abcef';
 ok !$cmp->('dcba', 'ecba'), 'dcba ne ecba';
 ok !$cmp->('ecba', 'dcba'), 'ecba ne dcba';
+ok !$cmp->('ebba', 'edda'), 'ebba ne edda';
+ok !$cmp->('eeza', 'eeba'), 'eeza ne eeba';
 ok !$cmp->('', 'abc'),      'empty string ne abc';
 ok !$cmp->('abc', ''),      'abc ne empty string';
+ok !$cmp->('foo bar', 'foo bar baz'), 'foo bar ne foo bar baz';
+ok !$cmp->('foo bar baz', 'foo bar'), 'foo bar baz ne foo bar';
 
 done_testing
