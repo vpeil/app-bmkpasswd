@@ -189,10 +189,10 @@ sub _eq {
   my $unequal = ! (length $orig == length $created);
   my $n = 0;
   no warnings 'substr';
-  while ($n < length $created) {
-    my $schr = substr $orig, $n, 1;
+  while ($n < length $orig) {
+    my $schr = substr $created, $n, 1;
     $unequal = 1
-      if substr($created, $n, 1) ne (defined $schr ? $schr : '');
+      if substr($orig, $n, 1) ne (defined $schr ? $schr : '');
     ++$n;
   }
   ! $unequal

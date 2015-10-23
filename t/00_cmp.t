@@ -5,6 +5,8 @@ use App::bmkpasswd ();
 
 my $cmp = \&App::bmkpasswd::_eq;
 ok  $cmp->('foo', 'foo'),   'foo eq foo';
+ok  $cmp->('ooo', 'ooo'),   'ooo eq ooo';
+ok  $cmp->('123', '123'),   '123 eq 123';
 ok  $cmp->('', ''),         'empty string eq empty string';
 ok !$cmp->('abc', '123'),   'abc ne 123';
 ok !$cmp->('o', 'oo'),      'o ne oo';
