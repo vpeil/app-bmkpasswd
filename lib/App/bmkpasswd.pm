@@ -184,6 +184,20 @@ sub mkpasswd {
     Crypt::Passwd::XS::crypt($pwd, $salt) : crypt($pwd, $salt)
 }
 
+sub _eq {
+  my ($orig, $created) = @_;
+  my $unequal = ! (length $orig == length $created);
+  my $n = 0;
+  no warnings 'substr';
+  while ($n < length $created) {
+    my $schr = substr $orig, $n, 1;
+    $unequal = 1
+      if substr($created, $n, 1) ne (defined $schr ? $schr : '');
+    ++$n;
+  }
+  ! $unequal
+}
+
 sub passwdcmp {
   my ($pwd, $crypt) = @_;
   croak 'Expected a password string and hash'
@@ -198,12 +212,14 @@ sub passwdcmp {
 
   if ($crypt =~ /^\$2a\$\d{2}\$/) {
     # Looks like bcrypt.
-    return $crypt if $crypt eq bcrypt($pwd, $crypt)
+    return $crypt if _eq( $crypt, bcrypt($pwd, $crypt) )
   } else {
     if (have_passwd_xs) {
-      return $crypt if $crypt eq Crypt::Passwd::XS::crypt($pwd, $crypt)
+      return $crypt
+        if _eq( $crypt, Crypt::Passwd::XS::crypt($pwd, $crypt) )
     } else {
-      return $crypt if $crypt eq crypt($pwd, $crypt)
+      return $crypt
+        if _eq( $crypt, crypt($pwd, $crypt) )
     }
   }
 
@@ -300,6 +316,8 @@ Compare a password against a hash.
 B<passwdcmp> will return the hash if it is a match; otherwise, C<undef>
 is returned. (This is an API change in C<v2.7.1>; prior versions return
 an empty list on failure.)
+
+As of C<v2.10>, a constant time comparison function is used to compare hashes.
 
 =head2 mkpasswd
 
