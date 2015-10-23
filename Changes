@@ -1,5 +1,11 @@
 Revision history for Perl module App::bmkpasswd
 
+2.010001 2015-10-23
+
+  - Reintroduce constant time comparison for hashes
+
+  - Minor test expansion
+
 2.009001 2015-08-08
 
   - Support calling Crypt::Bcrypt::Easy->crypt as a class method

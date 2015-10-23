@@ -84,6 +84,8 @@ Compare a password against a hash.
 is returned. (This is an API change in `v2.7.1`; prior versions return
 an empty list on failure.)
 
+As of `v2.10`, a constant time comparison function is used to compare hashes.
+
 ## mkpasswd
 
     my $crypted = mkpasswd($passwd);
