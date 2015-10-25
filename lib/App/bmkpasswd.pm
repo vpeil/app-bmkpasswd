@@ -57,7 +57,6 @@ my %_shatests = (
 sub have_sha {
   # if we have Crypt::Passwd::XS, just use that:
   return 1 if have_passwd_xs();
-
   # else determine (the slow way) if SHA256/512 are available via libc:
   my $rate = $_[0] || 512;
   my $type = "sha$rate";
@@ -153,6 +152,7 @@ sub mkpasswd {
       $salt = $saltgen->(bcrypt => $opts{strong});
       my $bsettings = join '', '$2a$', $cost, '$', $salt;
 
+      # bcrypt returns from here; everything else depends on have_passwd_xs
       return bcrypt($pwd, $bsettings)
     }
 

@@ -33,6 +33,8 @@ ok !$cmp->('ebba', 'edda'), 'ebba ne edda';
 ok !$cmp->('eeza', 'eeba'), 'eeza ne eeba';
 ok !$cmp->('', 'abc'),      'empty string ne abc';
 ok !$cmp->('abc', ''),      'abc ne empty string';
+ok !$cmp->('', 'a'),        'empty string ne a';
+ok !$cmp->('a', ''),        'a ne empty string';
 ok !$cmp->('foo bar', 'foo bar baz'), 'foo bar ne foo bar baz';
 ok !$cmp->('foo bar baz', 'foo bar'), 'foo bar baz ne foo bar';
 
