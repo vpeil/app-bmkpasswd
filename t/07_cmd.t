@@ -3,8 +3,14 @@ use strict; use warnings;
 
 use Test::Cmd;
 
+use Config;
+my $perl = $Config{perlpath};
+if ($^O ne 'VMS') {
+  $perl .= $Config{_exe} unless $perl =~ /$Config{_exe}$/i
+}
+
 my $cmd = Test::Cmd->new(
-  interpreter => $^X,
+  interpreter => $perl,
   workdir => '',
   prog => 'bin/bmkpasswd',
 );
@@ -37,7 +43,7 @@ my $cmd = Test::Cmd->new(
   $cmd->run(args => "--check=@{[quotemeta $crypt]} foo");
   is $? >> 8, 0, 'bmkpasswd -c exit 0';
   ok !$cmd->stderr, 'bmkpasswd -c produced no stderr' 
-    or diag explain $cmd->stderr;
+    or diag $cmd->stderr;
   cmp_ok $cmd->stdout, 'eq', "Match\n$crypt\n",
     'password comparison returned hash';
 
@@ -46,7 +52,7 @@ my $cmd = Test::Cmd->new(
   ok !$cmd->stdout, 'bad passwd produced no stdout';
 }
 
-{ $cmd->run(args => '-w 2', stdin => 'foo');
+{ $cmd->run(args => '-m bcrypt -w 2', stdin => 'foo');
   is $? >> 8, 0, 'bmkpasswd (-w 2) exit 0';
   my $crypt = $cmd->stdout;
   chomp $crypt;
@@ -57,5 +63,7 @@ my $cmd = Test::Cmd->new(
   cmp_ok $cmd->stdout, 'eq', "Match\n$crypt\n",
     'password comparison (tuned work cost) returned hash';
 }
+
+# FIXME SHA tests if avail
 
 done_testing
