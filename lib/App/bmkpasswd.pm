@@ -233,7 +233,7 @@ __END__
 
 =head1 NAME
 
-App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
+App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported bcrypt interface
 
 =head1 SYNOPSIS
 
@@ -267,13 +267,11 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported helpers
 B<App::bmkpasswd> is a bcrypt-enabled C<mkpasswd> implementation.
 
 Helper functions are also exported for use in other applications; see
-L</EXPORTED>.
-L<Crypt::Bcrypt::Easy> provides an easier bcrypt-specific
-programmatic interface for Perl programmers.
+L</EXPORTED> -- however L<Crypt::Bcrypt::Easy> (from this distribution)
+provides an easier bcrypt-specific programmatic interface for Perl
+programmers.
 
 See C<bmkpasswd --help> for command-line usage information.
-
-Uses L<Crypt::Eksblowfish::Bcrypt> for bcrypted passwords.
 
 Bcrypt leverages a work-cost factor allowing hash generation
 to become configurably slower as computers get faster, thereby
@@ -285,15 +283,17 @@ B<SHA-256> and B<SHA-512> are supported if available. SHA support requires
 either L<Crypt::Passwd::XS> or a system crypt() that can handle SHA (such as
 glibc-2.7+ or modern FreeBSD builds).
 
+This module uses L<Crypt::Eksblowfish::Bcrypt> as a back-end.
+
 Uses L<Bytes::Random::Secure::Tiny> to generate random salts. Strongly-random salts
 can also be enabled; see L</mkpasswd>.
 
 =head1 EXPORTED
 
-L<Crypt::Bcrypt::Easy> provides an easier programmatic interface, if you're
-only interested in generating bcrypt passwords.  If you'd like to make use of
-other password types, you can use the exported B<mkpasswd> and B<passwdcmp>
-functions:
+L<Crypt::Bcrypt::Easy> provides an easier programmatic interface, but only
+generates bcrypt (although it can validate any supported type).  If you would
+like to create crypted passwords using other methods, you can use the exported
+B<mkpasswd> and B<passwdcmp> functions:
 
   # Import selectively:
   use App::bmkpasswd 'mkpasswd', 'passwdcmp';
@@ -307,7 +307,7 @@ flexible import options. See the L<Exporter::Tiny> docs for details.
 
 Compare a password against a hash.
 
-  if ( passwdcmp($plaintext, $crypted) ) {
+  if ( passwdcmp($plaintext => $crypted) ) {
     ## Successful match
   } else {
     ## Failed match
@@ -412,7 +412,7 @@ Added in C<v2.6.1>.
 
 =head1 AUTHOR
 
-Jon Portnoy <avenj@cobaltirc.org>
+Jon Portnoy <jon@portnoy.me>
 
 =for Pod::Coverage have_\w+ get_\w+
 
