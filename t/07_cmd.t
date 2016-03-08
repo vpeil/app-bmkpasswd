@@ -52,7 +52,7 @@ my $cmd = Test::Cmd->new(
   ok !$cmd->stdout, 'bad passwd produced no stdout';
 }
 
-{ $cmd->run(args => '-m bcrypt -w 2', stdin => 'foo');
+{ $cmd->run(args => '-m bcrypt -w 2 foo');
   is $? >> 8, 0, 'bmkpasswd (-w 2) exit 0';
   my $crypt = $cmd->stdout;
   chomp $crypt;
