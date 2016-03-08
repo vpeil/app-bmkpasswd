@@ -20,9 +20,13 @@ GetOptions(
   'check=s'          => \$check,
   'm|method|type=s'  => \$type,
   'workcost=s'       => \$bcost,
+
+  'available' => sub {
+    print join("\n", mkpasswd_available), "\n";
+    exit 0
+  },
   
   'version' => sub {
-     require Crypt::Eksblowfish::Bcrypt;
      my $bvers = $App::bmkpasswd::VERSION || '(git)';
      print(
            "App::bmkpasswd $bvers\n\n",
@@ -107,6 +111,7 @@ __END__
  -c, --check=HASH   Compare password against given HASH
  -s, --strong       Use strongly-random salt generation
  -b, --benchmark    Show timers; useful for comparing hash generation
+ --available        List available methods (one per line)
  --version          Display version information and available methods
 
 If PASSWD is missing, it is prompted for interactively.
