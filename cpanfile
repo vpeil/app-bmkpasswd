@@ -17,6 +17,7 @@ recommends "Math::Random::ISAAC::XS"  => "0";
 
 on 'test' => sub {
   requires "Test::More" => "0.88";
+  requires "Test::Cmd"  => "1.09";
 };
 
 on 'develop' => sub {

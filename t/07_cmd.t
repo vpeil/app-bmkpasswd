@@ -10,9 +10,9 @@ if ($^O ne 'VMS') {
 }
 
 my $cmd = Test::Cmd->new(
+  prog        => 'bin/bmkpasswd',
   interpreter => $perl,
-  workdir => '',
-  prog => 'bin/bmkpasswd',
+  workdir     => '',
 );
 
 { $cmd->run(args => '-h');
