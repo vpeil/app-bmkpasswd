@@ -41,11 +41,11 @@ my $cmd = Test::Cmd->new(
   cmp_ok length($crypt), '==', 60, 'bcrypt output correct length';
   
   $cmd->run(args => "--check=@{[quotemeta $crypt]} foo");
-  is $? >> 8, 0, 'bmkpasswd -c exit 0';
-  ok !$cmd->stderr, 'bmkpasswd -c produced no stderr' 
+  is $? >> 8, 0, 'bmkpasswd --check exit 0';
+  ok !$cmd->stderr, 'bmkpasswd --check produced no stderr' 
     or diag $cmd->stderr;
   cmp_ok $cmd->stdout, 'eq', "Match\n$crypt\n",
-    'password comparison returned hash';
+    'bmkpasswd --check returned hash';
 
   $cmd->run(args => "--check=@{[quotemeta $crypt]} bar");
   is $? >> 8, 1, 'bmkpasswd -c bad passwd exit 1';
@@ -53,15 +53,15 @@ my $cmd = Test::Cmd->new(
 }
 
 { $cmd->run(args => '-m bcrypt -w 2 foo');
-  is $? >> 8, 0, 'bmkpasswd (-w 2) exit 0';
+  is $? >> 8, 0, 'bmkpasswd (-m bcrypt -w 2) exit 0';
   my $crypt = $cmd->stdout;
   chomp $crypt;
   cmp_ok length($crypt), '==', 60, 'bcrypt output correct length';
   ok index($crypt, '$2a$02') == 0, 'bcrypt tuned work cost ok';
   
-  $cmd->run(args => "--check=@{[quotemeta $crypt]} foo");
+  $cmd->run(args => "-c @{[quotemeta $crypt]} foo");
   cmp_ok $cmd->stdout, 'eq', "Match\n$crypt\n",
-    'password comparison (tuned work cost) returned hash';
+    'bmkpasswd -c (tuned work cost) returned hash';
 }
 
 # FIXME SHA tests if avail
