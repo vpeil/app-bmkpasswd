@@ -1,5 +1,12 @@
 Revision history for Perl module App::bmkpasswd
 
+2.011005 2016-03-09
+
+  - Skip 'bmkpasswd' command tests on MSWin32
+
+    While the utility is reported to work without issue, the test does not,
+    and I lack access to an appropriate machine for deeper diving.
+
 2.011004 2016-03-09
 
   - Fall back to Term::ReadKey on MSWin32
