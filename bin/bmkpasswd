@@ -159,16 +159,8 @@ comparing bcrypted passwords from your own modules.
 
 =head1 CAVEATS
 
-=head2 PERL 5.8
-
-Users of C<5.8.x> perls will need L<Term::ReadKey> to turn off
-terminal echo for password prompts.
-
-=head2 WINDOWS
-
-While the included backing libraries (L<App::bmkpasswd>,
-L<Crypt::Bcrypt::Easy>) are tested on C<MSWin32>, this frontend utility is not;
-the author is receptive to relevant reports ;-)
+Users of C<5.8.x> perls or C<MSWin32> platforms will need L<Term::ReadKey> to
+turn off terminal echo for password prompts.
 
 =head1 AUTHOR
 
