@@ -63,7 +63,7 @@ if (@ARGV) {
       unless $has_readkey;
   }
 
-  { my $prev = select(STDERR); $|++; select($prev) }
+  { $|++; my $prev = select(STDERR); $|++; select($prev) }
   print {*STDERR} "Password: ";
 
   my $term;
