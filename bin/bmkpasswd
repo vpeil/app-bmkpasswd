@@ -55,24 +55,34 @@ my $pwd;
 if (@ARGV) {
   $pwd = $ARGV[0];
 } else {
-  $|++; 
+  my $posix_sucks = $] < 5.010;
+  my $has_readkey; 
+  if ($posix_sucks) {
+    $has_readkey = eval {; require Term::ReadKey; 1 } && !$@;
+    warn "WARNING: cannot disable terminal echo, password will be visible!\n"
+      unless $has_readkey;
+  }
+
+  { my $prev = select(STDERR); $|++; select($prev) }
   print {*STDERR} "Password: ";
 
-  # TODO consider backwards-compat ReadKey bit instead?
-  my $posix_sucks = $] < 5.010;
   my $term;
-  unless ($posix_sucks) {
+  if (!$posix_sucks) {
     $term = POSIX::Termios->new;
     $term->getattr(0);
     $term->setlflag( $term->getlflag & eval("~POSIX::ECHO") );
     $term->setattr(0);
+  } elsif ($has_readkey) {
+    Term::ReadKey::ReadMode(2)
   }
 
   $pwd = <STDIN>;
 
-  unless ($posix_sucks) {
+  if (!$posix_sucks) {
     $term->setlflag( $term->getlflag | eval("POSIX::ECHO") );
     $term->setattr(0);
+  } elsif ($has_readkey) {
+    Term::ReadKey::ReadMode(0)
   }
 
   chomp($pwd);
@@ -144,8 +154,13 @@ this software.
 See L<Crypt::Bcrypt::Easy> if you'd like a simple interface to creating and
 comparing bcrypted passwords from your own modules.
 
+=head2 PERL 5.8 USERS
+
+Users of C<5.8.x> perls will need L<Term::ReadKey> to turn off
+terminal echo for password prompts.
+
 =head1 AUTHOR
 
-Jon Portnoy <avenj@cobaltirc.org>
+Jon Portnoy <jon@portnoy.me>
 
 =cut
