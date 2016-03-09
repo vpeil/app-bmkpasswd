@@ -58,15 +58,22 @@ if (@ARGV) {
   $|++; 
   print {*STDERR} "Password: ";
 
-  my $term = POSIX::Termios->new;
-  $term->getattr(0);
-  $term->setlflag( $term->getlflag & ~POSIX::ECHO );
-  $term->setattr(0);
+  # FIXME backwards-compat ReadKey bit instead?
+  my $posix_sucks = $] < 5.010;
+  my $term;
+  unless ($posix_sucks) {
+    $term = POSIX::Termios->new;
+    $term->getattr(0);
+    $term->setlflag( $term->getlflag & eval("~POSIX::ECHO") );
+    $term->setattr(0);
+  }
 
   $pwd = <STDIN>;
 
-  $term->setlflag( $term->getlflag | POSIX::ECHO );
-  $term->setattr(0);
+  unless ($posix_sucks) {
+    $term->setlflag( $term->getlflag | eval("POSIX::ECHO") );
+    $term->setattr(0);
+  }
 
   chomp($pwd);
   print {*STDERR} "\n";
