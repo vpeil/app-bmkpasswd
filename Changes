@@ -1,5 +1,9 @@
 Revision history for Perl module App::bmkpasswd
 
+2.011002 2016-03-09
+
+  - Fix `bmkpasswd` executable on 5.8.x (no POSIX::ECHO available)
+
 2.011001 2016-03-08
 
   - Add `bmkpasswd --available` for listing available crypt methods
