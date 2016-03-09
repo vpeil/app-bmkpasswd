@@ -1,6 +1,8 @@
 use Test::More;
 use strict; use warnings;
 
+=for comment
+
 BEGIN {
   if ($^O eq 'MSWin32') {
     require Test::More;
@@ -13,6 +15,7 @@ BEGIN {
   }
 }
 
+=cut
 
 use Test::Cmd;
 

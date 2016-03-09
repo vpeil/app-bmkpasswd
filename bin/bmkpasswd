@@ -55,7 +55,7 @@ my $pwd;
 if (@ARGV) {
   $pwd = $ARGV[0];
 } else {
-  my $posix_sucks = $] < 5.010;
+  my $posix_sucks = $] < 5.010 || $^O eq 'MSWin32';
   my $has_readkey; 
   if ($posix_sucks) {
     $has_readkey = eval {; require Term::ReadKey; 1 } && !$@;
