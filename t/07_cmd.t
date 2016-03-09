@@ -1,6 +1,19 @@
 use Test::More;
 use strict; use warnings;
 
+BEGIN {
+  if ($^O eq 'MSWin32') {
+    require Test::More;
+    Test::More::diag(
+      "This test is broken on Windows, a platform the author does not have
+      access to -- pull requests welcome!
+      http://github.com/avenj/app-bmkpasswd"
+    );
+    Test::More::plan(skip_all => 'these tests are known to fail on Windows');
+  }
+}
+
+
 use Test::Cmd;
 
 use Config;
