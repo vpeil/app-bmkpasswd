@@ -167,7 +167,7 @@ terminal echo for password prompts.
 =head2 WINDOWS
 
 While the included backing libraries (L<App::bmkpasswd>,
-L<Crypt::Bcrypt:Easy>) are tested on C<MSWin32>, this frontend utility is not;
+L<Crypt::Bcrypt::Easy>) are tested on C<MSWin32>, this frontend utility is not;
 the author is receptive to relevant reports ;-)
 
 =head1 AUTHOR
