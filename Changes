@@ -1,5 +1,11 @@
 Revision history for Perl module App::bmkpasswd
 
+2.011003 2016-03-09
+
+  - Fall back to Term::ReadKey to turn off terminal echo on 5.8.x, if
+    available; if not, warn loudly and suggest it before prompting for a
+    password to crypt
+
 2.011002 2016-03-09
 
   - Fix `bmkpasswd` executable on 5.8.x (no POSIX::ECHO available)

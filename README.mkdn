@@ -10,6 +10,8 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported bcrypt interface
     my $bcrypted = mkpasswd($passwd);
     say 'matched' if passwdcmp($passwd, $bcrypted);
 
+    my $stronger = mkpasswd($passwd, 'bcrypt', 12);
+
     ## From a shell:
 
     bmkpasswd --help
