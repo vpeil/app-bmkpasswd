@@ -58,7 +58,7 @@ if (@ARGV) {
   $|++; 
   print {*STDERR} "Password: ";
 
-  # FIXME backwards-compat ReadKey bit instead?
+  # TODO consider backwards-compat ReadKey bit instead?
   my $posix_sucks = $] < 5.010;
   my $term;
   unless ($posix_sucks) {
