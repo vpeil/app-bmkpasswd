@@ -43,7 +43,7 @@ my $cmd = Test::Cmd->new(
 { $cmd->run(args => '--available');
   is $? >> 8, 0, 'bmkpasswd --available exit 0';
   ok !$cmd->stderr, 'bmkpasswd --available produced no stderr';
-  like $cmd->stdout, qr/bcrypt/, 'bmkpasswd --available';
+  like $cmd->stdout, qr/bcrypt\n/, 'bmkpasswd --available';
 }
 
 { $cmd->run(stdin => 'foo');
@@ -77,6 +77,18 @@ my $cmd = Test::Cmd->new(
     'bmkpasswd -c (tuned work cost) returned hash';
 }
 
-# FIXME SHA tests if avail
+require App::bmkpasswd;
+if (App::bmkpasswd::mkpasswd_available('sha256')) { 
+  diag "Found SHA support";
+  $cmd->run(args => '-m sha256', stdin => 'foo');
+  is $? >> 8, 0, 'bmkpasswd (-m sha256) exit 0';
+  my $crypt = $cmd->stdout;
+  chomp $crypt;
+  ok index($crypt, '$5$') == 0, 'sha256 hash looks ok';
+  
+  $cmd->run(args => "-c @{[quotemeta $crypt]} foo");
+  cmp_ok $cmd->stdout, 'eq', "Match\n$crypt\n",
+    'bmkpasswd -c (sha256) returned hash';
+}
 
 done_testing
