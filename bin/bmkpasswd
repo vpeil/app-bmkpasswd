@@ -156,10 +156,18 @@ this software.
 See L<Crypt::Bcrypt::Easy> if you'd like a simple interface to creating and
 comparing bcrypted passwords from your own modules.
 
-=head2 PERL 5.8 USERS
+=head1 CAVEATS
+
+=head2 PERL 5.8
 
 Users of C<5.8.x> perls will need L<Term::ReadKey> to turn off
 terminal echo for password prompts.
+
+=head2 WINDOWS
+
+While the included backing libraries (L<App::bmkpasswd>,
+L<Crypt::Bcrypt:Easy>) are tested on C<MSWin32>, this frontend utility is not;
+the author is receptive to relevant reports ;-)
 
 =head1 AUTHOR
 
