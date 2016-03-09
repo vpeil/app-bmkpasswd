@@ -59,7 +59,9 @@ if (@ARGV) {
   my $has_readkey; 
   if ($posix_sucks) {
     $has_readkey = eval {; require Term::ReadKey; 1 } && !$@;
-    warn "WARNING: cannot disable terminal echo, password will be visible!\n"
+    warn 
+       " WARNING: cannot disable terminal echo, password will be visible!\n"
+      ." (Recommend installing Term::ReadKey or upgrading perl)\n"
       unless $has_readkey;
   }
 
