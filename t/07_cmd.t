@@ -1,21 +1,18 @@
 use Test::More;
 use strict; use warnings;
 
-=for comment
-
 BEGIN {
   if ($^O eq 'MSWin32') {
     require Test::More;
     Test::More::diag(
       "This test is broken on Windows, a platform the author does not have
-      access to -- pull requests welcome!
+      access to -- although it is reported that the 'bmkpasswd' utility does
+      work as-advertised on MSWin32 platforms. Pull requests welcome!
       http://github.com/avenj/app-bmkpasswd"
     );
     Test::More::plan(skip_all => 'these tests are known to fail on Windows');
   }
 }
-
-=cut
 
 use Test::Cmd;
 
