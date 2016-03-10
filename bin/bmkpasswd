@@ -3,6 +3,8 @@ use strictures 2;
 
 use POSIX ();
 
+use IO::Handle;
+
 use App::bmkpasswd -all;
 use Time::HiRes    qw/ gettimeofday tv_interval /;
 use Try::Tiny;
@@ -65,7 +67,8 @@ if (@ARGV) {
       unless $has_readkey;
   }
 
-  { $|++; my $prev = select(STDERR); $|++; select($prev) }
+  # stderr should be unbuffered anyway, but can't hurt?
+  STDERR->autoflush(1); STDOUT->autoflush(1);
   print {*STDERR} "Password: ";
 
   my $term;
