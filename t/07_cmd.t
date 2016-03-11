@@ -12,6 +12,13 @@ BEGIN {
     );
     Test::More::plan(skip_all => 'these tests are known to fail on Windows');
   }
+
+  if (getpwuid($<) eq 'njh') {
+    require Test::More;
+    Test::More::plan(skip_all => 
+      "this looks like one of Nigel Horne's busted smokers"
+    )
+  }
 }
 
 use Test::Cmd;
