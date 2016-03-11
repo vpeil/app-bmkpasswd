@@ -13,7 +13,7 @@ BEGIN {
     Test::More::plan(skip_all => 'these tests are known to fail on Windows');
   }
 
-  if ($ENV{AUTOMATED_TESTING} && getpwuid($<) eq 'njh') {
+  if ($ENV{AUTOMATED_TESTING} && $^O ne 'MSWin32' && getpwuid($<) eq 'njh') {
     # obnoxious and useless test noise, something's fucky with this cat's
     # smokers; f.ex:
     # http://www.cpantesters.org/cpan/report/82c71a7e-e6a9-11e5-8839-f3218d218ed8
