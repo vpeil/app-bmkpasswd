@@ -13,7 +13,10 @@ BEGIN {
     Test::More::plan(skip_all => 'these tests are known to fail on Windows');
   }
 
-  if (getpwuid($<) eq 'njh') {
+  if ($ENV{AUTOMATED_TESTING} && getpwuid($<) eq 'njh') {
+    # obnoxious and useless test noise, something's fucky with this cat's
+    # smokers; f.ex:
+    # http://www.cpantesters.org/cpan/report/82c71a7e-e6a9-11e5-8839-f3218d218ed8
     require Test::More;
     Test::More::plan(skip_all => 
       "this looks like one of Nigel Horne's busted smokers"
