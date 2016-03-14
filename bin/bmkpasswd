@@ -58,6 +58,9 @@ if (@ARGV) {
   $pwd = $ARGV[0];
 } else {
   my $posix_sucks = $] < 5.010 || $^O eq 'MSWin32';
+  my $term;
+  $posix_sucks++
+    unless eval {; $term = POSIX::Termios->new } and !$@;
   my $has_readkey; 
   if ($posix_sucks) {
     $has_readkey = eval {; require Term::ReadKey; 1 } && !$@;
@@ -71,9 +74,7 @@ if (@ARGV) {
   STDERR->autoflush(1); STDOUT->autoflush(1);
   print {*STDERR} "Password: ";
 
-  my $term;
   if (!$posix_sucks) {
-    $term = POSIX::Termios->new;
     $term->getattr(0);
     $term->setlflag( $term->getlflag & eval("~POSIX::ECHO") );
     $term->setattr(0);
