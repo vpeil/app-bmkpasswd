@@ -64,7 +64,8 @@ if (@ARGV) {
       try {; POSIX::Termios->new }
       catch {; 
         $posix_sucks = 1; 
-        warn "Could not init POSIX::Termios: '$_'" 
+        warn "Could not init POSIX::Termios: '$_'\n";
+        undef
       };
   }
 
