@@ -62,11 +62,7 @@ if (@ARGV) {
   unless ($posix_sucks) { 
     $term = 
       try {; POSIX::Termios->new }
-      catch {; 
-        $posix_sucks = 1; 
-        warn "Could not init POSIX::Termios: '$_'\n";
-        undef
-      };
+      catch {; $posix_sucks = 1; undef };
   }
 
   my $has_readkey; 
