@@ -114,7 +114,6 @@ if ($bench) {
   my $interval = tv_interval($timer);
   print " bench: $type, time: $interval\n";
 }
-exit 0
 
 __END__
 =pod
