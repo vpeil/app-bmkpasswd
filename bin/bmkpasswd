@@ -79,7 +79,7 @@ if (@ARGV) {
 
   # stderr should be unbuffered anyway, but can't hurt?
   STDERR->autoflush(1); STDOUT->autoflush(1);
-  print {*STDERR} "Password: ";
+  STDERR->print("Password: ");
 
   if (!$posix_sucks) {
     $term->getattr(0);
@@ -99,7 +99,7 @@ if (@ARGV) {
   }
 
   chomp($pwd);
-  print {*STDERR} "\n";
+  STDERR->print("\n");
 }
 
 my $timer = $bench ? [gettimeofday] : ();
