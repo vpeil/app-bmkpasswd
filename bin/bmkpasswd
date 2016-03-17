@@ -60,8 +60,7 @@ if (@ARGV) {
   my $posix_sucks = $] < 5.010 || $^O eq 'MSWin32';
   my $term;
   unless ($posix_sucks) { 
-    $term = 
-      try {; POSIX::Termios->new }
+    $term = try {; POSIX::Termios->new }
       catch {; $posix_sucks = 1; undef };
   }
 
@@ -69,8 +68,8 @@ if (@ARGV) {
   if ($posix_sucks) {
     $has_readkey = try {; require Term::ReadKey; 1 };
     warn 
-       " WARNING: cannot disable terminal echo, password will be visible!\n"
-      ." (Recommend installing Term::ReadKey or upgrading perl)\n"
+       "WARNING: cannot disable terminal echo, password will be visible!\n"
+      ." (Try installing 'Term::ReadKey')\n"
       unless $has_readkey;
   }
 
@@ -95,7 +94,7 @@ if (@ARGV) {
     Term::ReadKey::ReadMode(0)
   }
 
-  chomp($pwd);
+  chomp $pwd;
   STDERR->print("\n");
 }
 
