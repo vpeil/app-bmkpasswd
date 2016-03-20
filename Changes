@@ -1,5 +1,12 @@
 Revision history for Perl module App::bmkpasswd
 
+2.011006 2016-03-20
+
+  - Improved check for POSIX::Termios in `bmkpasswd`
+
+  - Minor `bmkpasswd` cleanups; take advantage of IO::Handle methods as long
+    as we have it
+
 2.011005 2016-03-09
 
   - Skip 'bmkpasswd' command tests on MSWin32
