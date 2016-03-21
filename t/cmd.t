@@ -50,6 +50,18 @@ my $cmd = Test::Cmd->new(
   like $cmd->stdout, qr/bmkpasswd/, 'bmkpasswd --version';
 }
 
+{ $cmd->run(args => '--man');
+  is $? >> 8, 0, 'bmkpasswd --man exit 0';
+  ok !$cmd->stderr, 'bmkpasswd --man produced no stderr';
+  like $cmd->stdout, qr/^NAME/, 'bmkpasswd --man';
+}
+
+{ $cmd->run(args => '--usage');
+  is $? >> 8, 2, 'bmkpasswd --usage exit 2';
+  like $cmd->stderr, qr/^Usage/, 'bmkpasswd --usage';
+  ok !$cmd->stdout, 'bmkpasswd --usage produced no stdout';
+}
+
 { $cmd->run(args => '--available');
   is $? >> 8, 0, 'bmkpasswd --available exit 0';
   ok !$cmd->stderr, 'bmkpasswd --available produced no stderr';

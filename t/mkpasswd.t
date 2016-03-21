@@ -4,7 +4,8 @@ use strict; use warnings;
 use App::bmkpasswd -all;
 
 subtest bcrypt => sub {
-  ok mkpasswd_available('bcrypt'), 'mkpasswd_available ok';
+  ok mkpasswd_available('bcrypt'), 'mkpasswd_available';
+  ok !mkpasswd_available('foo'), 'negative mkpasswd_available';
 
   my $bc;
   ok $bc = mkpasswd('snacks'), 'Bcrypt crypt()';
