@@ -55,9 +55,6 @@ subtest sha512 => sub {
   plan skip_all => "No SHA512 support; install Crypt::Passwd::XS"
     unless mkpasswd_available('sha512');
 
-  diag App::bmkpasswd::have_passwd_xs() ? "Using Crypt::Passwd::XS for SHA"
-    : "Using system crypt() for SHA";
-
   my $sha512;
   ok $sha512 = mkpasswd('snacks', 'sha512'), 'SHA512 crypt()';
   ok index($sha512, '$6$') == 0, 'looks like SHA512';
