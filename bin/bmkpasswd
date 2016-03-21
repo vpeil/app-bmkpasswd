@@ -40,7 +40,7 @@ GetOptions(
      push @avail, 'SHA256' if mkpasswd_available('sha256');
      push @avail, 'SHA512' if mkpasswd_available('sha512');
      printf '  ' . join(', ', @avail) . " available (via %s)\n",
-      App::bmkpasswd::have_passwd_xs ? 'Crypt::Passwd::XS' : 'system crypt';
+      App::bmkpasswd::have_passwd_xs() ? 'Crypt::Passwd::XS' : 'system crypt';
      
      exit 0
    },
