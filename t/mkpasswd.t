@@ -4,9 +4,6 @@ use strict; use warnings;
 use App::bmkpasswd -all;
 
 subtest bcrypt => sub {
-  ok mkpasswd_available('bcrypt'), 'mkpasswd_available';
-  ok !mkpasswd_available('foo'), 'negative mkpasswd_available';
-
   my $bc;
   ok $bc = mkpasswd('snacks'), 'Bcrypt crypt()';
   ok index($bc, '$2a$') == 0, 'Looks like bcrypt';
@@ -23,14 +20,6 @@ subtest bcrypt => sub {
   $bc = mkpasswd foo => +{ cost => 6 };
   ok index($bc, '$2a$06') == 0, 'bcrypt hash-style opts generation';
   ok passwdcmp('foo', $bc), 'bcrypt hash-style opts comparison';
-
-  my $orig_brs = App::bmkpasswd::get_brs;
-  ok $orig_brs == App::bmkpasswd::get_brs, 'get_brs ok';
-  mkpasswd_forked;
-  $bc = mkpasswd('snacks');
-  ok( index($bc, '$2a$') == 0, 'Bcrypt after mkpasswd_forked ok' );
-  my $new_brs = App::bmkpasswd::get_brs;
-  ok $orig_brs != $new_brs, 'mkpasswd_forked reset Bytes::Random::Secure';
 };
 
 subtest md5 => sub {
@@ -76,6 +65,21 @@ subtest sha512 => sub {
 
   ok $sha512 = mkpasswd('snacks', 'SHA-512'), 'SHA-512 crypt()';
   ok index($sha512, '$6$') == 0, 'Looks like SHA512 ("SHA-512")';
+};
+
+subtest mkpasswd_available => sub {
+  ok mkpasswd_available('bcrypt'), 'mkpasswd_available';
+  ok !mkpasswd_available('foo'), 'negative mkpasswd_available';
+};
+
+subtest mkpasswd_forked => sub {
+  my $orig_brs = App::bmkpasswd::get_brs;
+  ok $orig_brs == App::bmkpasswd::get_brs, 'get_brs ok';
+  mkpasswd_forked;
+  my $bc = mkpasswd('snacks');
+  ok index($bc, '$2a$') == 0, 'Bcrypt after mkpasswd_forked ok';
+  my $new_brs = App::bmkpasswd::get_brs;
+  ok $orig_brs != $new_brs, 'mkpasswd_forked reset Bytes::Random::Secure';
 };
 
 subtest saltgen => sub {
