@@ -34,6 +34,30 @@ sub mkpasswd_forked {
   undef $brsnb;
 }
 
+# can be local'd or replaced, but you get to keep both pieces ->
+our $SaltGenerator = sub {
+  my ($type, $strong) = @_;
+
+  my $rnd = get_brs(strong => $strong);
+  if ($type eq 'bcrypt') {
+    return en_base64( $rnd->bytes(16) );
+  }
+
+  if ($type eq 'sha') {
+    my $max = en_base64( $rnd->bytes(16) );
+    my $initial = substr $max, 0, 8, '';
+    # Drepper recommends random-length salts:
+    $initial .= substr $max, 0, 1, '' for  1 .. rand 8;
+    return $initial
+  }
+
+  if ($type eq 'md5') {
+    return en_base64( $rnd->bytes(6) );
+  }
+
+  confess "SaltGenerator fell through, unknown type $type"
+};
+
 my %_can_haz;
 sub have_passwd_xs {
   unless (defined $_can_haz{passwdxs}) {
@@ -97,29 +121,7 @@ sub mkpasswd_available {
   return
 }
 
-my $_saltgen = sub {
-  my ($type, $strong) = @_;
 
-  my $rnd = get_brs(strong => $strong);
-
-  if ($type eq 'bcrypt') {
-    return en_base64( $rnd->bytes(16) );
-  }
-
-  if ($type eq 'sha') {
-    my $max = en_base64( $rnd->bytes(16) );
-    my $initial = substr $max, 0, 8, '';
-    # Drepper recommends random-length salts:
-    $initial .= substr $max, 0, 1, '' for  1 .. rand 8;
-    return $initial
-  }
-
-  if ($type eq 'md5') {
-    return en_base64( $rnd->bytes(6) );
-  }
-
-  confess "_saltgen fell through, unknown type $type"
-};
 
 sub mkpasswd {
   # mkpasswd $passwd => $type, $cost, $strongsalt;
@@ -137,7 +139,7 @@ sub mkpasswd {
     ref $_[0] eq 'HASH' ? %{ $_[0] }
     : map {; $_ => shift } qw/type cost strong/;
   my $type = defined $opts{type} ? $opts{type} : 'bcrypt';
-  my $saltgen = $opts{saltgen} || $_saltgen;
+  my $saltgen = $opts{saltgen} || $SaltGenerator;
 
   my $salt;
 
