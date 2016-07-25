@@ -1,5 +1,15 @@
 Revision history for Perl module App::bmkpasswd
 
+2.012001 2016-07-25
+
+  - Safer Crypt::Passwd::XS require() (ignore '.' in @INC)
+
+  - bmkpasswd executable always drops '.' from @INC
+
+  - Default salt generator now package-scoped
+
+  - Test suite improvements
+
 2.011006 2016-03-20
 
   - Improved check for POSIX::Termios in `bmkpasswd`

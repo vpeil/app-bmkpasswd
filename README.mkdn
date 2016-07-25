@@ -181,4 +181,4 @@ Added in `v2.6.1`.
 
 # AUTHOR
 
-Jon Portnoy &lt;jon@portnoy.me>
+Jon Portnoy <jon@portnoy.me>
