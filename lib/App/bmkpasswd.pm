@@ -61,6 +61,8 @@ our $SaltGenerator = sub {
 my %_can_haz;
 sub have_passwd_xs {
   unless (defined $_can_haz{passwdxs}) {
+    local @INC = @INC;
+    pop @INC if $INC[-1] eq '.';
     try { require Crypt::Passwd::XS;  $_can_haz{passwdxs} = 1 } 
       catch { $_can_haz{passwdxs} = 0 };
   }
