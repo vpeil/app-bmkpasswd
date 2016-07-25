@@ -1,6 +1,10 @@
 #!perl
 use strictures 2;
 
+BEGIN {
+  pop @INC if $INC[-1] eq '.';
+}
+
 use POSIX ();
 
 use IO::Handle;
