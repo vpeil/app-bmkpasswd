@@ -19,7 +19,10 @@ our @EXPORT_OK = qw/
   mkpasswd_forked
 /;
 
-use Bytes::Random::Secure::Tiny;
+{ local @INC = @INC;
+  pop @INC if $INC[-1] eq '.';
+  require Bytes::Random::Secure::Tiny;
+}
 my ($brs, $brsnb);
 sub get_brs {
   my (%params) = @_;
