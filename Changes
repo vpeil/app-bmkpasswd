@@ -1,5 +1,9 @@
 Revision history for Perl module App::bmkpasswd
 
+2.012002 2016-07-26
+
+  - Safer Bytes::Random::Secure::Tiny require()
+
 2.012001 2016-07-25
 
   - Safer Crypt::Passwd::XS require() (ignore '.' in @INC)
