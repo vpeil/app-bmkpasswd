@@ -5,232 +5,236 @@ use Carp;
 use Try::Tiny;
 
 use Crypt::Eksblowfish::Bcrypt qw/
-  bcrypt 
-  en_base64
-/;
+    bcrypt
+    en_base64
+    /;
 
 use parent 'Exporter::Tiny';
 our @EXPORT = qw/
-  mkpasswd
-  passwdcmp 
-/;
+    mkpasswd
+    passwdcmp
+    /;
 our @EXPORT_OK = qw/
-  mkpasswd_available
-  mkpasswd_forked
-/;
+    mkpasswd_available
+    mkpasswd_forked
+    /;
 
-{ local @INC = @INC;
-  pop @INC if $INC[-1] eq '.';
-  require Bytes::Random::Secure::Tiny;
+{
+    local @INC = @INC;
+    pop @INC if $INC[-1] eq '.';
+    require Bytes::Random::Secure::Tiny;
 }
 my ($brs, $brsnb);
+
 sub get_brs {
-  my (%params) = @_;
-  $params{strong} ?
-    $brs ||= Bytes::Random::Secure::Tiny->new(Bits => 128, NonBlocking => 0)
-    : $brsnb ||= Bytes::Random::Secure::Tiny->new(Bits => 128, NonBlocking => 1)
+    my (%params) = @_;
+    $params{strong}
+        ? $brs
+        ||= Bytes::Random::Secure::Tiny->new(Bits => 128, NonBlocking => 0)
+        : $brsnb
+        ||= Bytes::Random::Secure::Tiny->new(Bits => 128, NonBlocking => 1);
 }
 
 sub mkpasswd_forked {
-  srand; # wrt random-length salts
-  undef $brs;
-  undef $brsnb;
+    srand;    # wrt random-length salts
+    undef $brs;
+    undef $brsnb;
 }
 
 # can be local'd or replaced, but you get to keep both pieces ->
 our $SaltGenerator = sub {
-  my ($type, $strong) = @_;
+    my ($type, $strong) = @_;
 
-  my $rnd = get_brs(strong => $strong);
-  if ($type eq 'bcrypt') {
-    return en_base64( $rnd->bytes(16) );
-  }
+    my $rnd = get_brs(strong => $strong);
+    if ($type eq 'bcrypt') {
+        return en_base64($rnd->bytes(16));
+    }
 
-  if ($type eq 'sha') {
-    my $max = en_base64( $rnd->bytes(16) );
-    my $initial = substr $max, 0, 8, '';
-    # Drepper recommends random-length salts:
-    $initial .= substr $max, 0, 1, '' for  1 .. rand 8;
-    return $initial
-  }
+    if ($type eq 'sha') {
+        my $max     = en_base64($rnd->bytes(16));
+        my $initial = substr $max, 0, 8, '';
 
-  if ($type eq 'md5') {
-    return en_base64( $rnd->bytes(6) );
-  }
+        # Drepper recommends random-length salts:
+        $initial .= substr $max, 0, 1, '' for 1 .. rand 8;
+        return $initial;
+    }
 
-  confess "SaltGenerator fell through, unknown type $type"
+    if ($type eq 'md5') {
+        return en_base64($rnd->bytes(6));
+    }
+
+    confess "SaltGenerator fell through, unknown type $type";
 };
 
 my %_can_haz;
+
 sub have_passwd_xs {
-  unless (defined $_can_haz{passwdxs}) {
-    local @INC = @INC;
-    pop @INC if $INC[-1] eq '.';
-    try { require Crypt::Passwd::XS;  $_can_haz{passwdxs} = 1 } 
-      catch { $_can_haz{passwdxs} = 0 };
-  }
-  $_can_haz{passwdxs}
+    unless (defined $_can_haz{passwdxs}) {
+        local @INC = @INC;
+        pop @INC if $INC[-1] eq '.';
+        try {require Crypt::Passwd::XS; $_can_haz{passwdxs} = 1}
+        catch {$_can_haz{passwdxs} = 0};
+    }
+    $_can_haz{passwdxs};
 }
 
 my %_shatests = (
-  sha256 => sub {
-    my $testc = try { crypt('a', '$5$abc$') } catch { warn $_; () };
-    $testc && index($testc, '$5$abc$') == 0 ? 1 : ()
-  },
-  sha512 => sub {
-    my $testc = try { crypt('b', '$6$abc$') } catch { warn $_; () };
-    $testc && index($testc, '$6$abc$') == 0 ? 1 : ()
-  },
+    sha256 => sub {
+        my $testc = try {crypt('a', '$5$abc$')} catch {warn $_; ()};
+        $testc && index($testc, '$5$abc$') == 0 ? 1 : ();
+    },
+    sha512 => sub {
+        my $testc = try {crypt('b', '$6$abc$')} catch {warn $_; ()};
+        $testc && index($testc, '$6$abc$') == 0 ? 1 : ();
+    },
 );
 
 sub have_sha {
-  # if we have Crypt::Passwd::XS, just use that:
-  return 1 if have_passwd_xs();
-  # else determine (the slow way) if SHA256/512 are available via libc:
-  my $rate = $_[0] || 512;
-  my $type = "sha$rate";
-  return $_can_haz{$type} if defined $_can_haz{$type};
-  if (exists $_shatests{$type} && $_shatests{$type}->()) {
-    return $_can_haz{$type} = 1
-  }
-  return $_can_haz{$type} = 0
+
+    # if we have Crypt::Passwd::XS, just use that:
+    return 1 if have_passwd_xs();
+
+    # else determine (the slow way) if SHA256/512 are available via libc:
+    my $rate = $_[0] || 512;
+    my $type = "sha$rate";
+    return $_can_haz{$type} if defined $_can_haz{$type};
+    if (exists $_shatests{$type} && $_shatests{$type}->()) {
+        return $_can_haz{$type} = 1;
+    }
+    return $_can_haz{$type} = 0;
 }
 
 sub have_md5 {
-  return 1 if have_passwd_xs();
-  return $_can_haz{md5} if defined $_can_haz{md5};
-  my $testc = try { crypt('a', '$1$abcd$') } catch { warn $_; () };
-  if ($testc && index($testc, '$1$abcd$') == 0) {
-    return $_can_haz{md5} = 1
-  }
-  return $_can_haz{md5} = 0
+    return 1 if have_passwd_xs();
+    return $_can_haz{md5} if defined $_can_haz{md5};
+    my $testc = try {crypt('a', '$1$abcd$')} catch {warn $_; ()};
+    if ($testc && index($testc, '$1$abcd$') == 0) {
+        return $_can_haz{md5} = 1;
+    }
+    return $_can_haz{md5} = 0;
 }
-
 
 sub mkpasswd_available {
-  my ($type) = @_;
+    my ($type) = @_;
 
-  unless ($type) {
-    return (
-      'bcrypt',
-      ( have_sha(256) ? 'sha256' : () ),
-      ( have_sha(512) ? 'sha512' : () ),
-      ( have_md5()    ? 'md5'    : () ),
-    );
-  }
+    unless ($type) {
+        return (
+            'bcrypt',
+            (have_sha(256) ? 'sha256' : ()),
+            (have_sha(512) ? 'sha512' : ()),
+            (have_md5()    ? 'md5'    : ()),
+        );
+    }
 
-  $type = lc $type;
-  return 1            if $type eq 'bcrypt';
-  return have_sha($1) if $type =~ /^sha-?(\d{3})$/;
-  return have_md5()   if $type eq 'md5';
-  return
+    $type = lc $type;
+    return 1            if $type eq 'bcrypt';
+    return have_sha($1) if $type =~ /^sha-?(\d{3})$/;
+    return have_md5()   if $type eq 'md5';
+    return;
 }
 
-
-
 sub mkpasswd {
-  # mkpasswd $passwd => $type, $cost, $strongsalt;
-  # mkpasswd $passwd => +{
-  #   type => $type,
-  #   cost => $cost,
-  #   saltgen => $coderef,
-  #   strong => $strongsalt,
-  # }
-  my $pwd = shift;
-  croak "mkpasswd passed an undef password"
-    unless defined $pwd;
 
-  my %opts =
-    ref $_[0] eq 'HASH' ? %{ $_[0] }
-    : map {; $_ => shift } qw/type cost strong/;
-  my $type = defined $opts{type} ? $opts{type} : 'bcrypt';
-  my $saltgen = $opts{saltgen} || $SaltGenerator;
+    # mkpasswd $passwd => $type, $cost, $strongsalt;
+    # mkpasswd $passwd => +{
+    #   type => $type,
+    #   cost => $cost,
+    #   saltgen => $coderef,
+    #   strong => $strongsalt,
+    # }
+    my $pwd = shift;
+    croak "mkpasswd passed an undef password" unless defined $pwd;
 
-  my $salt;
+    my %opts = ref $_[0] eq 'HASH' ? %{$_[0]} : map {; $_ => shift}
+        qw/type cost strong/;
+    my $type = defined $opts{type} ? $opts{type} : 'bcrypt';
+    my $saltgen = $opts{saltgen} || $SaltGenerator;
 
-  TYPE: {
-    if ($type =~ /^bcrypt$/i) {
-      my $cost = $opts{cost} || '08';
+    my $salt;
 
-      croak 'Work cost factor must be numeric'
-        unless $cost =~ /^[0-9]+$/;
-      $cost = "0$cost" if length $cost == 1;
+TYPE: {
+        if ($type =~ /^bcrypt$/i) {
+            my $cost = $opts{cost} || '08';
 
-      $salt = $saltgen->(bcrypt => $opts{strong});
-      my $bsettings = join '', '$2a$', $cost, '$', $salt;
+            croak 'Work cost factor must be numeric'
+                unless $cost =~ /^[0-9]+$/;
+            $cost = "0$cost" if length $cost == 1;
 
-      # bcrypt returns from here; everything else depends on have_passwd_xs
-      return bcrypt($pwd, $bsettings)
+            $salt = $saltgen->(bcrypt => $opts{strong});
+            my $bsettings = join '', '$2a$', $cost, '$', $salt;
+
+         # bcrypt returns from here; everything else depends on have_passwd_xs
+            return bcrypt($pwd, $bsettings);
+        }
+
+        if ($type =~ /^sha-?512$/i) {
+            croak 'SHA hash requested but no SHA support available'
+                unless have_sha(512);
+            $salt = join '', '$6$', $saltgen->(sha => $opts{strong}), '$';
+            last TYPE;
+        }
+
+        if ($type =~ /^sha(-?256)?$/i) {
+            croak 'SHA hash requested but no SHA support available'
+                unless have_sha(256);
+            $salt = join '', '$5$', $saltgen->(sha => $opts{strong}), '$';
+            last TYPE;
+        }
+
+        if ($type =~ /^md5$/i) {
+            croak 'MD5 hash requested but no MD5 support available'
+                unless have_md5;
+            $salt = join '', '$1$', $saltgen->(md5 => $opts{strong}), '$';
+            last TYPE;
+        }
+
+        croak "Unknown type specified: $type";
     }
 
-    if ($type =~ /^sha-?512$/i) {
-      croak 'SHA hash requested but no SHA support available' 
-        unless have_sha(512);
-      $salt = join '', '$6$', $saltgen->(sha => $opts{strong}), '$';
-      last TYPE
-    }
-
-    if ($type =~ /^sha(-?256)?$/i) {
-      croak 'SHA hash requested but no SHA support available' 
-        unless have_sha(256);
-      $salt = join '', '$5$', $saltgen->(sha => $opts{strong}), '$';
-      last TYPE
-    }
-
-    if ($type =~ /^md5$/i) {
-      croak 'MD5 hash requested but no MD5 support available'
-        unless have_md5;
-      $salt = join '', '$1$', $saltgen->(md5 => $opts{strong}), '$';
-      last TYPE
-    }
-
-    croak "Unknown type specified: $type"
-  }
-
-  have_passwd_xs() ?
-    Crypt::Passwd::XS::crypt($pwd, $salt) : crypt($pwd, $salt)
+    have_passwd_xs()
+        ? Crypt::Passwd::XS::crypt($pwd, $salt)
+        : crypt($pwd, $salt);
 }
 
 sub _eq {
-  my ($orig, $created) = @_;
-  my $unequal = ! (length $orig == length $created);
-  my $n = 0;
-  no warnings 'substr';
-  while ($n < length $orig) {
-    my $schr = substr $created, $n, 1;
-    $unequal = 1
-      if substr($orig, $n, 1) ne (defined $schr ? $schr : '');
-    ++$n;
-  }
-  ! $unequal
+    my ($orig, $created) = @_;
+    my $unequal = !(length $orig == length $created);
+    my $n       = 0;
+    no warnings 'substr';
+    while ($n < length $orig) {
+        my $schr = substr $created, $n, 1;
+        $unequal = 1 if substr($orig, $n, 1) ne (defined $schr ? $schr : '');
+        ++$n;
+    }
+    !$unequal;
 }
 
 sub passwdcmp {
-  my ($pwd, $crypt) = @_;
-  croak 'Expected a password string and hash'
-    unless defined $pwd and $crypt;
+    my ($pwd, $crypt) = @_;
+    croak 'Expected a password string and hash'
+        unless defined $pwd and $crypt;
 
-  my $pos_a = index $crypt, '$';
-  my $pos_b = index $crypt, '$', 2;
-  carp 'Possibly passed an invalid hash' 
-    unless $pos_a == 0
-    and    $pos_b == 2
-    or     $pos_b == 3;
+    my $pos_a = index $crypt, '$';
+    my $pos_b = index $crypt, '$', 2;
+    carp 'Possibly passed an invalid hash'
+        unless $pos_a == 0 and $pos_b == 2 or $pos_b == 3;
 
-  if ($crypt =~ /^\$2a\$\d{2}\$/) {
-    # Looks like bcrypt.
-    return $crypt if _eq( $crypt, bcrypt($pwd, $crypt) )
-  } else {
-    if (have_passwd_xs) {
-      return $crypt
-        if _eq( $crypt, Crypt::Passwd::XS::crypt($pwd, $crypt) )
-    } else {
-      return $crypt
-        if _eq( $crypt, crypt($pwd, $crypt) )
+    if ($crypt =~ /^\$2a\$\d{2}\$/) {
+
+        # Looks like bcrypt.
+        return $crypt if _eq($crypt, bcrypt($pwd, $crypt));
     }
-  }
+    else {
+        if (have_passwd_xs) {
+            return $crypt
+                if _eq($crypt, Crypt::Passwd::XS::crypt($pwd, $crypt));
+        }
+        else {
+            return $crypt if _eq($crypt, crypt($pwd, $crypt));
+        }
+    }
 
-  undef
+    undef;
 }
 
 1;
