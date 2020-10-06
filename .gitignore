@@ -1,0 +1,4 @@
+.build/*
+.tidyall.d/*
+local/*
+cpanfile.snapshot
