@@ -1,5 +1,7 @@
 package Crypt::Bcrypt::Easy;
 
+our $VERSION = "2.0";
+
 use Carp;
 use strictures 2;
 use App::bmkpasswd 'mkpasswd', 'passwdcmp', 'mkpasswd_forked';
@@ -8,9 +10,9 @@ use Scalar::Util 'blessed';
 
 use parent 'Exporter::Tiny';
 our @EXPORT = 'bcrypt';
-sub bcrypt {  Crypt::Bcrypt::Easy->new(@_)  }
+sub bcrypt {Crypt::Bcrypt::Easy->new(@_)}
 
-sub DEFAULT_COST () { '08' }
+sub DEFAULT_COST () {'08'}
 
 =pod
 
@@ -19,43 +21,46 @@ sub DEFAULT_COST () { '08' }
 =cut
 
 sub new {
-  my ($cls, %params) = @_;
-  my $cost = $params{cost} || DEFAULT_COST;
-  mkpasswd_forked if $params{reset_seed};
-  bless \$cost, blessed($cls) || $cls
+    my ($cls, %params) = @_;
+
+    my $cost = $params{cost} || DEFAULT_COST;
+    mkpasswd_forked if $params{reset_seed};
+    bless \$cost, blessed($cls) || $cls;
 }
 
-sub cost { 
-  my ($self) = @_;
-  blessed $self ? $$self : DEFAULT_COST
+sub cost {
+    my ($self) = @_;
+
+    blessed $self ? $$self : DEFAULT_COST
 }
 
 sub compare {
-  my ($self, %params) = @_;
-  unless (defined $params{text} && defined $params{crypt}) {
-    confess "Expected 'text =>' and 'crypt =>' params"
-  }
-  passwdcmp $params{text} => $params{crypt}
+    my ($self, %params) = @_;
+
+    unless (defined $params{text} && defined $params{crypt}) {
+        confess "Expected 'text =>' and 'crypt =>' params";
+    }
+    passwdcmp $params{text} => $params{crypt};
 }
 
 sub crypt {
-  my $self = shift;
-  my %params;
+    my $self = shift;
 
-  if (@_ == 1) {
-    $params{text} = $_[0]
-  } elsif (@_ > 1) {
-    %params = @_;
-    confess "Expected 'text =>' param"
-      unless defined $params{text};
-  } else {
-    confess 'Not enough arguments; expected a password'
-  }
+    my %params;
 
-  mkpasswd $params{text} => 
-    ($params{type}   || 'bcrypt'), 
-    ($params{cost}   || $self->cost), 
-    ($params{strong} || () )
+    if (@_ == 1) {
+        $params{text} = $_[0];
+    }
+    elsif (@_ > 1) {
+        %params = @_;
+        confess "Expected 'text =>' param" unless defined $params{text};
+    }
+    else {
+        confess 'Not enough arguments; expected a password';
+    }
+
+    mkpasswd $params{text} => ($params{type} || 'bcrypt'),
+        ($params{cost} || $self->cost), ($params{strong} || ());
 }
 
 1;

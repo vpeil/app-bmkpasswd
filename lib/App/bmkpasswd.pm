@@ -1,5 +1,7 @@
 package App::bmkpasswd;
 
+our $VERSION = "2.0";
+
 use strictures 2;
 use Carp;
 use Try::Tiny;
@@ -259,7 +261,7 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported bcrypt interface
   ## From a shell:
 
   bmkpasswd --help
-  
+
   # Generate bcrypted passwords:
   bmkpasswd
 
@@ -268,7 +270,7 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported bcrypt interface
 
   # SHA requires Crypt::Passwd::XS or a recent libc:
   bmkpasswd --method='sha512'
-  
+
   # Compare a hash:
   bmkpasswd --check=HASH
 
@@ -339,7 +341,7 @@ As of C<v2.10>, a constant time comparison function is used to compare hashes.
   my $crypted = mkpasswd($passwd, 'bcrypt', $cost);
   my $crypted = mkpasswd($passwd, $type, $cost, $strongsalt);
 
-  my $crypted = mkpasswd( $passwd => 
+  my $crypted = mkpasswd( $passwd =>
     +{
       type    => $type,
       cost    => $cost,
@@ -416,7 +418,7 @@ always available.)
   # After a fork / new thread is created:
   mkpasswd_forked;
 
-To retain secure salts after forking the process or creating a new thread, 
+To retain secure salts after forking the process or creating a new thread,
 it's advisable to either only load this module after creating the new process
 or call B<mkpasswd_forked> in the new process to reset the random seeds used
 by salt generators.
@@ -426,6 +428,10 @@ Added in C<v2.6.1>.
 =head1 AUTHOR
 
 Jon Portnoy <jon@portnoy.me>
+
+=head1 MAINTAINER
+
+Vitali Peil <vitali.peil@uni-bielefeld.de>
 
 =for Pod::Coverage have_\w+ get_\w+
 
