@@ -1,12 +1,9 @@
 # https://github.com/travis-perl/helpers
-
 language: perl
-
 env:
   global:
     - COVERAGE=0
     - AUTHOR_TESTING=0
-
 perl:
   - "5.8"
   - "5.10"
@@ -22,33 +19,26 @@ perl:
   - "5.30"
   - "5.32"
   - "blead"
-
 sudo: false
-
 matrix:
- include:
-   - perl: "5.32"
-     env: COVERAGE=1        # enables coverage+coveralls reporting
+  include:
+    - perl: "5.32"
+      env: COVERAGE=1
   allow_failures:
-    - perl: "blead"           # ignore failures for blead perl
-
+    - perl: "blead"
 before_install:
   - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
   - source ~/travis-perl-helpers/init
   - build-perl
   - perl -V
   - build-dist
-  - cd $BUILD_DIR             # set by the build-dist command
-
+  - cd $BUILD_DIR
 install:
-  - cpan-install --deps       # includes recommends
-  - cpan-install --coverage   # installs converage prereqs, if enabled
-
+  - cpan-install --deps
+  - cpan-install --coverage
 before_script:
   - coverage-setup
-
 script:
   - prove -lrv -j$((SYSTEM_CORES + 1)) $(test-dirs)
-
 after_success:
   - coverage-report
