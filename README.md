@@ -15,7 +15,7 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported bcrypt interface
     ## From a shell:
 
     bmkpasswd --help
-    
+
     # Generate bcrypted passwords:
     bmkpasswd
 
@@ -24,7 +24,7 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported bcrypt interface
 
     # SHA requires Crypt::Passwd::XS or a recent libc:
     bmkpasswd --method='sha512'
-    
+
     # Compare a hash:
     bmkpasswd --check=HASH
 
@@ -36,7 +36,7 @@ App::bmkpasswd - bcrypt-capable mkpasswd(1) and exported bcrypt interface
 **App::bmkpasswd** is a bcrypt-enabled `mkpasswd` implementation.
 
 Helper functions are also exported for use in other applications; see
-["EXPORTED"](#exported) -- however [Crypt::Bcrypt::Easy](https://metacpan.org/pod/Crypt::Bcrypt::Easy) (from this distribution)
+["EXPORTED"](#exported) -- however [Crypt::Bcrypt::Easy](https://metacpan.org/pod/Crypt%3A%3ABcrypt%3A%3AEasy) (from this distribution)
 provides an easier bcrypt-specific programmatic interface for Perl
 programmers.
 
@@ -49,17 +49,17 @@ See [http://codahale.com/how-to-safely-store-a-password/](http://codahale.com/ho
 on why you ought to be using bcrypt or similar "adaptive" techniques.
 
 **SHA-256** and **SHA-512** are supported if available. SHA support requires
-either [Crypt::Passwd::XS](https://metacpan.org/pod/Crypt::Passwd::XS) or a system crypt() that can handle SHA (such as
+either [Crypt::Passwd::XS](https://metacpan.org/pod/Crypt%3A%3APasswd%3A%3AXS) or a system crypt() that can handle SHA (such as
 glibc-2.7+ or modern FreeBSD builds).
 
-This module uses [Crypt::Eksblowfish::Bcrypt](https://metacpan.org/pod/Crypt::Eksblowfish::Bcrypt) as a back-end.
+This module uses [Crypt::Eksblowfish::Bcrypt](https://metacpan.org/pod/Crypt%3A%3AEksblowfish%3A%3ABcrypt) as a back-end.
 
-Uses [Bytes::Random::Secure::Tiny](https://metacpan.org/pod/Bytes::Random::Secure::Tiny) to generate random salts. Strongly-random salts
+Uses [Bytes::Random::Secure::Tiny](https://metacpan.org/pod/Bytes%3A%3ARandom%3A%3ASecure%3A%3ATiny) to generate random salts. Strongly-random salts
 can also be enabled; see ["mkpasswd"](#mkpasswd).
 
 # EXPORTED
 
-[Crypt::Bcrypt::Easy](https://metacpan.org/pod/Crypt::Bcrypt::Easy) provides an easier programmatic interface, but only
+[Crypt::Bcrypt::Easy](https://metacpan.org/pod/Crypt%3A%3ABcrypt%3A%3AEasy) provides an easier programmatic interface, but only
 generates bcrypt (although it can validate any supported type).  If you would
 like to create crypted passwords using other methods, you can use the exported
 **mkpasswd** and **passwdcmp** functions:
@@ -69,8 +69,8 @@ like to create crypted passwords using other methods, you can use the exported
     # Or import all functions:
     use App::bmkpasswd -all;
 
-This module uses [Exporter::Tiny](https://metacpan.org/pod/Exporter::Tiny) to export functions. This provides for
-flexible import options. See the [Exporter::Tiny](https://metacpan.org/pod/Exporter::Tiny) docs for details.
+This module uses [Exporter::Tiny](https://metacpan.org/pod/Exporter%3A%3ATiny) to export functions. This provides for
+flexible import options. See the [Exporter::Tiny](https://metacpan.org/pod/Exporter%3A%3ATiny) docs for details.
 
 ## passwdcmp
 
@@ -95,7 +95,7 @@ As of `v2.10`, a constant time comparison function is used to compare hashes.
     my $crypted = mkpasswd($passwd, 'bcrypt', $cost);
     my $crypted = mkpasswd($passwd, $type, $cost, $strongsalt);
 
-    my $crypted = mkpasswd( $passwd => 
+    my $crypted = mkpasswd( $passwd =>
       +{
         type    => $type,
         cost    => $cost,
@@ -172,7 +172,7 @@ always available.)
     # After a fork / new thread is created:
     mkpasswd_forked;
 
-To retain secure salts after forking the process or creating a new thread, 
+To retain secure salts after forking the process or creating a new thread,
 it's advisable to either only load this module after creating the new process
 or call **mkpasswd\_forked** in the new process to reset the random seeds used
 by salt generators.
@@ -182,3 +182,15 @@ Added in `v2.6.1`.
 # AUTHOR
 
 Jon Portnoy <jon@portnoy.me>
+
+# MAINTAINER
+
+Vitali Peil <vitali.peil@uni-bielefeld.de>
+
+# LICENSE AND COPYRIGHT
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
